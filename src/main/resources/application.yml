@@ -1,0 +1,27 @@
+spring:
+  datasource:
+    url: jdbc:h2:mem:togather
+    username: sa
+    password:
+    driver-class-name: org.h2.Driver
+
+  h2:
+    console:
+      enabled: true
+
+  jpa:
+    defer-datasource-initialization: true
+    generate-ddl: true
+
+    hibernate:
+      ddl-auto: none
+
+    open-in-view: false
+
+    properties:
+      hibernate:
+        format_sql: true
+        show_sql: true
+        jdbc:
+          batch_size: 100
+
