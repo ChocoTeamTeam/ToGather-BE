@@ -6,10 +6,9 @@ import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyLong;
 import static org.mockito.BDDMockito.given;
-import static org.mockito.Mockito.RETURNS_MOCKS;
 import static org.mockito.Mockito.doReturn;
 
-import chocoteamteam.togather.RefreshTokenRepository;
+import chocoteamteam.togather.repository.RefreshTokenRepository;
 import chocoteamteam.togather.component.jwt.JwtIssuer;
 import chocoteamteam.togather.component.jwt.JwtParser;
 import chocoteamteam.togather.component.jwt.JwtUtils;

@@ -3,7 +3,7 @@ package chocoteamteam.togather.service;
 import static chocoteamteam.togather.component.jwt.JwtUtils.BEARER_PREFIX;
 import static chocoteamteam.togather.component.jwt.JwtUtils.KEY_ID;
 
-import chocoteamteam.togather.RefreshTokenRepository;
+import chocoteamteam.togather.repository.RefreshTokenRepository;
 import chocoteamteam.togather.component.jwt.JwtUtils;
 import chocoteamteam.togather.component.jwt.JwtIssuer;
 import chocoteamteam.togather.component.jwt.JwtParser;

@@ -1,4 +1,4 @@
-package chocoteamteam.togather;
+package chocoteamteam.togather.repository;
 
 import java.time.Duration;
 import java.util.Optional;
