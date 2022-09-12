@@ -25,3 +25,14 @@ spring:
         jdbc:
           batch_size: 100
 
+  redis:
+    host: localhost
+    port: 6379
+
+jwt:
+  secret-key:
+    access: TestSecretKey123asdasdadadwadwawdawdadwddwawdadwadawadwdwaawdawdwaddwadwawad
+    refresh: TestRefreshKey2131asdsdasdwdwadawdawdwadwadawwadawdawdwadwadawdawdwadawdwad
+  expired-min:
+    access: 60
+    refresh: 4320
