@@ -23,15 +23,10 @@ public class JwtParser {
 				.setSigningKey(Keys.hmacShaKeyFor(secretKey))
 				.build()
 				.parseClaimsJws(token).getBody();
-		} catch (SignatureException e) {
-			throw new JwtParseException("JWT의 시그니쳐가 유효하지 않습니다.", e);
-		} catch (MalformedJwtException e) {
-			throw new JwtParseException("JWT의 형식이 잘못되었습니다.", e);
 		} catch (ExpiredJwtException e) {
 			throw new JwtParseException("JWT의 유효시간이 만료되었습니다.", e);
-		} catch (UnsupportedJwtException e) {
-			throw new JwtParseException("지원하지 않는 JWT 입니다.", e);
-		} catch (IllegalArgumentException e) {
+		} catch (SignatureException | MalformedJwtException | IllegalArgumentException |
+				 UnsupportedJwtException e) {
 			throw new JwtParseException("유효하지 않은 JWT 입니다.", e);
 		}
 

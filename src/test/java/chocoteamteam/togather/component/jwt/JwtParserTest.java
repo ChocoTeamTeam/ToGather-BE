@@ -83,7 +83,7 @@ class JwtParserTest {
 		//then
 		assertThatThrownBy(() -> jwtParser.parseToken(token, secretKey))
 			.isInstanceOf(JwtParseException.class)
-			.hasMessage("JWT의 시그니쳐가 유효하지 않습니다.");
+			.hasMessage("유효하지 않은 JWT 입니다.");
 	}
 
 	@DisplayName("토큰 파싱 실패 - JWT 형식이 잘못된 경우")
@@ -94,7 +94,7 @@ class JwtParserTest {
 		//then
 		assertThatThrownBy(() -> jwtParser.parseToken(token + ".malformed", secretKey))
 			.isInstanceOf(JwtParseException.class)
-			.hasMessage("JWT의 형식이 잘못되었습니다.");
+			.hasMessage("유효하지 않은 JWT 입니다.");
 	}
 
 	@DisplayName("토큰 파싱 실패 - JWT 값 자체가 유효하지않을 경우")
