@@ -68,11 +68,6 @@ class JwtServiceTest {
 		given(jwtIssuer.issueToken(any(), any()))
 			.willReturn("accessToken", "refreshToken");
 
-		given(jwtUtils.getEncodedAccessKey())
-			.willReturn("encodedAccessKey".getBytes());
-		given(jwtUtils.getEncodedRefreshKey())
-			.willReturn("encodedRefreshKey".getBytes());
-
 		given(jwtUtils.getAccessTokenExpiredMin())
 			.willReturn(120);
 
@@ -141,7 +136,7 @@ class JwtServiceTest {
 	void refreshToken_fail_NotExistsRefreshToken(){
 	    //given
 		given(jwtParser.parseToken(any(), any()))
-			.willReturn(Jwts.claims());
+			.willReturn(claims);
 
 		given(refreshTokenRepository.find(anyLong()))
 			.willReturn(Optional.empty());

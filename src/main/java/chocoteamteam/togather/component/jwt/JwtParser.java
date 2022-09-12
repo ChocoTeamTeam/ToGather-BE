@@ -8,6 +8,7 @@ import io.jsonwebtoken.MalformedJwtException;
 import io.jsonwebtoken.UnsupportedJwtException;
 import io.jsonwebtoken.security.Keys;
 import io.jsonwebtoken.security.SignatureException;
+import java.security.Key;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 
@@ -15,12 +16,12 @@ import org.springframework.stereotype.Component;
 @Component
 public class JwtParser {
 
-	public Claims parseToken(String token, byte[] secretKey) {
+	public Claims parseToken(String token, Key secretKey) {
 		Claims claims;
 
 		try {
 			claims = Jwts.parserBuilder()
-				.setSigningKey(Keys.hmacShaKeyFor(secretKey))
+				.setSigningKey(secretKey)
 				.build()
 				.parseClaimsJws(token).getBody();
 		} catch (ExpiredJwtException e) {

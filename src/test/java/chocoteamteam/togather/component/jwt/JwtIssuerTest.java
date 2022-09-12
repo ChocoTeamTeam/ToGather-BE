@@ -5,6 +5,8 @@ import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
+import io.jsonwebtoken.security.Keys;
+import java.security.Key;
 import java.util.Base64;
 import java.util.Date;
 import org.junit.jupiter.api.BeforeAll;
@@ -20,7 +22,7 @@ class JwtIssuerTest {
 	@InjectMocks
 	JwtIssuer jwtIssuer;
 	static Claims claims;
-	static byte[] secretKey;
+	static Key secretKey;
 
 	@BeforeAll
 	static void beforeAll() {
@@ -29,8 +31,8 @@ class JwtIssuerTest {
 		claims = Jwts.claims().setSubject("test").setIssuedAt(date)
 			.setExpiration(date);
 
-		secretKey = Base64.getEncoder()
-			.encodeToString("secretKeysecretKeysecretKeysecretKeysecretKey".getBytes()).getBytes();
+		secretKey = Keys.hmacShaKeyFor(Base64.getEncoder()
+			.encodeToString("secretKeysecretKeysecretKeysecretKeysecretKey".getBytes()).getBytes());
 	}
 
 	@DisplayName("Token 발급 성공")

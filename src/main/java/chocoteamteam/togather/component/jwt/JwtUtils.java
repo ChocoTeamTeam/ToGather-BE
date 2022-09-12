@@ -1,7 +1,10 @@
 package chocoteamteam.togather.component.jwt;
 
+import io.jsonwebtoken.security.Keys;
+import java.security.Key;
 import java.util.Base64;
 import javax.annotation.PostConstruct;
+import javax.crypto.SecretKey;
 import lombok.Getter;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
@@ -23,8 +26,8 @@ public class JwtUtils {
 	@Value("${jwt.secret-key.refresh}")
 	private String refreshKey;
 
-	private byte[] encodedAccessKey;
-	private byte[] encodedRefreshKey;
+	private Key encodedAccessKey;
+	private Key encodedRefreshKey;
 
 	@Value("${jwt.expired-min.access}")
 	private int accessTokenExpiredMin;
@@ -34,8 +37,11 @@ public class JwtUtils {
 
 	@PostConstruct
 	private void init() {
-		encodedAccessKey = Base64.getEncoder().encodeToString(accessKey.getBytes()).getBytes();
-		encodedRefreshKey = Base64.getEncoder().encodeToString(refreshKey.getBytes()).getBytes();
+		encodedAccessKey = Keys.hmacShaKeyFor(
+			Base64.getEncoder().encodeToString(accessKey.getBytes()).getBytes());
+
+		encodedRefreshKey = Keys.hmacShaKeyFor(
+			Base64.getEncoder().encodeToString(refreshKey.getBytes()).getBytes());
 	}
 
 }

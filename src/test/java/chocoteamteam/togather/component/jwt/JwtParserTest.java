@@ -6,6 +6,8 @@ import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import chocoteamteam.togather.exception.JwtParseException;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
+import io.jsonwebtoken.security.Keys;
+import java.security.Key;
 import java.util.Base64;
 import java.util.Date;
 import org.junit.jupiter.api.BeforeEach;
@@ -24,7 +26,7 @@ class JwtParserTest {
 	JwtParser jwtParser;
 
 	Claims claims;
-	byte[] secretKey;
+	Key secretKey;
 	String token;
 
 
@@ -35,8 +37,8 @@ class JwtParserTest {
 		claims = Jwts.claims().setSubject("test").setIssuedAt(date)
 			.setExpiration(new Date(date.getTime() + 6000));
 
-		secretKey = Base64.getEncoder()
-			.encodeToString("secretKeysecretKeysecretKeysecretKeysecretKey".getBytes()).getBytes();
+		secretKey = Keys.hmacShaKeyFor(Base64.getEncoder()
+			.encodeToString("secretKeysecretKeysecretKeysecretKeysecretKey".getBytes()).getBytes());
 
 		token = jwtIssuer.issueToken(claims, secretKey);
 
@@ -47,7 +49,7 @@ class JwtParserTest {
 	void parseToken_success() {
 		//given
 		//when
-		Claims parsedClaims = jwtParser.parseToken(token,secretKey);
+		Claims parsedClaims = jwtParser.parseToken(token, secretKey);
 
 		//then
 		assertThat(parsedClaims.getSubject()).isEqualTo(claims.getSubject());
@@ -77,7 +79,9 @@ class JwtParserTest {
 	void parseToken_fail_invalidSignature() {
 		//given
 		String token = jwtIssuer.issueToken(claims,
-			"invalidTestKeyinvalidTestKeyinvalidTestKey".getBytes());
+			Keys.hmacShaKeyFor(Base64.getEncoder()
+				.encodeToString("invalidTestKeyinvalidTestKeyinvalidTestKey".getBytes())
+				.getBytes()));
 
 		//when
 		//then
