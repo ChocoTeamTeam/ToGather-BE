@@ -76,7 +76,7 @@ public class JwtService {
 			jwtParser.parseToken(accessToken, jwtUtils.getEncodedAccessKey()));
 	}
 
-	public String issueSignUpToken(String email, String provider) {
+	public String issueSignUpToken(@NonNull String email,@NonNull String provider) {
 		Claims claims = Jwts.claims();
 		claims.put(KEY_ID, email);
 		claims.put(KEY_PROVIDER, provider);
@@ -84,13 +84,13 @@ public class JwtService {
 		return jwtIssuer.issueToken(claims, jwtUtils.getEncodedSignupKey());
 	}
 
-	public SignUpTokenMemberInfo parseSignUpToken(String signUpToken) {
+	public SignUpTokenMemberInfo parseSignUpToken(@NonNull String signUpToken) {
 		Claims claims = jwtParser.parseToken(signUpToken, jwtUtils.getEncodedSignupKey());
 
 		if (!StringUtils.hasText(claims.get(KEY_PROVIDER, String.class))) {
 			throw new InvalidSignUpTokenException("유효한 회원가입 토큰이 아닙니다.");
 		}
-		
+
 		return SignUpTokenMemberInfo.from(claims);
 	}
 
