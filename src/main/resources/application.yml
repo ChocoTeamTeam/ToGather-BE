@@ -33,6 +33,8 @@ jwt:
   secret-key:
     access: TestSecretKey123asdasdadadwadwawdawdadwddwawdadwadawadwdwaawdawdwaddwadwawad
     refresh: TestRefreshKey2131asdsdasdwdwadawdawdwadwadawwadawdawdwadwadawdawdwadawdwad
+    signup: TestSignupKey123asdasdadadwadwawdvcbcvbcvbvcbcvbcvbcvcvbwdwaawdawdwaddwadwawad
   expired-min:
     access: 60
     refresh: 4320
+    signup: 5
