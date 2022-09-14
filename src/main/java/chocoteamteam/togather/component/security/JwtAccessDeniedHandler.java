@@ -1,5 +1,7 @@
 package chocoteamteam.togather.component.security;
 
+import static org.springframework.http.MediaType.APPLICATION_JSON_VALUE;
+
 import com.fasterxml.jackson.databind.ObjectMapper;
 import java.io.IOException;
 import javax.servlet.ServletException;
@@ -29,7 +31,7 @@ public class JwtAccessDeniedHandler implements AccessDeniedHandler {
 
 	private void setResponse(HttpServletResponse response) {
 		response.setStatus(HttpStatus.FORBIDDEN.value());
-		response.setContentType("application/json");
+		response.setContentType(APPLICATION_JSON_VALUE);
 		response.setCharacterEncoding("UTF-8");
 	}
 }
