@@ -29,6 +29,57 @@ spring:
     host: localhost
     port: 6379
 
+  security:
+    oauth2:
+      client:
+        registration:
+          google:
+            clientId:
+            clientSecret:
+            redirect-uri:
+            scope:
+              - email
+              - profile
+          github:
+            clientId:
+            clientSecret:
+            redirect-uri:
+            scope:
+              - public_profile
+              - email
+          kakao:
+            clientId:
+            clientSecret:
+            clientAuthenticationMethod: post
+            authorizationGrantType: authorization_code
+            redirect-uri:
+            scope:
+              - profile_nickname
+              - account_email
+            clientName: Kakao
+          naver:
+            clientId:
+            clientSecret:
+            clientAuthenticationMethod: post
+            authorizationGrantType: authorization_code
+            redirect-uri:
+            scope:
+              - name
+              - email
+            clientName: Naver
+        # Provider 설정
+        provider:
+          naver:
+            authorizationUri: https://nid.naver.com/oauth2.0/authorize
+            tokenUri: https://nid.naver.com/oauth2.0/token
+            userInfoUri: https://openapi.naver.com/v1/nid/me
+            userNameAttribute: response
+          kakao:
+            authorizationUri: https://kauth.kakao.com/oauth/authorize
+            tokenUri: https://kauth.kakao.com/oauth/token
+            userInfoUri: https://kapi.kakao.com/v2/user/me
+            userNameAttribute: id
+
 jwt:
   secret-key:
     access: TestSecretKey123asdasdadadwadwawdawdadwddwawdadwadawadwdwaawdawdwaddwadwawad

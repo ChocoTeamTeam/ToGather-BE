@@ -1,6 +1,7 @@
 package chocoteamteam.togather.entity;
 
 import chocoteamteam.togather.type.MemberStatus;
+import chocoteamteam.togather.type.ProviderType;
 import chocoteamteam.togather.type.Role;
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -43,6 +44,7 @@ public class Member extends BaseTimeEntity {
 	@Enumerated(EnumType.STRING)
 	private Role role;
 
-
+    @Enumerated(EnumType.STRING)
+    private ProviderType providerType;
 
 }
