@@ -8,6 +8,8 @@ import static org.mockito.ArgumentMatchers.anyLong;
 import static org.mockito.BDDMockito.given;
 import static org.mockito.Mockito.doReturn;
 
+import chocoteamteam.togather.dto.SignUpTokenMemberInfo;
+import chocoteamteam.togather.exception.InvalidSignUpTokenException;
 import chocoteamteam.togather.repository.RefreshTokenRepository;
 import chocoteamteam.togather.component.jwt.JwtIssuer;
 import chocoteamteam.togather.component.jwt.JwtParser;
@@ -190,6 +192,79 @@ class JwtServiceTest {
 		//then
 		assertThatThrownBy(() -> jwtService.parseAccessToken(null))
 			.isInstanceOf(NullPointerException.class);
+	}
+
+	@DisplayName("SignUp Token 발급 성공")
+	@Test
+	void issueSignUpToken_success() {
+		//given
+		given(jwtIssuer.issueToken(any(), any()))
+			.willReturn("signUpToken");
+
+		//when
+		String token = jwtService.issueSignUpToken("test@test.com", "kakao");
+
+		//then
+		assertThat(token).isEqualTo("signUpToken");
+	}
+
+	@DisplayName("SignUp Token 발급 실패 - 매개변수들이 null인 경우")
+	@Test
+	void issueSignUpToken_fail_parameterIsNull() {
+		//given
+		//when
+		//then
+		assertThatThrownBy(() -> jwtService.issueSignUpToken(null,"kakao"))
+			.isInstanceOf(NullPointerException.class);
+		assertThatThrownBy(() -> jwtService.issueSignUpToken(null,null))
+			.isInstanceOf(NullPointerException.class);
+		assertThatThrownBy(() -> jwtService.issueSignUpToken("test",null))
+			.isInstanceOf(NullPointerException.class);
+	}
+
+	@DisplayName("SignUp Token 파싱 성공")
+	@Test
+	void parseSignUpToken_success(){
+	    //given
+		Claims claims = Jwts.claims();
+
+		claims.put(KEY_ID, "test");
+		claims.put(KEY_PROVIDER, "kakao");
+
+		given(jwtParser.parseToken(any(), any()))
+			.willReturn(claims);
+
+	    //when
+		SignUpTokenMemberInfo info = jwtService.parseSignUpToken("signUpToken");
+
+		//then
+		assertThat(info.getEmail()).isEqualTo("test");
+		assertThat(info.getProvider()).isEqualTo("kakao");
+
+	}
+
+	@DisplayName("SignUp Token 파싱 실패 - 매개변수들이 null인 경우")
+	@Test
+	void parseSignUpToken_fail_parameterIsNull() {
+		//given
+		//when
+		//then
+		assertThatThrownBy(() -> jwtService.parseSignUpToken(null))
+			.isInstanceOf(NullPointerException.class);
+	}
+
+	@DisplayName("SignUp Token 파싱 실패 - 회원가입 토큰이 아닌 경우")
+	@Test
+	void parseSignUpToken_fail_InvalidSignUpToken() {
+		//given
+		given(jwtParser.parseToken(any(), any()))
+			.willReturn(claims);
+
+		//when
+		//then
+		assertThatThrownBy(() -> jwtService.parseSignUpToken("singUpToken"))
+			.isInstanceOf(InvalidSignUpTokenException.class)
+			.hasMessage("유효한 회원가입 토큰이 아닙니다.");
 	}
 
 
