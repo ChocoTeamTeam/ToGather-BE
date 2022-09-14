@@ -2,7 +2,10 @@ package chocoteamteam.togather.service;
 
 import static chocoteamteam.togather.component.jwt.JwtUtils.BEARER_PREFIX;
 import static chocoteamteam.togather.component.jwt.JwtUtils.KEY_ID;
+import static chocoteamteam.togather.component.jwt.JwtUtils.KEY_PROVIDER;
 
+import chocoteamteam.togather.dto.SignUpTokenMemberInfo;
+import chocoteamteam.togather.exception.InvalidSignUpTokenException;
 import chocoteamteam.togather.repository.RefreshTokenRepository;
 import chocoteamteam.togather.component.jwt.JwtUtils;
 import chocoteamteam.togather.component.jwt.JwtIssuer;
@@ -11,10 +14,12 @@ import chocoteamteam.togather.dto.TokenMemberInfo;
 import chocoteamteam.togather.dto.Tokens;
 import chocoteamteam.togather.exception.InvalidRefreshTokenException;
 import io.jsonwebtoken.Claims;
+import io.jsonwebtoken.Jwts;
 import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.util.StringUtils;
 
 @RequiredArgsConstructor
 @Service
@@ -71,5 +76,22 @@ public class JwtService {
 			jwtParser.parseToken(accessToken, jwtUtils.getEncodedAccessKey()));
 	}
 
+	public String issueSignUpToken(@NonNull String email,@NonNull String provider) {
+		Claims claims = Jwts.claims();
+		claims.put(KEY_ID, email);
+		claims.put(KEY_PROVIDER, provider);
+
+		return jwtIssuer.issueToken(claims, jwtUtils.getEncodedSignupKey());
+	}
+
+	public SignUpTokenMemberInfo parseSignUpToken(@NonNull String signUpToken) {
+		Claims claims = jwtParser.parseToken(signUpToken, jwtUtils.getEncodedSignupKey());
+
+		if (!StringUtils.hasText(claims.get(KEY_PROVIDER, String.class))) {
+			throw new InvalidSignUpTokenException("유효한 회원가입 토큰이 아닙니다.");
+		}
+
+		return SignUpTokenMemberInfo.from(claims);
+	}
 
 }
