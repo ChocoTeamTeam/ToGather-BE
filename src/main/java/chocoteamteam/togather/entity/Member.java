@@ -1,6 +1,7 @@
 package chocoteamteam.togather.entity;
 
 import chocoteamteam.togather.type.MemberStatus;
+import chocoteamteam.togather.type.ProviderType;
 import chocoteamteam.togather.type.Role;
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -23,25 +24,26 @@ import lombok.Setter;
 @Entity
 public class Member {
 
-	@Id
-	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	private Long id;
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
 
-	@Column(nullable = false,unique = true)
-	private String email;
+    @Column(nullable = false, unique = true)
+    private String email;
 
-	@Column(nullable = false,unique = true)
-	private String nickname;
+    @Column(nullable = false, unique = true)
+    private String nickname;
 
-	@Column(nullable = false)
-	private String profileImage;
+    @Column(nullable = false)
+    private String profileImage;
 
-	@Enumerated(EnumType.STRING)
-	private MemberStatus status;
+    @Enumerated(EnumType.STRING)
+    private MemberStatus status;
 
-	@Enumerated(EnumType.STRING)
-	private Role role;
+    @Enumerated(EnumType.STRING)
+    private Role role;
 
-
+    @Enumerated(EnumType.STRING)
+    private ProviderType providerType;
 
 }
