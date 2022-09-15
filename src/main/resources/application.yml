@@ -29,6 +29,9 @@ spring:
     host: localhost
     port: 6379
 
+  profiles:
+    include: oauth
+
 jwt:
   secret-key:
     access: TestSecretKey123asdasdadadwadwawdawdadwddwawdadwadawadwdwaawdawdwaddwadwawad
