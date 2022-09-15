@@ -19,6 +19,7 @@ public class JwtUtils {
 	public static final String KEY_NICKNAME = "nickname";
 	public static final String KEY_STATUS = "status";
 	public static final String KEY_ROLES = "roles";
+	public static final String KEY_PROVIDER = "provider";
 
 	@Value("${jwt.secret-key.access}")
 	private String accessKey;
@@ -26,14 +27,22 @@ public class JwtUtils {
 	@Value("${jwt.secret-key.refresh}")
 	private String refreshKey;
 
+	@Value("${jwt.secret-key.signup}")
+	private String signupKey;
+
 	private Key encodedAccessKey;
 	private Key encodedRefreshKey;
+
+	private Key encodedSignupKey;
 
 	@Value("${jwt.expired-min.access}")
 	private int accessTokenExpiredMin;
 
 	@Value("${jwt.expired-min.refresh}")
 	private int refreshTokenExpiredMin;
+
+	@Value("${jwt.expired-min.signup}")
+	private int signupTokenExpiredMin;
 
 	@PostConstruct
 	private void init() {
@@ -42,6 +51,9 @@ public class JwtUtils {
 
 		encodedRefreshKey = Keys.hmacShaKeyFor(
 			Base64.getEncoder().encodeToString(refreshKey.getBytes()).getBytes());
+
+		encodedSignupKey = Keys.hmacShaKeyFor(
+			Base64.getEncoder().encodeToString(signupKey.getBytes()).getBytes());
 	}
 
 }
