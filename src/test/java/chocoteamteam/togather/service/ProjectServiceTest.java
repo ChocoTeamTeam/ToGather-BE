@@ -2,6 +2,7 @@ package chocoteamteam.togather.service;
 
 import chocoteamteam.togather.dto.CreateProjectForm;
 import chocoteamteam.togather.dto.ProjectDto;
+import chocoteamteam.togather.dto.UpdateProjectForm;
 import chocoteamteam.togather.entity.Member;
 import chocoteamteam.togather.entity.Project;
 import chocoteamteam.togather.entity.TechStack;
@@ -157,6 +158,91 @@ class ProjectServiceTest {
                         "부산",
                         LocalDate.of(2022, 9, 13),
                         List.of(5L, 6L)
+                )));
+        //then
+        assertEquals(ErrorCode.NOT_FOUND_TECH_STACK, exception.getErrorCode());
+    }
+
+    @Test
+    @DisplayName("프로젝트 수정 성공")
+    void updateProjectSuccess() {
+        //given
+        given(projectRepository.findById(anyLong()))
+                .willReturn(Optional.of(project));
+
+        given(techStackRepository.findAllById(any()))
+                .willReturn(techStacks);
+
+        //when
+        ProjectDto projectDto = projectService.updateProject(
+                project.getId(),
+                member.getId(),
+                UpdateProjectForm.builder()
+                        .title("수정 제목")
+                        .content("수정 내용")
+                        .personnel(100)
+                        .status(ProjectStatus.COMPLETED)
+                        .location("수정 위치")
+                        .deadline(LocalDate.of(2022, 9, 17))
+                        .techStackIds(List.of(1L, 2L))
+                        .build()
+        );
+        //then
+        assertEquals(techStacks.get(1).getName(), projectDto.getProjectTechStacks().get(1).getTechStack().getName());
+        verify(projectTechStackRepository, times(1)).deleteAllByProjectId(project.getId());
+        verify(projectTechStackRepository, times(1)).flush();
+        verify(projectTechStackRepository, times(1)).saveAll(any());
+    }
+
+    @Test
+    @DisplayName("프로젝트 수정 실패 - 해당 프로젝트 없음")
+    void updateProject_NotFoundProject() {
+        //given
+
+        given(projectRepository.findById(anyLong()))
+                .willReturn(Optional.empty());
+        //when
+        ProjectException exception = assertThrows(ProjectException.class,
+                () -> projectService.updateProject(1L, 9L, new UpdateProjectForm()));
+
+        //then
+        assertEquals(ErrorCode.NOT_FOUND_PROJECT, exception.getErrorCode());
+    }
+
+    @Test
+    @DisplayName("프로젝트 수정 실패 - 해당 프로젝트 수정 권한 없음")
+    void updateProject_NotMatchMemberProject() {
+
+        //given
+        given(projectRepository.findById(anyLong()))
+                .willReturn(Optional.of(project));
+        //when
+        ProjectException exception = assertThrows(ProjectException.class,
+                () -> projectService.updateProject(1L, 100L, new UpdateProjectForm()));
+
+        //then
+        assertEquals(ErrorCode.NOT_MATCH_MEMBER_PROJECT, exception.getErrorCode());
+    }
+
+    @Test
+    @DisplayName("프로젝트 수정 실패 - 해당 기술스택 없음")
+    void updateProject_NotFoundTechStack() {
+        //given
+        given(projectRepository.findById(anyLong()))
+                .willReturn(Optional.of(project));
+        given(techStackRepository.findAllById(any()))
+                .willReturn(new ArrayList<>());
+
+        //when
+        ProjectException exception = assertThrows(ProjectException.class,
+                () -> projectService.updateProject(1L, 9L, new UpdateProjectForm(
+                        "글 제목 수정",
+                        "글 내용 수정",
+                        1,
+                        ProjectStatus.RECRUITING,
+                        "위치 수정",
+                        LocalDate.of(2022, 9, 15),
+                        List.of(1L, 2L)
                 )));
         //then
         assertEquals(ErrorCode.NOT_FOUND_TECH_STACK, exception.getErrorCode());

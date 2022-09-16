@@ -1,5 +1,6 @@
 package chocoteamteam.togather.entity;
 
+import chocoteamteam.togather.dto.UpdateProjectForm;
 import chocoteamteam.togather.type.ProjectStatus;
 import lombok.*;
 
@@ -38,4 +39,13 @@ public class Project extends BaseTimeEntity {
 
     @OneToMany(mappedBy = "project")
     private final List<ProjectTechStack> projectTechStacks = new ArrayList<>();
+
+    public void update(UpdateProjectForm form) {
+        this.title = form.getTitle();
+        this.content = form.getContent();
+        this.personnel = form.getPersonnel();
+        this.status = form.getStatus();
+        this.location = form.getLocation();
+        this.deadline = form.getDeadline();
+    }
 }
