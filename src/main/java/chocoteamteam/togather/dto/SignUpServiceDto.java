@@ -17,6 +17,6 @@ public class SignUpServiceDto {
     private String signUpToken;
     private String nickname;
     private String profileImage;
-    private List<TechStackDto> techStackDtoList;
+    private List<Long> techStackDtoList;
 
 }
