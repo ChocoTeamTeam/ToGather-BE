@@ -13,14 +13,13 @@ import javax.persistence.*;
 @NoArgsConstructor
 @AllArgsConstructor
 @Entity
-public class TechStack {
-
+public class TechStack extends BaseTimeEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
+    @Column(nullable = false, unique = true)
     private String name;
     @Enumerated(EnumType.STRING)
     private TechCategory category;
     private String image;
-
 }
