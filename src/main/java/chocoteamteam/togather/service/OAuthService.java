@@ -6,6 +6,7 @@ import chocoteamteam.togather.dto.SignUpControllerDto;
 import chocoteamteam.togather.dto.SignUpControllerDto.Response;
 import chocoteamteam.togather.dto.SignUpServiceDto;
 import chocoteamteam.togather.dto.SignUpTokenMemberInfo;
+import chocoteamteam.togather.dto.TechStackDto;
 import chocoteamteam.togather.dto.TokenMemberInfo;
 import chocoteamteam.togather.dto.Tokens;
 import chocoteamteam.togather.entity.Member;
@@ -27,6 +28,7 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
+import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
 import org.springframework.core.ParameterizedTypeReference;
 import org.springframework.http.MediaType;
@@ -57,8 +59,8 @@ public class OAuthService {
 
         Map<String, Object> attributes = getAttributes(oAuthToken, provider);
 
-        OAuth2MemberInfo oAuth2MemberInfo = OAuth2MemberInfoFactory
-            .getOAuth2MemberInfo(providerType.toUpperCase(), attributes);
+        OAuth2MemberInfo oAuth2MemberInfo = OAuth2MemberInfoFactory.getOAuth2MemberInfo(
+            providerType.toUpperCase(), attributes);
 
         String email = oAuth2MemberInfo.getEmail()
             .orElseThrow(() -> new CustomOAuthException("이메일을 찾을 수 없습니다."));
@@ -66,7 +68,8 @@ public class OAuthService {
         Optional<Member> optionalMember = memberRepository.findByEmail(email);
 
         if (optionalMember.isEmpty()) {
-            String signUpToken = jwtService.issueSignUpToken(email, providerType.toUpperCase());
+            String signUpToken = jwtService.issueSignUpToken(email,
+                providerType.toUpperCase());
             return LoginResponse.builder()
                 .signUpToken(signUpToken)
                 .message(LoginStatus.NEW.getMessage())
@@ -81,19 +84,17 @@ public class OAuthService {
         }
 
         Tokens tokens = getTokens(member);
-        return LoginResponse.builder()
-            .accessToken(tokens.getAccessToken())
+        return LoginResponse.builder().accessToken(tokens.getAccessToken())
             .refreshToken(tokens.getRefreshToken())
             .message(LoginStatus.EXIST.getMessage())
-            .loginResult(LoginStatus.EXIST.isFoundMember())
-            .build();
+            .loginResult(LoginStatus.EXIST.isFoundMember()).build();
     }
 
     @Transactional
     public SignUpControllerDto.Response signUp(SignUpServiceDto signUpServiceDto) {
 
-        SignUpTokenMemberInfo signUpTokenMemberInfo =
-            jwtService.parseSignUpToken(signUpServiceDto.getSignUpToken());
+        SignUpTokenMemberInfo signUpTokenMemberInfo = jwtService.parseSignUpToken(
+            signUpServiceDto.getSignUpToken());
 
         if (memberRepository.existsByNickname(signUpServiceDto.getNickname())) {
             throw new CustomOAuthException("이미 존재하는 닉네임입니다.");
@@ -111,11 +112,9 @@ public class OAuthService {
         );
 
         List<TechStack> techStacks = getTechsById(signUpServiceDto.getTechStackDtoList());
-
         registerTechMembers(member, techStacks);
 
         Tokens tokens = getTokens(member);
-
         return Response.builder()
             .accessToken(tokens.getAccessToken())
             .refreshToken(tokens.getRefreshToken())
@@ -124,20 +123,19 @@ public class OAuthService {
 
     private Tokens getTokens(Member member) {
         return jwtService.issueTokens(
-            TokenMemberInfo.builder()
-                .id(member.getId())
-                .nickname(member.getNickname())
-                .role(member.getRole().toString())
-                .status(member.getStatus().toString())
-                .build());
+            TokenMemberInfo.builder().id(member.getId()).nickname(member.getNickname())
+                .role(member.getRole().toString()).status(member.getStatus().toString()).build());
     }
 
-    private List<TechStack> getTechsById(List<Long> techStackDtos) {
-        List<TechStack> techStacks = techStackRepository.findAllById(techStackDtos);
+    private List<TechStack> getTechsById(List<TechStackDto> techStackDtos) {
+        List<Long> techIds = techStackDtos.stream().map(TechStackDto::getId)
+            .collect(Collectors.toList());
+        List<TechStack> techStacks = techStackRepository.findAllById(techIds);
         if (techStacks.isEmpty()) {
             throw new TechStackException("기술이 존재하지 않습니다.");
+        } else {
+            return techStacks;
         }
-        return techStacks;
     }
 
     private void registerTechMembers(Member member, List<TechStack> techStacks) {

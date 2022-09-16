@@ -1,6 +1,6 @@
 package chocoteamteam.togather.type;
 
 public enum TechCategory {
-    BACKEND,
-    FRONTEND,
+    BACK_END,
+    FRONT_END,
 }

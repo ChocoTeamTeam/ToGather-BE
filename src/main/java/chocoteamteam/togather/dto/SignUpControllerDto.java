@@ -19,7 +19,7 @@ public class SignUpControllerDto {
         @NotEmpty
         private String profileImage;
         @NotEmpty
-        private List<Long> techStackDtos;
+        private List<TechStackDto> techStackDtos;
 
     }
 
