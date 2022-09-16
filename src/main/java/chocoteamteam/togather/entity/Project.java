@@ -5,6 +5,8 @@ import lombok.*;
 
 import javax.persistence.*;
 import java.time.LocalDate;
+import java.util.ArrayList;
+import java.util.List;
 
 @Getter
 @Setter
@@ -35,4 +37,6 @@ public class Project extends BaseTimeEntity {
 
     private LocalDate deadline;
 
+    @OneToMany(mappedBy = "project")
+    private final List<ProjectTechStack> projectTechStacks = new ArrayList<>();
 }
