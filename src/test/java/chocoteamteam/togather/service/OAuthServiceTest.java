@@ -7,7 +7,6 @@ import static org.mockito.BDDMockito.given;
 import chocoteamteam.togather.dto.SignUpControllerDto;
 import chocoteamteam.togather.dto.SignUpServiceDto;
 import chocoteamteam.togather.dto.SignUpTokenMemberInfo;
-import chocoteamteam.togather.dto.TechStackDto;
 import chocoteamteam.togather.dto.Tokens;
 import chocoteamteam.togather.entity.Member;
 import chocoteamteam.togather.entity.TechStack;
@@ -51,8 +50,8 @@ class OAuthServiceTest {
     String refreshToken = "54321";
     String email = "test@test.com";
     String provider = "GOOGLE";
-    List<TechStackDto> techStackDtos = new ArrayList(
-        List.of(TechStackDto.builder().id(1L).build()));
+    List<Long> techStackDtos = new ArrayList(
+        List.of(1L));
 
     @DisplayName("회원가입 성공")
     @Test
