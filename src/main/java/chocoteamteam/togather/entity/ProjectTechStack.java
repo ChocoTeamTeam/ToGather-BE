@@ -8,23 +8,26 @@ import javax.persistence.*;
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-@Builder
 @Entity
 @Table(uniqueConstraints = {
         @UniqueConstraint(name = "project_tech_stack_check",
                 columnNames = {"project_id", "tech_stack_id"})
 })
 public class ProjectTechStack extends BaseTimeEntity {
+
+    public ProjectTechStack(Project project, TechStack techStack) {
+        setProject(project);
+        this.techStack = techStack;
+    }
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
     @ManyToOne(fetch = FetchType.LAZY, optional = false)
-    @JoinColumn(name = "project_id")
     private Project project;
 
     @ManyToOne(fetch = FetchType.LAZY, optional = false)
-    @JoinColumn(name = "tech_stack_id")
     private TechStack techStack;
 
     public void setProject(Project project) {

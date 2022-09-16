@@ -20,7 +20,6 @@ public class Project extends BaseTimeEntity {
     private Long id;
 
     @ManyToOne(fetch = FetchType.LAZY, optional = false)
-    @JoinColumn(name = "member_id")
     private Member member;
 
     private String title;

@@ -10,6 +10,8 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import javax.validation.Valid;
+
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/projects")
@@ -19,7 +21,7 @@ public class ProjectController {
     // 나중에 memberId 받아오기
     @PostMapping
     public ResponseEntity<ProjectDto> createProject(
-            @RequestBody CreateProjectForm form
+            @Valid @RequestBody CreateProjectForm form
     ) {
         Long memberId = 1L;
         return ResponseEntity.ok(

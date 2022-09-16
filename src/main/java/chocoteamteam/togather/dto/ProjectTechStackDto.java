@@ -11,7 +11,7 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 public class ProjectTechStackDto {
-    Long id;
+    private Long id;
     private Long projectId;
     private TechStackDto techStack;
 

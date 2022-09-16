@@ -22,6 +22,7 @@ import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
 import java.time.LocalDate;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -51,7 +52,7 @@ class ProjectServiceTest {
 
     private Member member;
     private Project project;
-    private TechStack techStack;
+    private final List<TechStack> techStacks = new ArrayList<>();
 
     @BeforeEach
     void beforeEach() {
@@ -74,13 +75,14 @@ class ProjectServiceTest {
                 .deadline(LocalDate.of(2022, 9, 12))
                 .build();
 
-        techStack = TechStack.builder()
-                .id(9L)
-                .name("java")
-                .category(TechCategory.BACKEND)
-                .image("img_url")
-                .build();
-
+        for (int i = 0; i < 2; i++) {
+            techStacks.add(TechStack.builder()
+                    .id((long) +1)
+                    .name("java" + i)
+                    .category(TechCategory.BACKEND)
+                    .image("img_url" + i)
+                    .build());
+        }
     }
 
     @Test
@@ -93,8 +95,8 @@ class ProjectServiceTest {
         given(projectRepository.save(any()))
                 .willReturn(project);
 
-        given(techStackRepository.findById(anyLong()))
-                .willReturn(Optional.of(techStack));
+        given(techStackRepository.findAllById(any()))
+                .willReturn(techStacks);
 
         //when
         CreateProjectForm form = new CreateProjectForm(
@@ -118,8 +120,8 @@ class ProjectServiceTest {
         assertEquals(project.getLocation(), projectDto.getLocation());
         assertEquals(project.getDeadline(), projectDto.getDeadline());
         assertEquals(project.getId(), projectDto.getProjectTechStacks().get(1).getProjectId());
-        assertEquals(techStack.getName(), projectDto.getProjectTechStacks().get(0).getTechStack().getName());
-        assertEquals(form.getTechStackIds().size(), projectDto.getProjectTechStacks().size());
+        assertEquals(techStacks.get(0).getName(), projectDto.getProjectTechStacks().get(0).getTechStack().getName());
+        assertEquals(techStacks.size(), projectDto.getProjectTechStacks().size());
         verify(projectTechStackRepository, times(1)).saveAll(any());
     }
 
@@ -143,8 +145,8 @@ class ProjectServiceTest {
         given(memberRepository.findById(anyLong()))
                 .willReturn(Optional.of(member));
 
-        given(techStackRepository.findById(anyLong()))
-                .willReturn(Optional.empty());
+        given(techStackRepository.findAllById(any()))
+                .willReturn(new ArrayList<>());
         //when
         ProjectException exception = assertThrows(ProjectException.class,
                 () -> projectService.createProject(1L, new CreateProjectForm(

@@ -16,8 +16,8 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
+import java.util.ArrayList;
 import java.util.List;
-import java.util.stream.Collectors;
 
 import static chocoteamteam.togather.exception.ErrorCode.NOT_FOUND_MEMBER;
 import static chocoteamteam.togather.exception.ErrorCode.NOT_FOUND_TECH_STACK;
@@ -50,21 +50,21 @@ public class ProjectService {
     }
 
     private List<TechStack> getTechStacks(List<Long> techStackIds) {
-        return techStackIds.stream()
-                .map(tid -> techStackRepository.findById(tid)
-                        .orElseThrow(() -> new ProjectException(NOT_FOUND_TECH_STACK)))
-                .collect(Collectors.toList());
+        List<TechStack> techStacks = techStackRepository.findAllById(techStackIds);
+
+        if (techStacks.size() != techStackIds.size()) {
+            throw new ProjectException(NOT_FOUND_TECH_STACK);
+        }
+
+        return techStacks;
     }
 
     private void saveProjectTechs(Project project, List<TechStack> techStacks) {
-        List<ProjectTechStack> projectTechStacks = techStacks.stream()
-                .map(tech -> ProjectTechStack.builder()
-                        .techStack(tech)
-                        .build()
-                ).collect(Collectors.toList());
 
-        projectTechStacks.forEach(pt -> pt.setProject(project));
+        List<ProjectTechStack> projectTechStacks = new ArrayList<>();
+        for (TechStack tech : techStacks) {
+            projectTechStacks.add(new ProjectTechStack(project, tech));
+        }
         projectTechStackRepository.saveAll(projectTechStacks);
     }
-
 }

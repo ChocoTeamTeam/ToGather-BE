@@ -6,6 +6,8 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
+import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.NotNull;
 import java.time.LocalDate;
 import java.util.List;
 
@@ -14,11 +16,20 @@ import java.util.List;
 @NoArgsConstructor
 @AllArgsConstructor
 public class CreateProjectForm {
+    @NotNull
+    @NotBlank
     private String title;
+    @NotNull
+    @NotBlank
     private String content;
+    @NotNull
     private Integer personnel;
+    @NotNull
     private ProjectStatus status;
+    @NotNull
     private String location;
+    @NotNull
     private LocalDate deadline;
+    @NotNull
     private List<Long> techStackIds;
 }
