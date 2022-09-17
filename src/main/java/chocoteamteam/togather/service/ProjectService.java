@@ -2,6 +2,7 @@ package chocoteamteam.togather.service;
 
 import chocoteamteam.togather.dto.CreateProjectForm;
 import chocoteamteam.togather.dto.ProjectDto;
+import chocoteamteam.togather.dto.UpdateProjectForm;
 import chocoteamteam.togather.entity.Member;
 import chocoteamteam.togather.entity.Project;
 import chocoteamteam.togather.entity.ProjectTechStack;
@@ -18,9 +19,9 @@ import org.springframework.stereotype.Service;
 import javax.transaction.Transactional;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
-import static chocoteamteam.togather.exception.ErrorCode.NOT_FOUND_MEMBER;
-import static chocoteamteam.togather.exception.ErrorCode.NOT_FOUND_TECH_STACK;
+import static chocoteamteam.togather.exception.ErrorCode.*;
 
 @RequiredArgsConstructor
 @Service
@@ -66,5 +67,27 @@ public class ProjectService {
             projectTechStacks.add(new ProjectTechStack(project, tech));
         }
         projectTechStackRepository.saveAll(projectTechStacks);
+    }
+
+    @Transactional
+    public ProjectDto updateProject(
+            Long projectId,
+            Long memberId,
+            UpdateProjectForm form
+    ) {
+
+        Project project = projectRepository.findById(projectId)
+                .orElseThrow(() -> new ProjectException(NOT_FOUND_PROJECT));
+        if (!Objects.equals(project.getMember().getId(), memberId)) {
+            throw new ProjectException(NOT_MATCH_MEMBER_PROJECT);
+        }
+
+        project.update(form);
+        projectTechStackRepository.deleteAllByProjectId(project.getId());
+        projectTechStackRepository.flush();
+
+        project.getProjectTechStacks().clear();
+        saveProjectTechs(project, getTechStacks(form.getTechStackIds()));
+        return ProjectDto.from(project);
     }
 }

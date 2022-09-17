@@ -15,7 +15,7 @@ import java.util.List;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-public class CreateProjectForm {
+public class UpdateProjectForm {
 
     @NotBlank
     private String title;
