@@ -16,10 +16,9 @@ import java.util.List;
 @NoArgsConstructor
 @AllArgsConstructor
 public class CreateProjectForm {
-    @NotNull
+
     @NotBlank
     private String title;
-    @NotNull
     @NotBlank
     private String content;
     @NotNull
