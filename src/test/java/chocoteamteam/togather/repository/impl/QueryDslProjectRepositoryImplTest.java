@@ -11,8 +11,10 @@ import chocoteamteam.togather.repository.ProjectRepository;
 import chocoteamteam.togather.repository.ProjectTechStackRepository;
 import chocoteamteam.togather.repository.TechStackRepository;
 import chocoteamteam.togather.type.ProjectStatus;
+import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.TestInstance;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
@@ -24,6 +26,7 @@ import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.*;
 
+@TestInstance(TestInstance.Lifecycle.PER_CLASS)
 @Import(QueryDslTestConfig.class)
 @DataJpaTest
 @ExtendWith(SpringExtension.class)
@@ -43,15 +46,8 @@ class QueryDslProjectRepositoryImplTest {
     @Autowired
     private TechStackRepository techStackRepository;
 
-    private static boolean alreadySetup;
-
-    @PostConstruct
+    @BeforeAll
     public void dataSetup() {
-        if (alreadySetup) { // 한 번만 실행
-            return;
-        }
-        alreadySetup = true;
-
         Member aMember = memberRepository.save(Member.builder().email("www.a.com").nickname("aaaa name").profileImage("image").build());
         Member bMember = memberRepository.save(Member.builder().email("www.b.com").nickname("bbbb name").profileImage("image").build());
         Member cMember = memberRepository.save(Member.builder().email("www.c.com").nickname("cccc name").profileImage("image").build());
