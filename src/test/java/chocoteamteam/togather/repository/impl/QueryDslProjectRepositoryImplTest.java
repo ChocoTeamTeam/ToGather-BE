@@ -221,7 +221,7 @@ class QueryDslProjectRepositoryImplTest {
 
         ProjectCondition projectCondition = ProjectCondition.builder()
                 .limit(TOTAL_DATA_SIZE)
-                .skillsId(List.of(react.getId(), spring.getId()))
+                .techStackIds(List.of(react.getId(), spring.getId()))
                 .build();
         //when
 
@@ -247,7 +247,7 @@ class QueryDslProjectRepositoryImplTest {
 
         ProjectCondition projectCondition = ProjectCondition.builder()
                 .limit(TOTAL_DATA_SIZE)
-                .skillsId(List.of(react.getId(), php.getId()))
+                .techStackIds(List.of(react.getId(), php.getId()))
                 .projectStatus(ProjectStatus.COMPLETED)
                 .title("cccc")
                 .build();

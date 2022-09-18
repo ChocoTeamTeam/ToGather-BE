@@ -25,7 +25,7 @@ public class ProjectCondition {
     /*  필터링 키워드 - option
      * */
     private ProjectStatus projectStatus;
-    private List<Long> skillsId;
+    private List<Long> techStackIds;
 
     /*  반환 size - 필수
      * */

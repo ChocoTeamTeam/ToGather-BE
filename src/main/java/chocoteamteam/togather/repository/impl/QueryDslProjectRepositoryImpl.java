@@ -29,14 +29,14 @@ public class QueryDslProjectRepositoryImpl implements QueryDslProjectRepository 
 
     @Override
     public List<SimpleProjectDto> findAllOptionAndSearch(ProjectCondition projectCondition) {
-        List<Long> Ids = getMultiConditionSearchId(projectCondition);
-        if (Ids.size() == 0) {
+        List<Long> projectIds = getMultiConditionSearchId(projectCondition);
+        if (projectIds.size() == 0) {
             return Collections.emptyList();
         }
 
         return new ArrayList<>(jpaQueryFactory
                 .from(project)
-                .where(project.id.in(Ids))
+                .where(project.id.in(projectIds))
                 .innerJoin(project.projectTechStacks, projectTechStack)
                 .transform(GroupBy.groupBy(project.id)
                         .as(new QSimpleProjectDto(
@@ -84,7 +84,7 @@ public class QueryDslProjectRepositoryImpl implements QueryDslProjectRepository 
     }
 
     private BooleanExpression filterTechStacks(ProjectCondition projectCondition) {
-        return projectCondition.getSkillsId() == null ? null : projectTechStack.techStack.id.in(projectCondition.getSkillsId());
+        return projectCondition.getTechStackIds() == null ? null : projectTechStack.techStack.id.in(projectCondition.getTechStackIds());
     }
 
     private BooleanExpression searchProjectContent(ProjectCondition projectCondition) {
