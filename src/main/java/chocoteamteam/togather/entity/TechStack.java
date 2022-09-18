@@ -1,6 +1,8 @@
 package chocoteamteam.togather.entity;
 
 import chocoteamteam.togather.type.TechCategory;
+import java.util.ArrayList;
+import java.util.List;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
@@ -22,4 +24,7 @@ public class TechStack extends BaseTimeEntity {
     @Enumerated(EnumType.STRING)
     private TechCategory category;
     private String image;
+    @OneToMany(mappedBy = "techStack")
+    private List<MemberTechStack> memberTechStacks = new ArrayList<>();
+
 }

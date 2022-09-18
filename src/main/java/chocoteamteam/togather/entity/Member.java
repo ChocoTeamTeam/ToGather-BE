@@ -3,6 +3,8 @@ package chocoteamteam.togather.entity;
 import chocoteamteam.togather.type.MemberStatus;
 import chocoteamteam.togather.type.ProviderType;
 import chocoteamteam.togather.type.Role;
+import java.util.ArrayList;
+import java.util.List;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.EnumType;
@@ -10,6 +12,7 @@ import javax.persistence.Enumerated;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.OneToMany;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
@@ -45,5 +48,8 @@ public class Member extends BaseTimeEntity{
 
     @Enumerated(EnumType.STRING)
     private ProviderType providerType;
+
+    @OneToMany(mappedBy = "member")
+    private List<MemberTechStack> memberTechStacks = new ArrayList<>();
 
 }
