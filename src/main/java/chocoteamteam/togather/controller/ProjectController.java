@@ -1,6 +1,7 @@
 package chocoteamteam.togather.controller;
 
 import chocoteamteam.togather.dto.CreateProjectForm;
+import chocoteamteam.togather.dto.ProjectCondition;
 import chocoteamteam.togather.dto.ProjectDto;
 import chocoteamteam.togather.dto.UpdateProjectForm;
 import chocoteamteam.togather.service.ProjectService;
@@ -36,5 +37,10 @@ public class ProjectController {
         return ResponseEntity.ok(
                 projectService.updateProject(projectId, memberId, form)
         );
+    }
+
+    @GetMapping
+    public ResponseEntity<?> getProjectList(@Valid ProjectCondition projectCondition) {
+        return ResponseEntity.ok(projectService.getProjectList(projectCondition));
     }
 }
