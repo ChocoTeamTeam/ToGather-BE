@@ -1,9 +1,6 @@
 package chocoteamteam.togather.service;
 
-import chocoteamteam.togather.dto.CreateProjectForm;
-import chocoteamteam.togather.dto.ProjectCondition;
-import chocoteamteam.togather.dto.ProjectDto;
-import chocoteamteam.togather.dto.UpdateProjectForm;
+import chocoteamteam.togather.dto.*;
 import chocoteamteam.togather.dto.queryDslSimpleDto.SimpleProjectDto;
 import chocoteamteam.togather.entity.Member;
 import chocoteamteam.togather.entity.Project;
@@ -19,9 +16,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Objects;
+import java.util.*;
 
 import static chocoteamteam.togather.exception.ErrorCode.*;
 
@@ -55,16 +50,13 @@ public class ProjectService {
 
     private List<TechStack> getTechStacks(List<Long> techStackIds) {
         List<TechStack> techStacks = techStackRepository.findAllById(techStackIds);
-
         if (techStacks.size() != techStackIds.size()) {
             throw new ProjectException(NOT_FOUND_TECH_STACK);
         }
-
         return techStacks;
     }
 
     private void saveProjectTechs(Project project, List<TechStack> techStacks) {
-
         List<ProjectTechStack> projectTechStacks = new ArrayList<>();
         for (TechStack tech : techStacks) {
             projectTechStacks.add(new ProjectTechStack(project, tech));
@@ -81,16 +73,28 @@ public class ProjectService {
 
         Project project = projectRepository.findById(projectId)
                 .orElseThrow(() -> new ProjectException(NOT_FOUND_PROJECT));
+
         if (!Objects.equals(project.getMember().getId(), memberId)) {
             throw new ProjectException(NOT_MATCH_MEMBER_PROJECT);
         }
 
         project.update(form);
-        projectTechStackRepository.deleteAllByProjectId(project.getId());
-        projectTechStackRepository.flush();
+        Set<Long> prevIds = new HashSet<>(projectTechStackRepository.findTechStackIdsByProjectId(projectId));
 
-        project.getProjectTechStacks().clear();
-        saveProjectTechs(project, getTechStacks(form.getTechStackIds()));
+        Set<Long> deleteIds = new HashSet<>(prevIds);
+        Set<Long> addIds = new HashSet<>(form.getTechStackIds());
+        deleteIds.removeAll(addIds);
+        addIds.removeAll(prevIds);
+
+        if (deleteIds.size() > 0) {
+            List<ProjectTechStack> projectTechStacks =
+                    projectTechStackRepository.deleteAllByIdIn(new ArrayList<>(deleteIds));
+            project.getProjectTechStacks().removeAll(projectTechStacks);
+        }
+
+        if (addIds.size() > 0) {
+            saveProjectTechs(project, getTechStacks(new ArrayList<>(addIds)));
+        }
         return ProjectDto.from(project);
     }
 
