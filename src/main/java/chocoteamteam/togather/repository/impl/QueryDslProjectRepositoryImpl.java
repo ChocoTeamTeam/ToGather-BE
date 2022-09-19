@@ -6,6 +6,7 @@ import chocoteamteam.togather.dto.queryDslSimpleDto.QSimpleMemberDto;
 import chocoteamteam.togather.dto.queryDslSimpleDto.QSimpleProjectDto;
 import chocoteamteam.togather.dto.queryDslSimpleDto.QSimpleTechStackDto;
 import chocoteamteam.togather.dto.queryDslSimpleDto.SimpleProjectDto;
+import chocoteamteam.togather.entity.Project;
 import chocoteamteam.togather.repository.QueryDslProjectRepository;
 import com.querydsl.core.group.GroupBy;
 import com.querydsl.core.types.dsl.BooleanExpression;
@@ -16,16 +17,29 @@ import org.springframework.stereotype.Repository;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import java.util.Optional;
 
 import static chocoteamteam.togather.entity.QMember.member;
 import static chocoteamteam.togather.entity.QProject.project;
 import static chocoteamteam.togather.entity.QProjectTechStack.projectTechStack;
+import static chocoteamteam.togather.entity.QTechStack.techStack;
 import static com.querydsl.core.group.GroupBy.list;
 
 @RequiredArgsConstructor
 @Repository
 public class QueryDslProjectRepositoryImpl implements QueryDslProjectRepository {
     private final JPAQueryFactory jpaQueryFactory;
+
+
+    @Override
+    public Optional<Project> findByIdQuery(Long projectId) {
+        return Optional.ofNullable(jpaQueryFactory
+                .selectFrom(project)
+                .where(project.id.eq(projectId))
+                .leftJoin(project.projectTechStacks, projectTechStack).fetchJoin()
+                .leftJoin(projectTechStack.techStack, techStack).fetchJoin()
+                .fetchOne());
+    }
 
     @Override
     public List<SimpleProjectDto> findAllOptionAndSearch(ProjectCondition projectCondition) {

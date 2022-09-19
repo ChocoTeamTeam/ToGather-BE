@@ -1,9 +1,6 @@
 package chocoteamteam.togather.controller;
 
-import chocoteamteam.togather.dto.CreateProjectForm;
-import chocoteamteam.togather.dto.ProjectCondition;
-import chocoteamteam.togather.dto.ProjectDto;
-import chocoteamteam.togather.dto.UpdateProjectForm;
+import chocoteamteam.togather.dto.*;
 import chocoteamteam.togather.service.ProjectService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
@@ -42,5 +39,10 @@ public class ProjectController {
     @GetMapping
     public ResponseEntity<?> getProjectList(@Valid ProjectCondition projectCondition) {
         return ResponseEntity.ok(projectService.getProjectList(projectCondition));
+    }
+
+    @GetMapping("/{projectId}")
+    public ResponseEntity<ProjectDetails> getProjectDetail(@PathVariable Long projectId) {
+        return ResponseEntity.ok(projectService.getProject(projectId));
     }
 }

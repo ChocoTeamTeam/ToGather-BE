@@ -1,6 +1,7 @@
 package chocoteamteam.togather.service;
 
 import chocoteamteam.togather.dto.CreateProjectForm;
+import chocoteamteam.togather.dto.ProjectDetails;
 import chocoteamteam.togather.dto.ProjectDto;
 import chocoteamteam.togather.dto.UpdateProjectForm;
 import chocoteamteam.togather.entity.Member;
@@ -105,6 +106,7 @@ class ProjectServiceTest {
                 "의미 없는 내용",
                 1000,
                 ProjectStatus.RECRUITING,
+                false,
                 "의미 없는 위치",
                 LocalDate.of(2050, 9, 13),
                 List.of(1000L, 1001L)
@@ -155,6 +157,7 @@ class ProjectServiceTest {
                         "내용888",
                         20,
                         ProjectStatus.RECRUITING,
+                        false,
                         "부산",
                         LocalDate.of(2022, 9, 13),
                         List.of(5L, 6L)
@@ -240,11 +243,60 @@ class ProjectServiceTest {
                         "글 내용 수정",
                         1,
                         ProjectStatus.RECRUITING,
+                        false,
                         "위치 수정",
                         LocalDate.of(2022, 9, 15),
                         List.of(1L, 2L)
                 )));
         //then
         assertEquals(ErrorCode.NOT_FOUND_TECH_STACK, exception.getErrorCode());
+    }
+
+    @Test
+    @DisplayName("프로젝트 상세조회 실패")
+    void getProject_fail() {
+        //given
+        given(projectRepository.findByIdQuery(anyLong()))
+                .willReturn(Optional.empty());
+        //when
+        ProjectException exception = assertThrows(ProjectException.class,
+                () -> projectService.getProject(1L));
+        //then
+
+        assertEquals(ErrorCode.NOT_FOUND_PROJECT, exception.getErrorCode());
+    }
+
+    @Test
+    @DisplayName("프로젝트 상세조회 성공")
+    void getProject_success() {
+        member = Member.builder()
+                .id(9L)
+                .email("togather@to.com")
+                .nickname("두개더")
+                .profileImage("img_url")
+                .build();
+
+
+        project = Project.builder()
+                .id(999L)
+                .member(member)
+                .title("제목999")
+                .content("내용999")
+                .personnel(10)
+                .status(ProjectStatus.RECRUITING)
+                .location("서울")
+                .offline(true)
+                .deadline(LocalDate.of(2022, 9, 12))
+                .build();
+        //given
+        given(projectRepository.findByIdQuery(anyLong()))
+                .willReturn(Optional.of(project));
+
+
+        //when
+        ProjectDetails projectDetails = projectService.getProject(1L);
+        //then
+
+        assertEquals(999L, projectDetails.getId());
     }
 }

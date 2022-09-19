@@ -11,10 +11,7 @@ import chocoteamteam.togather.repository.ProjectRepository;
 import chocoteamteam.togather.repository.ProjectTechStackRepository;
 import chocoteamteam.togather.repository.TechStackRepository;
 import chocoteamteam.togather.type.ProjectStatus;
-import org.junit.jupiter.api.BeforeAll;
-import org.junit.jupiter.api.DisplayName;
-import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.TestInstance;
+import org.junit.jupiter.api.*;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
@@ -26,6 +23,7 @@ import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.*;
 
+@TestMethodOrder(MethodOrderer.OrderAnnotation.class)
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
 @Import(QueryDslTestConfig.class)
 @DataJpaTest
@@ -101,6 +99,29 @@ class QueryDslProjectRepositoryImplTest {
     }
 
     private final long TOTAL_DATA_SIZE = 4;
+
+    @Test
+    @Order(1)
+    void data_Setup_time() {
+        queryDslProjectRepository.findAllOptionAndSearch(ProjectCondition.builder()
+                .limit(1L)
+                .build());
+        System.out.println("insert Data loading");
+    }
+
+    @Test
+    @DisplayName("프로젝트 상세 조회")
+    void findByIdQueryTest() {
+        //given
+        //when
+        Project project = projectRepository.findByIdQuery(1L).get();
+
+        //then
+        assertEquals(1L, project.getId());
+        assertEquals(1L, project.getMember().getId());
+        assertEquals("aaaa title", project.getTitle());
+        assertEquals(3, project.getProjectTechStacks().size());
+    }
 
     @Test
     @DisplayName("아무 조건 없이 조회")
