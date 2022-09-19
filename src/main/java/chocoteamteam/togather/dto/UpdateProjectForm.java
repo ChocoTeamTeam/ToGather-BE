@@ -26,6 +26,7 @@ public class UpdateProjectForm {
     @NotNull
     private ProjectStatus status;
     @NotNull
+    private Boolean offline;
     private String location;
     @NotNull
     private LocalDate deadline;

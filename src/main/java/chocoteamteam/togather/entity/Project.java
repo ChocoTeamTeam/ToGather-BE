@@ -33,6 +33,7 @@ public class Project extends BaseTimeEntity {
     @Enumerated(EnumType.STRING)
     private ProjectStatus status;
 
+    private Boolean offline;
     private String location;
 
     private LocalDate deadline;
@@ -45,6 +46,7 @@ public class Project extends BaseTimeEntity {
         this.content = form.getContent();
         this.personnel = form.getPersonnel();
         this.status = form.getStatus();
+        this.offline = form.getOffline();
         this.location = form.getLocation();
         this.deadline = form.getDeadline();
     }
