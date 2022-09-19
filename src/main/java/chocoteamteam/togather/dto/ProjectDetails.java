@@ -24,6 +24,7 @@ public class ProjectDetails {
     private ProjectStatus status;
     private String location;
     private LocalDate deadline;
+    private boolean offline;
     private List<TechStackDto> techStacks;
 
     public static ProjectDetails fromEntity(Project project) {
@@ -36,6 +37,7 @@ public class ProjectDetails {
                 .status(project.getStatus())
                 .location(project.getLocation())
                 .deadline(project.getDeadline())
+                .offline(project.getOffline())
                 .techStacks(project.getProjectTechStacks()
                         .stream()
                         .map(projectTechStack -> TechStackDto.from(projectTechStack.getTechStack()))
