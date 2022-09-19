@@ -22,6 +22,7 @@ public class ProjectDto {
     private String content;
     private Integer personnel;
     private ProjectStatus status;
+    private Boolean offline;
     private String location;
     private LocalDate deadline;
     private List<ProjectTechStackDto> projectTechStacks;
@@ -34,6 +35,7 @@ public class ProjectDto {
                 .content(project.getContent())
                 .personnel(project.getPersonnel())
                 .status(project.getStatus())
+                .offline(project.getOffline())
                 .location(project.getLocation())
                 .deadline(project.getDeadline())
                 .projectTechStacks(project.getProjectTechStacks().stream()

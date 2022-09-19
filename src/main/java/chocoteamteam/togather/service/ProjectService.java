@@ -44,6 +44,7 @@ public class ProjectService {
                 .content(form.getContent())
                 .personnel(form.getPersonnel())
                 .status(ProjectStatus.RECRUITING)
+                .offline(form.getOffline())
                 .location(form.getLocation())
                 .deadline(form.getDeadline())
                 .build());
