@@ -18,6 +18,7 @@ import chocoteamteam.togather.oauth2.OAuth2MemberInfo;
 import chocoteamteam.togather.oauth2.OAuth2MemberInfoFactory;
 import chocoteamteam.togather.repository.MemberRepository;
 import chocoteamteam.togather.repository.MemberTechStackRepository;
+import chocoteamteam.togather.repository.RefreshTokenRepository;
 import chocoteamteam.togather.repository.TechStackRepository;
 import chocoteamteam.togather.type.LoginStatus;
 import chocoteamteam.togather.type.MemberStatus;
@@ -29,6 +30,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 import java.util.stream.Collectors;
+import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
 import org.springframework.core.ParameterizedTypeReference;
 import org.springframework.http.MediaType;
@@ -49,6 +51,8 @@ public class OAuthService {
     private final MemberTechStackRepository memberTechStackRepository;
     private final InMemoryClientRegistrationRepository inMemoryClientRegistrationRepository;
     private final JwtService jwtService;
+
+    private final RefreshTokenRepository refreshTokenRepository;
 
     @Transactional
     public LoginResponse login(String code, String providerType) {
@@ -204,6 +208,11 @@ public class OAuthService {
             .retrieve().bodyToMono(new ParameterizedTypeReference<Map<String, Object>>() {
             })
             .block();
+    }
+
+    @Transactional
+    public void logout(@NonNull Long memberId) {
+        refreshTokenRepository.delete(memberId);
     }
 
 }
