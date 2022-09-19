@@ -14,7 +14,7 @@ spring:
     generate-ddl: true
 
     hibernate:
-      ddl-auto: none
+      ddl-auto: create-drop
 
     open-in-view: false
 
@@ -32,6 +32,60 @@ spring:
   profiles:
     include: oauth
 
+
+  security:
+    oauth2:
+      client:
+        registration:
+          google:
+            clientId: 1095568918877-kq9bbs71dec6d5bhsqk500n4jjh2hqpq.apps.googleusercontent.com
+            clientSecret: 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
+            redirect-uri: "http://localhost:5173/oauth/google"
+            scope:
+              - email
+              - profile
+          github:
+            clientId: bde77a036f9421fed5e4
+            clientSecret: 0f0000646e58b1074c728554a3c93115a6cfec57
+            redirect-uri: "http://localhost:5173/oauth/github"
+            scope:
+              - public_profile
+              - email
+          kakao:
+            clientId: 267eef692f4d4e43db0736de51d88e10
+            clientSecret: O7jjTwZxWKkUN717F9mlnzzCzN3bbB4a
+            clientAuthenticationMethod: post
+            authorizationGrantType: authorization_code
+            redirect-uri: "http://localhost:5173/oauth/kakao"
+            scope:
+              - profile_nickname
+              - account_email
+            clientName: Kakao
+          naver:
+            clientId: ZIVSMXrwIuS5hAT_LjIw
+            clientSecret: 02tpH9FWMn
+            clientAuthenticationMethod: post
+            authorizationGrantType: authorization_code
+            redirect-uri: "http://localhost:5173/oauth/naver"
+            scope:
+              - name
+              - email
+            clientName: Naver
+        # Provider 설정
+        provider:
+          naver:
+            authorizationUri: https://nid.naver.com/oauth2.0/authorize
+            tokenUri: https://nid.naver.com/oauth2.0/token
+            userInfoUri: https://openapi.naver.com/v1/nid/me
+            userNameAttribute: response
+          kakao:
+            authorizationUri: https://kauth.kakao.com/oauth/authorize
+            tokenUri: https://kauth.kakao.com/oauth/token
+            userInfoUri: https://kapi.kakao.com/v2/user/me
+            userNameAttribute: id
+  mvc:
+    pathmatch:
+      matching-strategy: ant_path_matcher
 jwt:
   secret-key:
     access: TestSecretKey123asdasdadadwadwawdawdadwddwawdadwadawadwdwaawdawdwaddwadwawad

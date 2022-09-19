@@ -1,7 +1,6 @@
 package chocoteamteam.togather.repository.impl;
 
 import chocoteamteam.togather.dto.ProjectCondition;
-import chocoteamteam.togather.dto.queryDslSimpleDto.SimpleProjectDto;
 import chocoteamteam.togather.entity.Member;
 import chocoteamteam.togather.entity.Project;
 import chocoteamteam.togather.entity.ProjectTechStack;
@@ -21,7 +20,6 @@ import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 import org.springframework.context.annotation.Import;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 
-import javax.annotation.PostConstruct;
 import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -103,6 +101,22 @@ class QueryDslProjectRepositoryImplTest {
     private final long TOTAL_DATA_SIZE = 4;
 
     @Test
+    @DisplayName("프로젝트 상세 조회")
+    void findByIdQueryTest() {
+        //given
+        //when
+        Project project = projectRepository.findByIdQuery(1L).get();
+
+        //then
+        assertEquals(1L, project.getId());
+        assertEquals(1L, project.getMember().getId());
+        assertEquals("aaaa title", project.getTitle());
+        assertEquals(3, project.getProjectTechStacks().size());
+
+    }
+
+
+    @Test
     @DisplayName("아무 조건 없이 조회")
     void noOption_search_test() {
         //given
@@ -110,7 +124,7 @@ class QueryDslProjectRepositoryImplTest {
                 .limit(10L)
                 .build();
         //when
-        List<SimpleProjectDto> result = queryDslProjectRepository.findAllOptionAndSearch(projectCondition);
+        List<Project> result = queryDslProjectRepository.findAllOptionAndSearch(projectCondition);
         //then
 
         assertEquals(4, result.size());
@@ -128,7 +142,7 @@ class QueryDslProjectRepositoryImplTest {
                 .pageNumber(pageNumber)
                 .build();
         //when
-        List<SimpleProjectDto> result = queryDslProjectRepository.findAllOptionAndSearch(projectCondition);
+        List<Project> result = queryDslProjectRepository.findAllOptionAndSearch(projectCondition);
         //then
 
         assertEquals(2, result.size());
@@ -147,12 +161,12 @@ class QueryDslProjectRepositoryImplTest {
                 .author("cc")
                 .build();
         //when
-        List<SimpleProjectDto> result = queryDslProjectRepository.findAllOptionAndSearch(projectCondition);
+        List<Project> result = queryDslProjectRepository.findAllOptionAndSearch(projectCondition);
         //then
 
         assertTrue(result.size() > 0);
-        for (SimpleProjectDto simpleProjectDto : result) {
-            assertTrue(simpleProjectDto.getMember().getNickname().contains("cc"));
+        for (Project project : result) {
+            assertTrue(project.getMember().getNickname().contains("cc"));
         }
     }
 
@@ -165,12 +179,12 @@ class QueryDslProjectRepositoryImplTest {
                 .title("dd")
                 .build();
         //when
-        List<SimpleProjectDto> result = queryDslProjectRepository.findAllOptionAndSearch(projectCondition);
+        List<Project> result = queryDslProjectRepository.findAllOptionAndSearch(projectCondition);
         //then
 
         assertTrue(result.size() > 0);
-        for (SimpleProjectDto simpleProjectDto : result) {
-            assertTrue(simpleProjectDto.getTitle().contains("dd"));
+        for (Project project : result) {
+            assertTrue(project.getTitle().contains("dd"));
         }
     }
 
@@ -183,7 +197,7 @@ class QueryDslProjectRepositoryImplTest {
                 .content("cccc")
                 .build();
         //when
-        List<SimpleProjectDto> result = queryDslProjectRepository.findAllOptionAndSearch(projectCondition);
+        List<Project> result = queryDslProjectRepository.findAllOptionAndSearch(projectCondition);
         //then
 
         assertEquals(1, result.size());
@@ -199,12 +213,12 @@ class QueryDslProjectRepositoryImplTest {
                 .projectStatus(ProjectStatus.RECRUITING)
                 .build();
         //when
-        List<SimpleProjectDto> result = queryDslProjectRepository.findAllOptionAndSearch(projectCondition);
+        List<Project> result = queryDslProjectRepository.findAllOptionAndSearch(projectCondition);
         //then
 
         assertTrue(result.size() > 0);
-        for (SimpleProjectDto simpleProjectDto : result) {
-            assertEquals(ProjectStatus.RECRUITING, simpleProjectDto.getStatus());
+        for (Project project : result) {
+            assertEquals(ProjectStatus.RECRUITING, project.getStatus());
         }
     }
 
@@ -221,16 +235,16 @@ class QueryDslProjectRepositoryImplTest {
                 .build();
         //when
 
-        List<SimpleProjectDto> result = queryDslProjectRepository.findAllOptionAndSearch(projectCondition);
+        List<Project> result = queryDslProjectRepository.findAllOptionAndSearch(projectCondition);
         //then
 
         assertEquals(3, result.size());
 
-        for (SimpleProjectDto simpleProjectDto : result) {
-            assertTrue(simpleProjectDto.getTechStacks().stream()
-                    .anyMatch(techStack ->
-                            techStack.getId().equals(react.getId()) ||
-                                    techStack.getId().equals(spring.getId())));
+        for (Project project : result) {
+            assertTrue(project.getProjectTechStacks().stream()
+                    .anyMatch(projectTechStack ->
+                            projectTechStack.getTechStack().getId().equals(react.getId()) ||
+                                    projectTechStack.getTechStack().getId().equals(spring.getId())));
         }
     }
 
@@ -249,7 +263,7 @@ class QueryDslProjectRepositoryImplTest {
                 .build();
         //when
 
-        List<SimpleProjectDto> result = queryDslProjectRepository.findAllOptionAndSearch(projectCondition);
+        List<Project> result = queryDslProjectRepository.findAllOptionAndSearch(projectCondition);
         //then
 
         assertEquals(3, result.get(0).getId());

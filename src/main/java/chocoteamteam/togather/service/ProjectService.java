@@ -1,10 +1,7 @@
 package chocoteamteam.togather.service;
 
-import chocoteamteam.togather.dto.CreateProjectForm;
-import chocoteamteam.togather.dto.ProjectCondition;
-import chocoteamteam.togather.dto.ProjectDto;
-import chocoteamteam.togather.dto.UpdateProjectForm;
-import chocoteamteam.togather.dto.queryDslSimpleDto.SimpleProjectDto;
+import chocoteamteam.togather.dto.*;
+import chocoteamteam.togather.dto.ProjectDetails;
 import chocoteamteam.togather.entity.Member;
 import chocoteamteam.togather.entity.Project;
 import chocoteamteam.togather.entity.ProjectTechStack;
@@ -22,6 +19,7 @@ import javax.transaction.Transactional;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
+import java.util.stream.Collectors;
 
 import static chocoteamteam.togather.exception.ErrorCode.*;
 
@@ -93,7 +91,16 @@ public class ProjectService {
         return ProjectDto.from(project);
     }
 
-    public List<SimpleProjectDto> getProjectList(ProjectCondition projectCondition) {
-        return projectRepository.findAllOptionAndSearch(projectCondition);
+    public List<SimpleProject> getProjectList(ProjectCondition projectCondition) {
+        return projectRepository.findAllOptionAndSearch(projectCondition)
+                .stream()
+                .map(SimpleProject::from)
+                .collect(Collectors.toList());
     }
+
+    public ProjectDetails getProject(Long projectId) {
+        return ProjectDetails.fromEntity(projectRepository.findByIdQuery(projectId)
+                .orElseThrow(() -> new ProjectException(NOT_FOUND_PROJECT)));
+    }
+
 }
