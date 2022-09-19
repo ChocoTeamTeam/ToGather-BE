@@ -28,6 +28,9 @@ public class SignUpControllerDto {
     @Builder
     public static class Response {
 
+        private Long id;
+        private String profileImage;
+        private List<TechStackDto> techStackDtos;
         private String accessToken;
         private String refreshToken;
 

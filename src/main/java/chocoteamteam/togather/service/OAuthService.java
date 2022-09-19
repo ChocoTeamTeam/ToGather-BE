@@ -6,6 +6,7 @@ import chocoteamteam.togather.dto.SignUpControllerDto;
 import chocoteamteam.togather.dto.SignUpControllerDto.Response;
 import chocoteamteam.togather.dto.SignUpServiceDto;
 import chocoteamteam.togather.dto.SignUpTokenMemberInfo;
+import chocoteamteam.togather.dto.TechStackDto;
 import chocoteamteam.togather.dto.TokenMemberInfo;
 import chocoteamteam.togather.dto.Tokens;
 import chocoteamteam.togather.entity.Member;
@@ -27,6 +28,7 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
+import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
 import org.springframework.core.ParameterizedTypeReference;
 import org.springframework.http.MediaType;
@@ -48,6 +50,7 @@ public class OAuthService {
     private final InMemoryClientRegistrationRepository inMemoryClientRegistrationRepository;
     private final JwtService jwtService;
 
+    @Transactional
     public LoginResponse login(String code, String providerType) {
 
         ClientRegistration provider = inMemoryClientRegistrationRepository.findByRegistrationId(
@@ -81,12 +84,26 @@ public class OAuthService {
         }
 
         Tokens tokens = getTokens(member);
+
         return LoginResponse.builder()
+            .id(member.getId())
+            .profileImage(member.getProfileImage())
+            .techStackDtos(getTechStackDtosFromMember(member))
             .accessToken(tokens.getAccessToken())
             .refreshToken(tokens.getRefreshToken())
             .message(LoginStatus.EXIST.getMessage())
             .loginResult(LoginStatus.EXIST.isFoundMember())
             .build();
+    }
+
+    private List<TechStackDto> getTechStackDtosFromMember(Member member) {
+        List<Long> techStackIds = member.getMemberTechStacks().stream()
+            .map(memberTechStack -> memberTechStack.getTechStack().getId())
+            .collect(Collectors.toList());
+
+        return techStackRepository.findAllById(techStackIds).stream()
+            .map(TechStackDto::from)
+            .collect(Collectors.toList());
     }
 
     @Transactional
@@ -112,11 +129,14 @@ public class OAuthService {
 
         List<TechStack> techStacks = getTechsById(signUpServiceDto.getTechStackDtoList());
 
-        registerTechMembers(member, techStacks);
+        registerMemberTechStack(member, techStacks);
 
         Tokens tokens = getTokens(member);
 
         return Response.builder()
+            .id(member.getId())
+            .profileImage(member.getProfileImage())
+            .techStackDtos(techStacks.stream().map(TechStackDto::from).collect(Collectors.toList()))
             .accessToken(tokens.getAccessToken())
             .refreshToken(tokens.getRefreshToken())
             .build();
@@ -140,7 +160,7 @@ public class OAuthService {
         return techStacks;
     }
 
-    private void registerTechMembers(Member member, List<TechStack> techStacks) {
+    private void registerMemberTechStack(Member member, List<TechStack> techStacks) {
         for (TechStack techStack : techStacks) {
             memberTechStackRepository.save(MemberTechStack.builder()
                 .member(member)

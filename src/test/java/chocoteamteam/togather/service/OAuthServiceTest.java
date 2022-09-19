@@ -9,6 +9,7 @@ import chocoteamteam.togather.dto.SignUpServiceDto;
 import chocoteamteam.togather.dto.SignUpTokenMemberInfo;
 import chocoteamteam.togather.dto.Tokens;
 import chocoteamteam.togather.entity.Member;
+import chocoteamteam.togather.entity.MemberTechStack;
 import chocoteamteam.togather.entity.TechStack;
 import chocoteamteam.togather.exception.CustomOAuthException;
 import chocoteamteam.togather.exception.TechStackException;
@@ -18,6 +19,7 @@ import chocoteamteam.togather.repository.TechStackRepository;
 import chocoteamteam.togather.type.MemberStatus;
 import chocoteamteam.togather.type.ProviderType;
 import chocoteamteam.togather.type.Role;
+import chocoteamteam.togather.type.TechCategory;
 import java.util.ArrayList;
 import java.util.List;
 import org.assertj.core.api.Assertions;
@@ -50,14 +52,13 @@ class OAuthServiceTest {
     String refreshToken = "54321";
     String email = "test@test.com";
     String provider = "GOOGLE";
-    List<Long> techStackDtos = new ArrayList(
-        List.of(1L));
+    List<Long> techStackDtos = new ArrayList(List.of(1L));
 
     @DisplayName("회원가입 성공")
     @Test
     void signUp_success() {
         // given
-        given(memberRepository.save(any())).willReturn(Member.builder()
+        Member member = Member.builder()
             .id(1L)
             .email(email)
             .nickname("test")
@@ -65,10 +66,21 @@ class OAuthServiceTest {
             .status(MemberStatus.PERMITTED)
             .role(Role.ROLE_USER)
             .providerType(ProviderType.GOOGLE)
-            .build()
-        );
-        given(techStackRepository.findAllById(any())).willReturn(
-            List.of(TechStack.builder().build()));
+            .build();
+        TechStack techStack = TechStack.builder()
+            .id(1L)
+            .name("tech")
+            .image("image")
+            .category(TechCategory.BACKEND)
+            .build();
+        MemberTechStack memberTechStack = MemberTechStack.builder()
+            .member(member)
+            .techStack(techStack)
+            .build();
+        given(memberRepository.save(any())).willReturn(member);
+        given(memberTechStackRepository.save(any())).willReturn(memberTechStack);
+        given(techStackRepository.findAllById(any()))
+            .willReturn(List.of(techStack));
         given(jwtService.parseSignUpToken(any())).willReturn(SignUpTokenMemberInfo.builder()
             .email(email)
             .provider(provider)
@@ -90,6 +102,16 @@ class OAuthServiceTest {
                 .build());
 
         // then
+        Assertions.assertThat(response.getId()).isEqualTo(1L);
+        Assertions.assertThat(response.getProfileImage()).isEqualTo(profileImage);
+        Assertions.assertThat(response.getTechStackDtos().get(0).getId())
+            .isEqualTo(techStack.getId());
+        Assertions.assertThat(response.getTechStackDtos().get(0).getImage())
+            .isEqualTo(techStack.getImage());
+        Assertions.assertThat(response.getTechStackDtos().get(0).getName())
+            .isEqualTo(techStack.getName());
+        Assertions.assertThat(response.getTechStackDtos().get(0).getCategory())
+            .isEqualTo(techStack.getCategory());
         Assertions.assertThat(response.getAccessToken()).isEqualTo(accessToken);
         Assertions.assertThat(response.getRefreshToken()).isEqualTo(refreshToken);
     }
