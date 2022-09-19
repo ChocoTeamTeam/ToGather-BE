@@ -1,6 +1,7 @@
 package chocoteamteam.togather.service;
 
 import chocoteamteam.togather.dto.CreateProjectForm;
+import chocoteamteam.togather.dto.ProjectDetails;
 import chocoteamteam.togather.dto.ProjectDto;
 import chocoteamteam.togather.dto.UpdateProjectForm;
 import chocoteamteam.togather.entity.Member;
@@ -249,5 +250,53 @@ class ProjectServiceTest {
                 )));
         //then
         assertEquals(ErrorCode.NOT_FOUND_TECH_STACK, exception.getErrorCode());
+    }
+
+    @Test
+    @DisplayName("프로젝트 상세조회 실패")
+    void getProject_fail() {
+        //given
+        given(projectRepository.findByIdQuery(anyLong()))
+                .willReturn(Optional.empty());
+        //when
+        ProjectException exception = assertThrows(ProjectException.class,
+                () -> projectService.getProject(1L));
+        //then
+
+        assertEquals(ErrorCode.NOT_FOUND_PROJECT, exception.getErrorCode());
+    }
+
+    @Test
+    @DisplayName("프로젝트 상세조회 성공")
+    void getProject_success() {
+        member = Member.builder()
+                .id(9L)
+                .email("togather@to.com")
+                .nickname("두개더")
+                .profileImage("img_url")
+                .build();
+
+
+        project = Project.builder()
+                .id(999L)
+                .member(member)
+                .title("제목999")
+                .content("내용999")
+                .personnel(10)
+                .status(ProjectStatus.RECRUITING)
+                .location("서울")
+                .offline(true)
+                .deadline(LocalDate.of(2022, 9, 12))
+                .build();
+        //given
+        given(projectRepository.findByIdQuery(anyLong()))
+                .willReturn(Optional.of(project));
+
+
+        //when
+        ProjectDetails projectDetails = projectService.getProject(1L);
+        //then
+
+        assertEquals(999L, projectDetails.getId());
     }
 }
