@@ -70,22 +70,33 @@ public class ProjectService {
             Long memberId,
             UpdateProjectForm form
     ) {
+        Project project = getValidProject(projectId, memberId);
+        project.update(form);
+        calcAndUpdateTechStack(projectId, form, project);
+        return ProjectDto.from(project);
+    }
 
+    private Project getValidProject(Long projectId, Long memberId) {
         Project project = projectRepository.findById(projectId)
                 .orElseThrow(() -> new ProjectException(NOT_FOUND_PROJECT));
 
         if (!Objects.equals(project.getMember().getId(), memberId)) {
             throw new ProjectException(NOT_MATCH_MEMBER_PROJECT);
         }
+        return project;
+    }
 
-        project.update(form);
+    private void calcAndUpdateTechStack(Long projectId, UpdateProjectForm form, Project project) {
         Set<Long> prevIds = new HashSet<>(projectTechStackRepository.findTechStackIdsByProjectId(projectId));
-
         Set<Long> deleteIds = new HashSet<>(prevIds);
         Set<Long> addIds = new HashSet<>(form.getTechStackIds());
         deleteIds.removeAll(addIds);
         addIds.removeAll(prevIds);
 
+        updateProjectTechStack(project, deleteIds, addIds);
+    }
+
+    private void updateProjectTechStack(Project project, Set<Long> deleteIds, Set<Long> addIds) {
         if (deleteIds.size() > 0) {
             List<ProjectTechStack> projectTechStacks =
                     projectTechStackRepository.deleteAllByIdIn(new ArrayList<>(deleteIds));
@@ -95,8 +106,8 @@ public class ProjectService {
         if (addIds.size() > 0) {
             saveProjectTechs(project, getTechStacks(new ArrayList<>(addIds)));
         }
-        return ProjectDto.from(project);
     }
+
 
     public List<SimpleProjectDto> getProjectList(ProjectCondition projectCondition) {
         return projectRepository.findAllOptionAndSearch(projectCondition);
