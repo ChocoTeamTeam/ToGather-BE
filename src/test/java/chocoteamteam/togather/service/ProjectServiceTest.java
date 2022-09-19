@@ -5,6 +5,7 @@ import chocoteamteam.togather.dto.ProjectDto;
 import chocoteamteam.togather.dto.UpdateProjectForm;
 import chocoteamteam.togather.entity.Member;
 import chocoteamteam.togather.entity.Project;
+import chocoteamteam.togather.entity.ProjectTechStack;
 import chocoteamteam.togather.entity.TechStack;
 import chocoteamteam.togather.exception.ErrorCode;
 import chocoteamteam.togather.exception.ProjectException;
@@ -42,12 +43,10 @@ class ProjectServiceTest {
     private MemberRepository memberRepository;
     @Mock
     private ProjectRepository projectRepository;
-
     @Mock
     private TechStackRepository techStackRepository;
     @Mock
     private ProjectTechStackRepository projectTechStackRepository;
-
     @InjectMocks
     private ProjectService projectService;
 
@@ -72,6 +71,7 @@ class ProjectServiceTest {
                 .content("내용999")
                 .personnel(10)
                 .status(ProjectStatus.RECRUITING)
+                .offline(false)
                 .location("서울")
                 .deadline(LocalDate.of(2022, 9, 12))
                 .build();
@@ -105,6 +105,7 @@ class ProjectServiceTest {
                 "의미 없는 내용",
                 1000,
                 ProjectStatus.RECRUITING,
+                false,
                 "의미 없는 위치",
                 LocalDate.of(2050, 9, 13),
                 List.of(1000L, 1001L)
@@ -122,7 +123,7 @@ class ProjectServiceTest {
         assertEquals(project.getDeadline(), projectDto.getDeadline());
         assertEquals(project.getId(), projectDto.getProjectTechStacks().get(1).getProjectId());
         assertEquals(techStacks.get(0).getName(), projectDto.getProjectTechStacks().get(0).getTechStack().getName());
-        assertEquals(techStacks.size(), projectDto.getProjectTechStacks().size());
+        assertEquals(project.getProjectTechStacks().size(), projectDto.getProjectTechStacks().size());
         verify(projectTechStackRepository, times(1)).saveAll(any());
     }
 
@@ -155,6 +156,7 @@ class ProjectServiceTest {
                         "내용888",
                         20,
                         ProjectStatus.RECRUITING,
+                        false,
                         "부산",
                         LocalDate.of(2022, 9, 13),
                         List.of(5L, 6L)
@@ -167,11 +169,40 @@ class ProjectServiceTest {
     @DisplayName("프로젝트 수정 성공")
     void updateProjectSuccess() {
         //given
+        Project testProject = Project.builder().id(999L).member(member).build();
+        TechStack techStack1 = TechStack.builder().id(1L).build();
+        TechStack techStack2 = TechStack.builder().id(2L).build();
+        TechStack techStack3 = TechStack.builder().id(3L).build();
+        TechStack techStack4 = TechStack.builder().id(4L).build();
+        TechStack techStack5 = TechStack.builder().id(5L).build();
+        TechStack techStack6 = TechStack.builder().id(6L).build();
+
+        ProjectTechStack projectTechStack1 = new ProjectTechStack(testProject, techStack1);
+        projectTechStack1.setId(1L);
+        ProjectTechStack projectTechStack2 = new ProjectTechStack(testProject, techStack2);
+        projectTechStack2.setId(2L);
+        ProjectTechStack projectTechStack3 = new ProjectTechStack(testProject, techStack3);
+        projectTechStack3.setId(3L);
+
+
+        //기존 기술 스택
+        List<Long> prevTech = new ArrayList<>(List.of(1L, 2L, 3L));
+        //새로 입력받은 기술 스택
+        List<Long> newTech = new ArrayList<>(List.of(3L, 4L, 5L, 6L));
+        //삭제 되어야할 기술 스택들
+        List<ProjectTechStack> deleteList = List.of(projectTechStack1, projectTechStack2);
+
         given(projectRepository.findById(anyLong()))
-                .willReturn(Optional.of(project));
+                .willReturn(Optional.of(testProject));
+
+        given(projectTechStackRepository.findTechStackIdsByProjectId(anyLong()))
+                .willReturn(prevTech);
+
+        given(projectTechStackRepository.deleteAllByIdIn(any()))
+                .willReturn(deleteList);
 
         given(techStackRepository.findAllById(any()))
-                .willReturn(techStacks);
+                .willReturn(List.of(techStack4, techStack5, techStack6));
 
         //when
         ProjectDto projectDto = projectService.updateProject(
@@ -179,18 +210,17 @@ class ProjectServiceTest {
                 member.getId(),
                 UpdateProjectForm.builder()
                         .title("수정 제목")
-                        .content("수정 내용")
-                        .personnel(100)
-                        .status(ProjectStatus.COMPLETED)
-                        .location("수정 위치")
-                        .deadline(LocalDate.of(2022, 9, 17))
-                        .techStackIds(List.of(1L, 2L))
+                        .techStackIds(newTech)
                         .build()
         );
         //then
-        assertEquals(techStacks.get(1).getName(), projectDto.getProjectTechStacks().get(1).getTechStack().getName());
-        verify(projectTechStackRepository, times(1)).deleteAllByProjectId(project.getId());
-        verify(projectTechStackRepository, times(1)).flush();
+        assertEquals(newTech.size(), projectDto.getProjectTechStacks().size());
+        assertEquals(techStack3.getId(), projectDto.getProjectTechStacks().get(0).getTechStack().getId());
+        assertEquals(techStack4.getId(), projectDto.getProjectTechStacks().get(1).getTechStack().getId());
+        assertEquals(techStack5.getId(), projectDto.getProjectTechStacks().get(2).getTechStack().getId());
+        assertEquals(techStack6.getId(), projectDto.getProjectTechStacks().get(3).getTechStack().getId());
+        assertEquals("수정 제목", projectDto.getTitle());
+        verify(projectTechStackRepository, times(1)).deleteAllByIdIn(List.of(1L, 2L));
         verify(projectTechStackRepository, times(1)).saveAll(any());
     }
 
@@ -240,6 +270,7 @@ class ProjectServiceTest {
                         "글 내용 수정",
                         1,
                         ProjectStatus.RECRUITING,
+                        false,
                         "위치 수정",
                         LocalDate.of(2022, 9, 15),
                         List.of(1L, 2L)
