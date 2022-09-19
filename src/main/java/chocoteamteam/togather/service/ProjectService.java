@@ -1,9 +1,6 @@
 package chocoteamteam.togather.service;
 
-import chocoteamteam.togather.dto.CreateProjectForm;
-import chocoteamteam.togather.dto.ProjectCondition;
-import chocoteamteam.togather.dto.ProjectDto;
-import chocoteamteam.togather.dto.UpdateProjectForm;
+import chocoteamteam.togather.dto.*;
 import chocoteamteam.togather.dto.queryDslSimpleDto.SimpleProjectDto;
 import chocoteamteam.togather.entity.Member;
 import chocoteamteam.togather.entity.Project;
@@ -96,5 +93,10 @@ public class ProjectService {
 
     public List<SimpleProjectDto> getProjectList(ProjectCondition projectCondition) {
         return projectRepository.findAllOptionAndSearch(projectCondition);
+    }
+
+    public ProjectDetails getProject(Long projectId) {
+        return ProjectDetails.fromEntity(projectRepository.findByIdQuery(projectId)
+                .orElseThrow(() -> new ProjectException(NOT_FOUND_PROJECT)));
     }
 }
