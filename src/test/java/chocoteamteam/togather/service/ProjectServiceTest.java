@@ -105,6 +105,7 @@ class ProjectServiceTest {
                 "의미 없는 내용",
                 1000,
                 ProjectStatus.RECRUITING,
+                false,
                 "의미 없는 위치",
                 LocalDate.of(2050, 9, 13),
                 List.of(1000L, 1001L)
@@ -155,6 +156,7 @@ class ProjectServiceTest {
                         "내용888",
                         20,
                         ProjectStatus.RECRUITING,
+                        false,
                         "부산",
                         LocalDate.of(2022, 9, 13),
                         List.of(5L, 6L)
@@ -240,6 +242,7 @@ class ProjectServiceTest {
                         "글 내용 수정",
                         1,
                         ProjectStatus.RECRUITING,
+                        false,
                         "위치 수정",
                         LocalDate.of(2022, 9, 15),
                         List.of(1L, 2L)
