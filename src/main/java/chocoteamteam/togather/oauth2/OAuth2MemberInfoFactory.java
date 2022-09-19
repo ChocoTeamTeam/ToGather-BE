@@ -1,6 +1,7 @@
 package chocoteamteam.togather.oauth2;
 
 import chocoteamteam.togather.exception.CustomOAuthException;
+import chocoteamteam.togather.exception.ErrorCode;
 import java.util.Map;
 
 public class OAuth2MemberInfoFactory {
@@ -18,7 +19,7 @@ public class OAuth2MemberInfoFactory {
             case "GITHUB":
                 return new GithubOAuth2MemberInfo(attributes);
             default:
-                throw new CustomOAuthException("제공하지 않는 간편 로그인입니다.");
+                throw new CustomOAuthException(ErrorCode.ABNORMAL_ACCESS);
         }
     }
 }

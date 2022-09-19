@@ -1,18 +1,19 @@
 package chocoteamteam.togather.exception;
 
+import lombok.Getter;
 
+@Getter
 public class MemberException extends RuntimeException {
 
-	public MemberException() {
-		super();
-	}
+	private final ErrorCode errorCode;
+	private final int status;
+	private final String errorMessage;
 
-	public MemberException(String message) {
-		super(message);
-	}
-
-	public MemberException(String message, Throwable cause) {
-		super(message, cause);
+	public MemberException(ErrorCode errorCode) {
+		super(errorCode.getErrorMessage());
+		this.errorCode = errorCode;
+		this.status = errorCode.getHttpStatus().value();
+		this.errorMessage = errorCode.getErrorMessage();
 	}
 
 }

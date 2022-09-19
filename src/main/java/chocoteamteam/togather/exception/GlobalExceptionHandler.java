@@ -14,4 +14,16 @@ public class GlobalExceptionHandler {
         log.error("{} is occured", e.getErrorCode());
         return new ErrorResponse(e.getStatus(), e.getErrorCode(), e.getErrorMessage());
     }
+
+    @ExceptionHandler(MemberException.class)
+    public ErrorResponse memberExceptionHandler(MemberException e) {
+        log.error("{} is occured", e.getErrorCode());
+        return new ErrorResponse(e.getStatus(), e.getErrorCode(), e.getErrorMessage());
+    }
+
+    @ExceptionHandler(CustomOAuthException.class)
+    public ErrorResponse customOAuthException(CustomOAuthException e) {
+        log.error("{} is occured", e.getErrorCode());
+        return new ErrorResponse(e.getStatus(), e.getErrorCode(), e.getErrorMessage());
+    }
 }
