@@ -7,11 +7,14 @@ import static org.mockito.BDDMockito.given;
 
 import chocoteamteam.togather.dto.MemberDetailResponse;
 import chocoteamteam.togather.dto.TechStackDto;
+import chocoteamteam.togather.dto.queryDslSimpleDto.MemberTechStackInfoDto;
 import chocoteamteam.togather.entity.Member;
 import chocoteamteam.togather.entity.MemberTechStack;
 import chocoteamteam.togather.entity.TechStack;
+import chocoteamteam.togather.exception.ErrorCode;
 import chocoteamteam.togather.exception.MemberException;
 import chocoteamteam.togather.repository.MemberRepository;
+import chocoteamteam.togather.repository.MemberTechStackCustomRepository;
 import chocoteamteam.togather.repository.MemberTechStackRepository;
 import chocoteamteam.togather.repository.TechStackRepository;
 import chocoteamteam.togather.type.MemberStatus;
@@ -37,6 +40,8 @@ class MemberServiceTest {
     MemberTechStackRepository memberTechStackRepository;
     @Mock
     TechStackRepository techStackRepository;
+    @Mock
+    MemberTechStackCustomRepository memberTechStackCustomRepository;
 
     @InjectMocks
     MemberService memberService;
@@ -44,6 +49,7 @@ class MemberServiceTest {
     Member member;
     MemberTechStack memberTechStack;
     TechStack techStack;
+    MemberTechStackInfoDto memberTechStackInfoDto;
 
     @BeforeEach
     void init() {
@@ -65,14 +71,21 @@ class MemberServiceTest {
                 List.of(MemberTechStack.builder().id(1L).techStack(techStack).build()))
             .build();
         memberTechStack = new MemberTechStack(1L, member, techStack);
+        memberTechStackInfoDto = MemberTechStackInfoDto.builder()
+            .id(1L)
+            .nickname("test")
+            .profileImage("test.png")
+            .techName("java")
+            .techImage("java.png")
+            .build();
     }
 
-    @DisplayName("내 정보 조회 성공")
+    @DisplayName("회원 정보 조회 성공 - 멤버 기술 스택 있음")
     @Test
-    void getDetail_success() {
+    void getDetail_success_memberTechStack_exist_true() {
         // given
-        given(memberRepository.findById(any())).willReturn(Optional.ofNullable(member));
-        given(techStackRepository.findAllById(any())).willReturn(List.of(techStack));
+        given(memberTechStackCustomRepository.findAllByMemberId(any()))
+            .willReturn(List.of(memberTechStackInfoDto));
 
         // when
         MemberDetailResponse response = memberService.getDetail(1L);
@@ -80,17 +93,30 @@ class MemberServiceTest {
 
         // then
         assertThat(response.getId()).isEqualTo(member.getId());
-        assertThat(response.getEmail()).isEqualTo(member.getEmail());
         assertThat(response.getNickname()).isEqualTo(member.getNickname());
         assertThat(response.getProfileImage()).isEqualTo(member.getProfileImage());
         assertThat(responseTechStackDto.getId()).isEqualTo(techStack.getId());
         assertThat(responseTechStackDto.getName()).isEqualTo(techStack.getName());
-        assertThat(responseTechStackDto.getCategory()).isEqualTo(techStack.getCategory());
         assertThat(responseTechStackDto.getImage()).isEqualTo(techStack.getImage());
     }
 
+    @DisplayName("회원 정보 조회 성공 - 멤버 기술 스택 없음")
+    @Test
+    void getDetail_success_memberTechStack_exist_false() {
+        // given
+        given(memberRepository.findById(any())).willReturn(Optional.ofNullable(member));
 
-    @DisplayName("내 정보 조회 실패 - 존재하지 않는 회원")
+        // when
+        MemberDetailResponse response = memberService.getDetail(1L);
+
+        // then
+        assertThat(response.getId()).isEqualTo(member.getId());
+        assertThat(response.getNickname()).isEqualTo(member.getNickname());
+        assertThat(response.getProfileImage()).isEqualTo(member.getProfileImage());
+    }
+
+
+    @DisplayName("회원 정보 조회 실패 - 존재하지 않는 회원")
     @Test
     void getDetail_failed_notFoundMember() {
         // given
@@ -100,7 +126,7 @@ class MemberServiceTest {
         // then
         assertThatThrownBy(() -> memberService.getDetail(1L))
             .isInstanceOf(MemberException.class)
-            .hasMessage("존재하지 않는 회원입니다.");
+            .hasMessage(ErrorCode.NOT_FOUND_MEMBER.getErrorMessage());
     }
 
 
