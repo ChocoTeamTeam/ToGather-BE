@@ -3,7 +3,7 @@ package chocoteamteam.togather.component.security;
 import static chocoteamteam.togather.component.jwt.JwtUtils.BEARER_PREFIX;
 
 import chocoteamteam.togather.dto.LoginMember;
-import chocoteamteam.togather.exception.MemberStatusException;
+import chocoteamteam.togather.exception.MemberException;
 import chocoteamteam.togather.service.JwtService;
 import chocoteamteam.togather.type.MemberStatus;
 import java.io.IOException;
@@ -70,13 +70,13 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
 			case PERMITTED:
 				return;
 			case WAIT:
-				throw new MemberStatusException("대기중인 회원입니다.");
+				throw new MemberException("대기중인 회원입니다.");
 			case BANNED:
-				throw new MemberStatusException("정지된 회원입니다.");
+				throw new MemberException("정지된 회원입니다.");
 			case WITHDRAWAL:
-				throw new MemberStatusException("탈퇴한 회원입니다.");
+				throw new MemberException("탈퇴한 회원입니다.");
 			default:
-				throw new MemberStatusException("비정상적인 접근입니다.");
+				throw new MemberException("비정상적인 접근입니다.");
 		}
 	}
 
