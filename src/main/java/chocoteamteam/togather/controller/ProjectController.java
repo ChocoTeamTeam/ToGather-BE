@@ -45,4 +45,12 @@ public class ProjectController {
     public ResponseEntity<ProjectDetails> getProjectDetail(@PathVariable Long projectId) {
         return ResponseEntity.ok(projectService.getProject(projectId));
     }
+
+    @DeleteMapping("/{projectId}")
+    public ResponseEntity<ProjectDto> deleteProject(
+            @PathVariable Long projectId
+    ) {
+        Long memberId = 1L;
+        return ResponseEntity.ok(projectService.deleteProject(projectId,memberId));
+    }
 }

@@ -327,4 +327,31 @@ class ProjectServiceTest {
 
         assertEquals(999L, projectDetails.getId());
     }
+
+    @Test
+    @DisplayName("프로젝트 삭제 실패 - 해당 프로젝트 없음")
+    void deleteProject_NotFoundProject() {
+        //given
+        given(projectRepository.findByIdQuery(anyLong()))
+                .willReturn(Optional.empty());
+        //when
+        ProjectException exception = assertThrows(ProjectException.class,
+                () -> projectService.deleteProject(1L, 9L));
+
+        //then
+        assertEquals(ErrorCode.NOT_FOUND_PROJECT, exception.getErrorCode());
+    }
+
+    @Test
+    @DisplayName("프로젝트 삭제 실패 - 해당 프로젝트 삭제 권한 없음")
+    void name() {
+        //given
+        given(projectRepository.findByIdQuery(anyLong()))
+                .willReturn(Optional.of(project));
+        //when
+        ProjectException exception = assertThrows(ProjectException.class,
+                () -> projectService.deleteProject(1L, 1234L));
+        //then
+        assertEquals(ErrorCode.NOT_MATCH_MEMBER_PROJECT, exception.getErrorCode());
+    }
 }
