@@ -1,7 +1,10 @@
 package chocoteamteam.togather.component.security;
 
+import static chocoteamteam.togather.exception.ErrorCode.*;
 import static org.springframework.http.MediaType.APPLICATION_JSON_VALUE;
 
+import chocoteamteam.togather.dto.ErrorResponse;
+import chocoteamteam.togather.exception.ErrorCode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import java.io.IOException;
 import javax.servlet.ServletException;
@@ -25,12 +28,16 @@ public class JwtAccessDeniedHandler implements AccessDeniedHandler {
 
 		setResponse(response);
 
-		response.getWriter().write(objectMapper.writeValueAsString("권한이 없습니다."));
+		response.getWriter().write(objectMapper.writeValueAsString(ErrorResponse.builder()
+				.status(NO_PERMISSION.getHttpStatus().value())
+				.errorCode(NO_PERMISSION)
+				.errorMessage(NO_PERMISSION.getErrorMessage())
+			.build()));
 		response.getWriter().flush();
 	}
 
 	private void setResponse(HttpServletResponse response) {
-		response.setStatus(HttpStatus.FORBIDDEN.value());
+		response.setStatus(NO_PERMISSION.getHttpStatus().value());
 		response.setContentType(APPLICATION_JSON_VALUE);
 		response.setCharacterEncoding("UTF-8");
 	}
