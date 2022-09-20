@@ -59,4 +59,15 @@ public class TechStackController {
     ) {
         return ResponseEntity.ok(techStackService.updateTechStack(techStackId, form));
     }
+
+    @Operation(
+            summary = "기술스택 삭제",
+            description = "기술스택을 삭제합니다. ADMIN만 수정할 수 있습니다",
+            security = {@SecurityRequirement(name = "Authorization")}, tags = {"TechStack"}
+    )
+    @PreAuthorize("hasRole('ADMIN')")
+    @DeleteMapping("/{techStackId}")
+    public ResponseEntity<TechStackDto> deleteTechStack(@PathVariable Long techStackId) {
+        return ResponseEntity.ok(techStackService.deleteTechStack(techStackId));
+    }
 }

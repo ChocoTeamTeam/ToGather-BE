@@ -42,4 +42,12 @@ public class TechStackService {
         techStack.update(form);
         return TechStackDto.from(techStack);
     }
+
+    @Transactional
+    public TechStackDto deleteTechStack(Long techStackId) {
+        TechStack techStack = techStackRepository.findById(techStackId)
+                .orElseThrow(() -> new TechStackException(NOT_FOUND_TECH_STACK));
+        techStackRepository.deleteById(techStack.getId());
+        return TechStackDto.from(techStack);
+    }
 }

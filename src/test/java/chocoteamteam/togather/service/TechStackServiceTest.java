@@ -92,4 +92,29 @@ class TechStackServiceTest {
         //then
         assertEquals(ErrorCode.NOT_FOUND_TECH_STACK, exception.getErrorCode());
     }
+
+    @Test
+    @DisplayName("기술 스택 삭제 성공")
+    void deleteTechStackSuccess() {
+        //given
+        given(techStackRepository.findById(any()))
+                .willReturn(Optional.of(TechStack.builder().id(99L).build()));
+        //when
+        techStackService.deleteTechStack(9876L);
+        //then
+        verify(techStackRepository, times(1)).deleteById(99L);
+    }
+
+    @Test
+    @DisplayName("기술 스택 삭제 실패 - 해당 기술 스택 없음")
+    void deleteTechStack_NotFoundTechStack() {
+        //given
+        given(techStackRepository.findById(any()))
+                .willReturn(Optional.empty());
+        //when
+        TechStackException exception = assertThrows(TechStackException.class,
+                () -> techStackService.deleteTechStack(1L));
+        //then
+        assertEquals(ErrorCode.NOT_FOUND_TECH_STACK, exception.getErrorCode());
+    }
 }
