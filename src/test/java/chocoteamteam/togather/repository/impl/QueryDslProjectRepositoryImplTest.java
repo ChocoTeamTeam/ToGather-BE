@@ -118,7 +118,7 @@ class QueryDslProjectRepositoryImplTest {
 
         //then
         assertEquals(1L, project.getId());
-        assertEquals(1L, project.getMember().getId());
+        assertEquals("aaaa name", project.getMember().getNickname());
         assertEquals("aaaa title", project.getTitle());
         assertEquals(3, project.getProjectTechStacks().size());
     }

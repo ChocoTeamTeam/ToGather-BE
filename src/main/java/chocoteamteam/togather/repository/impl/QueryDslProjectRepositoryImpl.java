@@ -30,12 +30,12 @@ import static com.querydsl.core.group.GroupBy.list;
 public class QueryDslProjectRepositoryImpl implements QueryDslProjectRepository {
     private final JPAQueryFactory jpaQueryFactory;
 
-
     @Override
     public Optional<Project> findByIdQuery(Long projectId) {
         return Optional.ofNullable(jpaQueryFactory
                 .selectFrom(project)
                 .where(project.id.eq(projectId))
+                .leftJoin(project.member,member).fetchJoin()
                 .leftJoin(project.projectTechStacks, projectTechStack).fetchJoin()
                 .leftJoin(projectTechStack.techStack, techStack).fetchJoin()
                 .fetchOne());
