@@ -20,7 +20,8 @@ public enum ErrorCode {
     EXIST_TRUE_MEMBER_NICKNAME(HttpStatus.BAD_REQUEST, "이미 존재하는 닉네임입니다."),
     MISS_MATCH_PROVIDER(HttpStatus.BAD_REQUEST, "다른 SNS 계정으로 회원가입이 돼있습니다."),
     NOT_FOUND_EMAIL(HttpStatus.BAD_REQUEST, "이메일을 찾을 수 없습니다."),
-    NOT_FOUND_PROJECT(HttpStatus.BAD_REQUEST, "프로젝트를 찾을 수 없습니다");
+    NOT_FOUND_PROJECT(HttpStatus.BAD_REQUEST, "프로젝트를 찾을 수 없습니다"),
+    INVALID_TOKEN(HttpStatus.UNAUTHORIZED,"유효하지 않은 인증 토큰 입니다.");
 
     private final HttpStatus httpStatus;
     private final String errorMessage;

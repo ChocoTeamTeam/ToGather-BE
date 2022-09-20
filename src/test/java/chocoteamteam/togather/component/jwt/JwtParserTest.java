@@ -3,7 +3,8 @@ package chocoteamteam.togather.component.jwt;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
-import chocoteamteam.togather.exception.JwtParseException;
+import chocoteamteam.togather.exception.ErrorCode;
+import chocoteamteam.togather.exception.TokenException;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.security.Keys;
@@ -70,8 +71,8 @@ class JwtParserTest {
 		//when
 		//then
 		assertThatThrownBy(() -> jwtParser.parseToken(token, secretKey))
-			.isInstanceOf(JwtParseException.class)
-			.hasMessage("JWT의 유효시간이 만료되었습니다.");
+			.isInstanceOf(TokenException.class)
+			.hasMessage(ErrorCode.INVALID_TOKEN.getErrorMessage());
 	}
 
 	@DisplayName("토큰 파싱 실패 - JWT 시그니쳐가 잘못되었을 경우")
@@ -86,8 +87,8 @@ class JwtParserTest {
 		//when
 		//then
 		assertThatThrownBy(() -> jwtParser.parseToken(token, secretKey))
-			.isInstanceOf(JwtParseException.class)
-			.hasMessage("유효하지 않은 JWT 입니다.");
+			.isInstanceOf(TokenException.class)
+			.hasMessage(ErrorCode.INVALID_TOKEN.getErrorMessage());
 	}
 
 	@DisplayName("토큰 파싱 실패 - JWT 형식이 잘못된 경우")
@@ -97,8 +98,8 @@ class JwtParserTest {
 		//when
 		//then
 		assertThatThrownBy(() -> jwtParser.parseToken(token + ".malformed", secretKey))
-			.isInstanceOf(JwtParseException.class)
-			.hasMessage("유효하지 않은 JWT 입니다.");
+			.isInstanceOf(TokenException.class)
+			.hasMessage(ErrorCode.INVALID_TOKEN.getErrorMessage());
 	}
 
 	@DisplayName("토큰 파싱 실패 - JWT 값 자체가 유효하지않을 경우")
@@ -108,7 +109,7 @@ class JwtParserTest {
 		//when
 		//then
 		assertThatThrownBy(() -> jwtParser.parseToken(" ", secretKey))
-			.isInstanceOf(JwtParseException.class)
-			.hasMessage("유효하지 않은 JWT 입니다.");
+			.isInstanceOf(TokenException.class)
+			.hasMessage(ErrorCode.INVALID_TOKEN.getErrorMessage());
 	}
 }

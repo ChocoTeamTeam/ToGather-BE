@@ -1,12 +1,12 @@
 package chocoteamteam.togather.component.jwt;
 
-import chocoteamteam.togather.exception.JwtParseException;
+import chocoteamteam.togather.exception.ErrorCode;
+import chocoteamteam.togather.exception.TokenException;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.ExpiredJwtException;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.MalformedJwtException;
 import io.jsonwebtoken.UnsupportedJwtException;
-import io.jsonwebtoken.security.Keys;
 import io.jsonwebtoken.security.SignatureException;
 import java.security.Key;
 import lombok.RequiredArgsConstructor;
@@ -24,11 +24,8 @@ public class JwtParser {
 				.setSigningKey(secretKey)
 				.build()
 				.parseClaimsJws(token).getBody();
-		} catch (ExpiredJwtException e) {
-			throw new JwtParseException("JWT의 유효시간이 만료되었습니다.", e);
-		} catch (SignatureException | MalformedJwtException | IllegalArgumentException |
-				 UnsupportedJwtException e) {
-			throw new JwtParseException("유효하지 않은 JWT 입니다.", e);
+		} catch (Exception e) {
+			throw new TokenException(ErrorCode.INVALID_TOKEN, e);
 		}
 
 		return claims;
