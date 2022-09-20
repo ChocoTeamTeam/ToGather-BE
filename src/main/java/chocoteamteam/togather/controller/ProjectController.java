@@ -75,7 +75,7 @@ public class ProjectController {
 
     @Operation(
             summary = "프로젝트 모집글 삭제",
-            description = "프로젝트 모집글을 삭제합니다. 본인이 쓴 글만 삭제 가능합니다",
+            description = "프로젝트 모집글을 삭제합니다. 일반 회원은 본인이 쓴 글만 삭제가능하며 ADMIN은 전부 삭제 가능합니다",
             security = {@SecurityRequirement(name = "Authorization")}, tags = {"Project"}
     )
     @PreAuthorize("hasRole('USER') or hasRole('ADMIN')")
@@ -84,6 +84,6 @@ public class ProjectController {
             @AuthenticationPrincipal LoginMember member,
             @PathVariable Long projectId
     ) {
-        return ResponseEntity.ok(projectService.deleteProject(projectId, member.getId()));
+        return ResponseEntity.ok(projectService.deleteProject(projectId, member));
     }
 }

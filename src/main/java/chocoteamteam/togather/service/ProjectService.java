@@ -12,6 +12,7 @@ import chocoteamteam.togather.repository.ProjectRepository;
 import chocoteamteam.togather.repository.ProjectTechStackRepository;
 import chocoteamteam.togather.repository.TechStackRepository;
 import chocoteamteam.togather.type.ProjectStatus;
+import chocoteamteam.togather.type.Role;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -119,15 +120,16 @@ public class ProjectService {
     }
 
     @Transactional
-    public ProjectDto deleteProject(Long projectId, Long memberId) {
+    public ProjectDto deleteProject(Long projectId, LoginMember member) {
         Project project = projectRepository.findByIdQuery(projectId)
                 .orElseThrow(() -> new ProjectException(NOT_FOUND_PROJECT));
 
-        if (!Objects.equals(project.getMember().getId(), memberId)) {
+        if (!Objects.equals(project.getMember().getId(), member.getId()) &&
+                member.getRole() != Role.ROLE_ADMIN) {
             throw new ProjectException(NOT_MATCH_MEMBER_PROJECT);
         }
 
-        projectRepository.deleteById(projectId);
+        projectRepository.deleteById(project.getId());
         return ProjectDto.from(project);
     }
 }
