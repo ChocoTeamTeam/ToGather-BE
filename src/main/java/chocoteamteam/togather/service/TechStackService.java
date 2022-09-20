@@ -2,7 +2,9 @@ package chocoteamteam.togather.service;
 
 import chocoteamteam.togather.dto.CreateTechStackForm;
 import chocoteamteam.togather.dto.TechStackDto;
+import chocoteamteam.togather.dto.UpdateTechStackForm;
 import chocoteamteam.togather.entity.TechStack;
+import chocoteamteam.togather.exception.TechStackException;
 import chocoteamteam.togather.repository.TechStackRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -10,6 +12,8 @@ import org.springframework.stereotype.Service;
 import javax.transaction.Transactional;
 import java.util.List;
 import java.util.stream.Collectors;
+
+import static chocoteamteam.togather.exception.ErrorCode.NOT_FOUND_TECH_STACK;
 
 @RequiredArgsConstructor
 @Service
@@ -29,5 +33,13 @@ public class TechStackService {
         return techStackRepository.findAll().stream()
                 .map(TechStackDto::from)
                 .collect(Collectors.toList());
+    }
+
+    @Transactional
+    public TechStackDto updateTechStack(Long techStackId, UpdateTechStackForm form) {
+        TechStack techStack = techStackRepository.findById(techStackId)
+                .orElseThrow(() -> new TechStackException(NOT_FOUND_TECH_STACK));
+        techStack.update(form);
+        return TechStackDto.from(techStack);
     }
 }

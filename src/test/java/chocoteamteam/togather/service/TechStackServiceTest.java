@@ -2,8 +2,12 @@ package chocoteamteam.togather.service;
 
 import chocoteamteam.togather.dto.CreateTechStackForm;
 import chocoteamteam.togather.dto.TechStackDto;
+import chocoteamteam.togather.dto.UpdateTechStackForm;
 import chocoteamteam.togather.entity.TechStack;
+import chocoteamteam.togather.exception.ErrorCode;
+import chocoteamteam.togather.exception.TechStackException;
 import chocoteamteam.togather.repository.TechStackRepository;
+import chocoteamteam.togather.type.TechCategory;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -12,7 +16,10 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
+import java.util.Optional;
+
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.BDDMockito.given;
 import static org.mockito.Mockito.times;
@@ -26,7 +33,6 @@ class TechStackServiceTest {
 
     @InjectMocks
     private TechStackService techStackService;
-
 
     @Test
     @DisplayName("기술 스택 등록 성공")
@@ -51,4 +57,39 @@ class TechStackServiceTest {
         verify(techStackRepository, times(1)).save(captor.capture());
     }
 
+    @Test
+    @DisplayName("기술 스택 수정 성공")
+    void updateTechStackSuccess() {
+        //given
+        given(techStackRepository.findById(any()))
+                .willReturn(Optional.of(new TechStack()));
+        //when
+        TechStackDto techStackDto = techStackService.updateTechStack(1L,
+                UpdateTechStackForm.builder()
+                        .category(TechCategory.FRONTEND)
+                        .name("수정 이름")
+                        .image("수정 이미지")
+                        .build());
+        //then
+        assertEquals("수정 이름", techStackDto.getName());
+        assertEquals(TechCategory.FRONTEND, techStackDto.getCategory());
+    }
+
+    @Test
+    @DisplayName("기술 스택 수정 실패 - 해당 기술 스택 없음")
+    void updateTechStack_NotFoundTechStack() {
+        //given
+        given(techStackRepository.findById(any()))
+                .willReturn(Optional.empty());
+        //when
+        TechStackException exception = assertThrows(TechStackException.class,
+                () -> techStackService.updateTechStack(1L,
+                        UpdateTechStackForm.builder()
+                                .category(TechCategory.FRONTEND)
+                                .name("수정 이름")
+                                .image("수정 이미지")
+                                .build()));
+        //then
+        assertEquals(ErrorCode.NOT_FOUND_TECH_STACK, exception.getErrorCode());
+    }
 }
