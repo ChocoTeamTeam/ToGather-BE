@@ -1,15 +1,16 @@
 package chocoteamteam.togather.exception;
 
+import lombok.Getter;
+
+@Getter
 public class TechStackException extends RuntimeException {
+    private final ErrorCode errorCode;
+    private final int status;
+    private final String errorMessage;
 
-    public TechStackException() {
-    }
-
-    public TechStackException(String message) {
-        super(message);
-    }
-
-    public TechStackException(String message, Throwable cause) {
-        super(message, cause);
+    public TechStackException(ErrorCode errorCode) {
+        this.errorCode = errorCode;
+        this.status = errorCode.getHttpStatus().value();
+        this.errorMessage = errorCode.getErrorMessage();
     }
 }
