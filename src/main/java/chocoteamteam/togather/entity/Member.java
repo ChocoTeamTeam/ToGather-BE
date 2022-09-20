@@ -52,4 +52,8 @@ public class Member extends BaseTimeEntity{
     @OneToMany(mappedBy = "member")
     private List<MemberTechStack> memberTechStacks = new ArrayList<>();
 
+    public void changeStatus(MemberStatus status) {
+        this.status = status;
+    }
+
 }
