@@ -117,4 +117,17 @@ public class ProjectService {
         return ProjectDetails.fromEntity(projectRepository.findByIdQuery(projectId)
                 .orElseThrow(() -> new ProjectException(NOT_FOUND_PROJECT)));
     }
+
+    @Transactional
+    public ProjectDto deleteProject(Long projectId, Long memberId) {
+        Project project = projectRepository.findByIdQuery(projectId)
+                .orElseThrow(() -> new ProjectException(NOT_FOUND_PROJECT));
+
+        if (!Objects.equals(project.getMember().getId(), memberId)) {
+            throw new ProjectException(NOT_MATCH_MEMBER_PROJECT);
+        }
+
+        projectRepository.deleteById(projectId);
+        return ProjectDto.from(project);
+    }
 }

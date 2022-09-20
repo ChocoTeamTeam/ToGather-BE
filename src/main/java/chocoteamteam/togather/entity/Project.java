@@ -38,7 +38,7 @@ public class Project extends BaseTimeEntity {
 
     private LocalDate deadline;
 
-    @OneToMany(mappedBy = "project")
+    @OneToMany(mappedBy = "project", cascade = CascadeType.REMOVE)
     private final List<ProjectTechStack> projectTechStacks = new ArrayList<>();
 
     public void update(UpdateProjectForm form) {
