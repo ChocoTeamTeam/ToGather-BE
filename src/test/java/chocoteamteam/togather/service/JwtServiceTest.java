@@ -1,6 +1,10 @@
 package chocoteamteam.togather.service;
 
-import static chocoteamteam.togather.component.jwt.JwtUtils.*;
+import static chocoteamteam.togather.component.jwt.JwtUtils.KEY_ID;
+import static chocoteamteam.togather.component.jwt.JwtUtils.KEY_NICKNAME;
+import static chocoteamteam.togather.component.jwt.JwtUtils.KEY_PROVIDER;
+import static chocoteamteam.togather.component.jwt.JwtUtils.KEY_ROLES;
+import static chocoteamteam.togather.component.jwt.JwtUtils.KEY_STATUS;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.mockito.ArgumentMatchers.any;
@@ -8,15 +12,15 @@ import static org.mockito.ArgumentMatchers.anyLong;
 import static org.mockito.BDDMockito.given;
 import static org.mockito.Mockito.doReturn;
 
-import chocoteamteam.togather.dto.SignUpTokenMemberInfo;
-import chocoteamteam.togather.exception.InvalidSignUpTokenException;
-import chocoteamteam.togather.repository.RefreshTokenRepository;
 import chocoteamteam.togather.component.jwt.JwtIssuer;
 import chocoteamteam.togather.component.jwt.JwtParser;
 import chocoteamteam.togather.component.jwt.JwtUtils;
+import chocoteamteam.togather.dto.SignUpTokenMemberInfo;
 import chocoteamteam.togather.dto.TokenMemberInfo;
 import chocoteamteam.togather.dto.Tokens;
-import chocoteamteam.togather.exception.InvalidRefreshTokenException;
+import chocoteamteam.togather.exception.ErrorCode;
+import chocoteamteam.togather.exception.TokenException;
+import chocoteamteam.togather.repository.RefreshTokenRepository;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
 import java.util.Optional;
@@ -146,8 +150,8 @@ class JwtServiceTest {
 		//when
 	    //then
 		assertThatThrownBy(() -> jwtService.refreshTokens("test"))
-			.isInstanceOf(InvalidRefreshTokenException.class)
-			.hasMessage("Refresh Token이 유효하지 않습니다.");
+			.isInstanceOf(TokenException.class)
+			.hasMessage(ErrorCode.INVALID_TOKEN.getErrorMessage());
 	}
 
 	@DisplayName("토큰 갱신 실패 - 저장된 Refresh Token과 파라미터 Refresh Token이 다름")
@@ -163,8 +167,8 @@ class JwtServiceTest {
 		//when
 	    //then
 		assertThatThrownBy(() -> jwtService.refreshTokens("test"))
-			.isInstanceOf(InvalidRefreshTokenException.class)
-			.hasMessage("Refresh Token이 유효하지 않습니다.");
+			.isInstanceOf(TokenException.class)
+			.hasMessage(ErrorCode.INVALID_TOKEN.getErrorMessage());
 	}
 
 	@DisplayName("Access Token 파싱 성공")
@@ -263,8 +267,8 @@ class JwtServiceTest {
 		//when
 		//then
 		assertThatThrownBy(() -> jwtService.parseSignUpToken("singUpToken"))
-			.isInstanceOf(InvalidSignUpTokenException.class)
-			.hasMessage("유효한 회원가입 토큰이 아닙니다.");
+			.isInstanceOf(TokenException.class)
+			.hasMessage(ErrorCode.INVALID_TOKEN.getErrorMessage());
 	}
 
 
