@@ -8,6 +8,7 @@ import static org.mockito.BDDMockito.given;
 import static org.mockito.Mockito.doNothing;
 
 import chocoteamteam.togather.dto.MemberDetailResponse;
+import chocoteamteam.togather.dto.SignUpControllerDto.Request;
 import chocoteamteam.togather.dto.TechStackDto;
 import chocoteamteam.togather.dto.queryDslSimpleDto.MemberTechStackInfoDto;
 import chocoteamteam.togather.entity.Member;
@@ -17,7 +18,9 @@ import chocoteamteam.togather.exception.ErrorCode;
 import chocoteamteam.togather.exception.MemberException;
 import chocoteamteam.togather.repository.MemberRepository;
 import chocoteamteam.togather.repository.MemberTechStackCustomRepository;
+import chocoteamteam.togather.repository.MemberTechStackRepository;
 import chocoteamteam.togather.repository.RefreshTokenRepository;
+import chocoteamteam.togather.repository.TechStackRepository;
 import chocoteamteam.togather.type.MemberStatus;
 import chocoteamteam.togather.type.ProviderType;
 import chocoteamteam.togather.type.Role;
@@ -38,18 +41,22 @@ class MemberServiceTest {
     @Mock
     MemberRepository memberRepository;
     @Mock
+    MemberTechStackRepository memberTechStackRepository;
+    @Mock
+    TechStackRepository techStackRepository;
+    @Mock
     MemberTechStackCustomRepository memberTechStackCustomRepository;
-
-	@Mock
-	RefreshTokenRepository refreshTokenRepository;
-
+    @Mock
+    RefreshTokenRepository refreshTokenRepository;
     @InjectMocks
     MemberService memberService;
 
     Member member;
     MemberTechStack memberTechStack;
     TechStack techStack;
+    TechStack secondTechStack;
     MemberTechStackInfoDto memberTechStackInfoDto;
+    Request modifyRequest;
 
     @BeforeEach
     void init() {
@@ -58,6 +65,12 @@ class MemberServiceTest {
             .name("java")
             .category(TechCategory.BACKEND)
             .image("java.png")
+            .build();
+        secondTechStack = TechStack.builder()
+            .id(2L)
+            .name("react")
+            .category(TechCategory.FRONTEND)
+            .image("react.png")
             .build();
         member = Member.builder()
             .id(1L)
@@ -77,6 +90,11 @@ class MemberServiceTest {
             .profileImage("test.png")
             .techName("java")
             .techImage("java.png")
+            .build();
+        modifyRequest = Request.builder()
+            .nickname("수정")
+            .profileImage("이미지수정")
+            .techStackDtos(List.of(2L))
             .build();
     }
 
@@ -172,5 +190,73 @@ class MemberServiceTest {
 			.isInstanceOf(MemberException.class)
 			.hasMessage(ErrorCode.NOT_FOUND_MEMBER.getErrorMessage());
 	}
+
+    @DisplayName("회원 정보 수정 성공")
+    @Test
+    void modify_success() {
+        // given
+        memberRepository.save(member);
+        techStackRepository.save(techStack);
+        techStackRepository.save(secondTechStack);
+        memberTechStackRepository.save(memberTechStack);
+        given(memberRepository.findByNickname(any())).willReturn(Optional.ofNullable(member));
+        given(memberRepository.findWithMemberTechStackById(any()))
+            .willReturn(Optional.ofNullable(member));
+
+        // when
+        memberService.modify(1L, modifyRequest, 1L);
+
+        // then
+        assertThat(member.getNickname()).isEqualTo("수정");
+        assertThat(member.getProfileImage()).isEqualTo("이미지수정");
+    }
+
+
+    @DisplayName("회원 정보 수정 실패 - 본인만 정보를 수정할 수 있음")
+    @Test
+    void modify_failed_miss_match_member() {
+        // given
+
+        // when
+
+        // then
+        assertThatThrownBy(() -> memberService.modify(1L, modifyRequest, 2L))
+            .isInstanceOf(MemberException.class)
+            .hasMessage(ErrorCode.MISS_MATCH_MEMBER.getErrorMessage());
+    }
+
+    @DisplayName("회원 정보 수정 실패 - 이미 존재하는 닉네임")
+    @Test
+    void modify_failed_exist_true_nickname() {
+        // given
+        given(memberRepository.findByNickname(any()))
+            .willReturn(Optional.ofNullable(Member.builder()
+                .id(2L)
+                .build()));
+
+        // when
+
+        // then
+        assertThatThrownBy(() -> memberService.modify(1L, modifyRequest, 1L))
+            .isInstanceOf(MemberException.class)
+            .hasMessage(ErrorCode.EXIST_TRUE_MEMBER_NICKNAME.getErrorMessage());
+    }
+
+    @DisplayName("회원 정보 수정 실패 - 회원이 존재하지 않음")
+    @Test
+    void modify_failed_not_found_member() {
+        // given
+        given(memberRepository.findByNickname(any()))
+            .willReturn(Optional.ofNullable(Member.builder()
+                .id(1L)
+                .build()));
+
+        // when
+
+        // then
+        assertThatThrownBy(() -> memberService.modify(1L, modifyRequest, 1L))
+            .isInstanceOf(MemberException.class)
+            .hasMessage(ErrorCode.NOT_FOUND_MEMBER.getErrorMessage());
+    }
 
 }
