@@ -9,12 +9,10 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
+import java.util.List;
 
 @Tag(name = "TechStack", description = "기술스택 관련 API")
 @RestController
@@ -34,7 +32,16 @@ public class TechStackController {
     public ResponseEntity<TechStackDto> createTechStack(
             @Valid @RequestBody CreateTechStackForm form
     ) {
-        System.out.println(form.getName());
         return ResponseEntity.ok(techStackService.createTechStack(form));
+    }
+
+    @Operation(
+            summary = "기술스택 목록 조회",
+            description = "기술스택 목록을 조회합니다",
+            tags = {"TechStack"}
+    )
+    @GetMapping
+    public ResponseEntity<List<TechStackDto>> getTechStacks() {
+        return ResponseEntity.ok(techStackService.getTechStacks());
     }
 }

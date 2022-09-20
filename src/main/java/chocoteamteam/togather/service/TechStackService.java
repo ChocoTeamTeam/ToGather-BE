@@ -8,6 +8,8 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
+import java.util.List;
+import java.util.stream.Collectors;
 
 @RequiredArgsConstructor
 @Service
@@ -21,5 +23,11 @@ public class TechStackService {
                 .category(form.getCategory())
                 .image(form.getImage())
                 .build()));
+    }
+
+    public List<TechStackDto> getTechStacks() {
+        return techStackRepository.findAll().stream()
+                .map(TechStackDto::from)
+                .collect(Collectors.toList());
     }
 }
