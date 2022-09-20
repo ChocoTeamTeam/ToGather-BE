@@ -20,12 +20,12 @@ public class MemberDetailResponse {
     private String profileImage;
     private List<TechStackDto> techStackDtos;
 
-    public static MemberDetailResponse to(List<MemberTechStackInfoDto> memberTechStackInfoDtos, List<TechStackDto> techStackDtos) {
+    public static MemberDetailResponse fromMemberTechStackInfoDtos(List<MemberTechStackInfoDto> memberTechStackInfoDtos) {
         return MemberDetailResponse.builder()
             .id(memberTechStackInfoDtos.get(0).getId())
             .nickname(memberTechStackInfoDtos.get(0).getNickname())
             .profileImage(memberTechStackInfoDtos.get(0).getProfileImage())
-            .techStackDtos(techStackDtos)
+            .techStackDtos(TechStackDto.fromMemberTechStackInfoDtos(memberTechStackInfoDtos))
             .build();
     }
 

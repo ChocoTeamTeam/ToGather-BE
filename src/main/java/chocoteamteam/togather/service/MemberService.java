@@ -39,10 +39,7 @@ public class MemberService {
                 .build();
         }
 
-        List<TechStackDto> techStackDtos = TechStackDto.fromMemberTechStackInfoDtos(
-            memberTechStackInfoDtos);
-
-        return MemberDetailResponse.to(memberTechStackInfoDtos, techStackDtos);
+        return MemberDetailResponse.fromMemberTechStackInfoDtos(memberTechStackInfoDtos);
 
     }
 
