@@ -39,7 +39,7 @@ public class MemberController {
 		tags = {"Member"}
 	)
 	@PreAuthorize("hasRole('USER') and principal.id == #memberId or hasRole('ADMIN')")
-	@PostMapping("/members/{memberId}/withdrawal")
+	@PostMapping("/{memberId}/withdrawal")
 	public ResponseEntity withdrawal(@PathVariable("memberId") Long memberId) {
 
 		memberService.changeStatus(memberId, MemberStatus.WITHDRAWAL);
