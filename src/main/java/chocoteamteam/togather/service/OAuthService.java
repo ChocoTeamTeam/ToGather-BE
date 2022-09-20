@@ -13,6 +13,7 @@ import chocoteamteam.togather.entity.Member;
 import chocoteamteam.togather.entity.MemberTechStack;
 import chocoteamteam.togather.entity.TechStack;
 import chocoteamteam.togather.exception.CustomOAuthException;
+import chocoteamteam.togather.exception.ErrorCode;
 import chocoteamteam.togather.exception.TechStackException;
 import chocoteamteam.togather.oauth2.OAuth2MemberInfo;
 import chocoteamteam.togather.oauth2.OAuth2MemberInfoFactory;
@@ -68,7 +69,7 @@ public class OAuthService {
             .getOAuth2MemberInfo(providerType.toUpperCase(), attributes);
 
         String email = oAuth2MemberInfo.getEmail()
-            .orElseThrow(() -> new CustomOAuthException("이메일을 찾을 수 없습니다."));
+            .orElseThrow(() -> new CustomOAuthException(ErrorCode.NOT_FOUND_EMAIL));
 
         Optional<Member> optionalMember = memberRepository.findByEmail(email);
 
@@ -84,7 +85,7 @@ public class OAuthService {
         Member member = optionalMember.get();
 
         if (!member.getProviderType().toString().equals(providerType.toUpperCase())) {
-            throw new CustomOAuthException(member.getProviderType() + " 아이디로 로그인하시길 바랍니다.");
+            throw new CustomOAuthException(ErrorCode.MISS_MATCH_PROVIDER);
         }
 
         Tokens tokens = getTokens(member);
@@ -117,7 +118,7 @@ public class OAuthService {
             jwtService.parseSignUpToken(signUpServiceDto.getSignUpToken());
 
         if (memberRepository.existsByNickname(signUpServiceDto.getNickname())) {
-            throw new CustomOAuthException("이미 존재하는 닉네임입니다.");
+            throw new CustomOAuthException(ErrorCode.EXIST_TRUE_MEMBER_NICKNAME);
         }
 
         Member member = memberRepository.save(
