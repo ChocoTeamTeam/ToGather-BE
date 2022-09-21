@@ -92,6 +92,7 @@ public class OAuthService {
 
         return LoginResponse.builder()
             .id(member.getId())
+            .nickname(member.getNickname())
             .profileImage(member.getProfileImage())
             .techStackDtos(getTechStackDtosFromMember(member))
             .accessToken(tokens.getAccessToken())
