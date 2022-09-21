@@ -88,6 +88,10 @@ public class OAuthService {
             throw new CustomOAuthException(ErrorCode.MISS_MATCH_PROVIDER);
         }
 
+        if (!member.getStatus().toString().equals(MemberStatus.PERMITTED.toString())) {
+            throw new CustomOAuthException(ErrorCode.MEMBER_STATUS_WITHDRAWAL);
+        }
+
         Tokens tokens = getTokens(member);
 
         return LoginResponse.builder()
