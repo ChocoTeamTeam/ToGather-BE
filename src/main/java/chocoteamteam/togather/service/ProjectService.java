@@ -71,40 +71,60 @@ public class ProjectService {
             Long memberId,
             UpdateProjectForm form
     ) {
-        Project project = getValidProject(projectId, memberId);
+
+        //프로젝트, 멤버, 모집기술스택, 기술스택 한번에 가져옴
+        Project project = projectRepository.findByIdQuery(projectId)
+                .orElseThrow(() -> new ProjectException(NOT_FOUND_PROJECT));
+        validate(project, memberId);
         project.update(form);
-        calcAndUpdateTechStack(projectId, form, project);
+        calcAndUpdateTechStack(project, form);
         return ProjectDto.from(project);
     }
 
-    private Project getValidProject(Long projectId, Long memberId) {
-        Project project = projectRepository.findById(projectId)
-                .orElseThrow(() -> new ProjectException(NOT_FOUND_PROJECT));
 
+    private void validate(Project project, Long memberId) {
         if (!Objects.equals(project.getMember().getId(), memberId)) {
             throw new ProjectException(NOT_MATCH_MEMBER_PROJECT);
         }
-        return project;
     }
 
-    private void calcAndUpdateTechStack(Long projectId, UpdateProjectForm form, Project project) {
-        Set<Long> prevIds = new HashSet<>(projectTechStackRepository.findTechStackIdsByProjectId(projectId));
-        Set<Long> deleteIds = new HashSet<>(prevIds);
-        Set<Long> addIds = new HashSet<>(form.getTechStackIds());
-        deleteIds.removeAll(addIds);
-        addIds.removeAll(prevIds);
+    private void calcAndUpdateTechStack(Project project, UpdateProjectForm form) {
+        List<ProjectTechStack> prevProjectTechStacks = project.getProjectTechStacks();
 
-        updateProjectTechStack(project, deleteIds, addIds);
-    }
+        //삭제 되어야 할 모집 기술 스택 id
+        List<Long> deleteIds = new ArrayList<>();
+        //추가 할 기술 스택 id
+        Set<Long> addTechIds = new HashSet<>(form.getTechStackIds());
+        //삭제 되어야 할 모집 기술 스택
+        List<ProjectTechStack> deleteProjectTechStacks = new ArrayList<>();
 
-    private void updateProjectTechStack(Project project, Set<Long> deleteIds, Set<Long> addIds) {
-        if (deleteIds.size() > 0) {
-            List<ProjectTechStack> projectTechStacks =
-                    projectTechStackRepository.deleteAllByIdIn(new ArrayList<>(deleteIds));
-            project.getProjectTechStacks().removeAll(projectTechStacks);
+        for (ProjectTechStack pt : prevProjectTechStacks) {
+            //기존 기술 스택 id
+            Long prevTechId = pt.getTechStack().getId();
+            if (addTechIds.contains(prevTechId)) {
+                addTechIds.remove(prevTechId);
+            } else {
+                deleteIds.add(pt.getId());
+                deleteProjectTechStacks.add(pt);
+            }
         }
 
-        if (addIds.size() > 0) {
+        updateProjectTechStack(project, deleteIds, addTechIds, deleteProjectTechStacks);
+    }
+
+    private void updateProjectTechStack(
+            Project project,
+            List<Long> deleteIds,
+            Set<Long> addIds,
+            List<ProjectTechStack> deleteProjectTechStacks
+    ) {
+
+        if (!deleteIds.isEmpty()) {
+            projectTechStackRepository.deleteAllByIdInQuery(deleteIds);
+            project.getProjectTechStacks().removeAll(deleteProjectTechStacks);
+        }
+
+        if (!addIds.isEmpty()) {
             saveProjectTechs(project, getTechStacks(new ArrayList<>(addIds)));
         }
     }
@@ -129,6 +149,7 @@ public class ProjectService {
             throw new ProjectException(NOT_MATCH_MEMBER_PROJECT);
         }
 
+        projectTechStackRepository.deleteByProjectId(project.getId());
         projectRepository.deleteById(project.getId());
         return ProjectDto.from(project);
     }

@@ -6,13 +6,15 @@ import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 
+import javax.transaction.Transactional;
 import java.util.List;
 
 public interface ProjectTechStackRepository extends JpaRepository<ProjectTechStack, Long> {
 
-    @Query(value = "select tech_stack_id from project_tech_stack where project_id=:id", nativeQuery = true)
-    List<Long> findTechStackIdsByProjectId(@Param("id") Long projectId);
-
+    @Transactional
     @Modifying
-    List<ProjectTechStack> deleteAllByIdIn(List<Long> ids);
+    @Query("delete from ProjectTechStack pt where pt.id in :ids")
+    void deleteAllByIdInQuery(@Param("ids") List<Long> ids);
+
+    void deleteByProjectId(Long projectId);
 }

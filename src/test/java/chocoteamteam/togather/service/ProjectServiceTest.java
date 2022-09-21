@@ -168,7 +168,10 @@ class ProjectServiceTest {
     @DisplayName("프로젝트 수정 성공")
     void updateProjectSuccess() {
         //given
-        Project testProject = Project.builder().id(999L).member(member).build();
+        Project testProject = Project.builder()
+                .id(project.getId())
+                .member(member)
+                .build();
         TechStack techStack1 = TechStack.builder().id(1L).build();
         TechStack techStack2 = TechStack.builder().id(2L).build();
         TechStack techStack3 = TechStack.builder().id(3L).build();
@@ -183,29 +186,32 @@ class ProjectServiceTest {
         ProjectTechStack projectTechStack3 = new ProjectTechStack(testProject, techStack3);
         projectTechStack3.setId(3L);
 
+        /*
+         * 헷갈리지 않기 위해 기술 스택과 모집 기술 스택 아이디를 일치시켰는데
+         * (ex 모집 기술 스택 1번 - 기술 스택 1번)
+         * 실제로는 구분하여 동작합니다
+         * 지울 때는 모집 기술 스택 ID로 지우며,
+         * 새로 추가할 때는 기술 스택 ID로 기술 스택 정보를 불러와서 모집 기술 스택 객체를 만들어 추가합니다
+         * (추가하는 부분은 프로젝트 생성 시 기술 스택 추가 부분과 동일합니다)
+         * 기존 기술 스택 ID : 1,2,3
+         * 새로 받은 기술 스택 ID : 3,4,5,6
+         * 지워야 할 모집 기술 스택 ID : 1,2
+         * 새로 추가 될 기술 스택 ID : 4,5,6
+         * 최종 모집 기술 스택 ID : 3,4,5,6
+         */
 
-        //기존 기술 스택
-        List<Long> prevTech = new ArrayList<>(List.of(1L, 2L, 3L));
-        //새로 입력받은 기술 스택
+        //새로 입력받은 기술 스택 ID
         List<Long> newTech = new ArrayList<>(List.of(3L, 4L, 5L, 6L));
-        //삭제 되어야할 기술 스택들
-        List<ProjectTechStack> deleteList = List.of(projectTechStack1, projectTechStack2);
 
-        given(projectRepository.findById(anyLong()))
+        given(projectRepository.findByIdQuery(anyLong()))
                 .willReturn(Optional.of(testProject));
-
-        given(projectTechStackRepository.findTechStackIdsByProjectId(anyLong()))
-                .willReturn(prevTech);
-
-        given(projectTechStackRepository.deleteAllByIdIn(any()))
-                .willReturn(deleteList);
 
         given(techStackRepository.findAllById(any()))
                 .willReturn(List.of(techStack4, techStack5, techStack6));
 
         //when
         ProjectDto projectDto = projectService.updateProject(
-                project.getId(),
+                testProject.getId(),
                 member.getId(),
                 UpdateProjectForm.builder()
                         .title("수정 제목")
@@ -219,7 +225,7 @@ class ProjectServiceTest {
         assertEquals(techStack5.getId(), projectDto.getProjectTechStacks().get(2).getTechStack().getId());
         assertEquals(techStack6.getId(), projectDto.getProjectTechStacks().get(3).getTechStack().getId());
         assertEquals("수정 제목", projectDto.getTitle());
-        verify(projectTechStackRepository, times(1)).deleteAllByIdIn(List.of(1L, 2L));
+        verify(projectTechStackRepository, times(1)).deleteAllByIdInQuery(List.of(1L, 2L));
         verify(projectTechStackRepository, times(1)).saveAll(any());
     }
 
@@ -228,7 +234,7 @@ class ProjectServiceTest {
     void updateProject_NotFoundProject() {
         //given
 
-        given(projectRepository.findById(anyLong()))
+        given(projectRepository.findByIdQuery(anyLong()))
                 .willReturn(Optional.empty());
         //when
         ProjectException exception = assertThrows(ProjectException.class,
@@ -243,7 +249,7 @@ class ProjectServiceTest {
     void updateProject_NotMatchMemberProject() {
 
         //given
-        given(projectRepository.findById(anyLong()))
+        given(projectRepository.findByIdQuery(anyLong()))
                 .willReturn(Optional.of(project));
         //when
         ProjectException exception = assertThrows(ProjectException.class,
@@ -257,7 +263,7 @@ class ProjectServiceTest {
     @DisplayName("프로젝트 수정 실패 - 해당 기술스택 없음")
     void updateProject_NotFoundTechStack() {
         //given
-        given(projectRepository.findById(anyLong()))
+        given(projectRepository.findByIdQuery(anyLong()))
                 .willReturn(Optional.of(project));
         given(techStackRepository.findAllById(any()))
                 .willReturn(new ArrayList<>());
@@ -338,7 +344,7 @@ class ProjectServiceTest {
                 .role(Role.ROLE_USER)
                 .build());
         //then
-        verify(projectRepository,times(1)).deleteById(project.getId());
+        verify(projectRepository, times(1)).deleteById(project.getId());
     }
 
     @Test
@@ -353,8 +359,9 @@ class ProjectServiceTest {
                 .role(Role.ROLE_ADMIN)
                 .build());
         //then
-        verify(projectRepository,times(1)).deleteById(project.getId());
+        verify(projectRepository, times(1)).deleteById(project.getId());
     }
+
     @Test
     @DisplayName("프로젝트 삭제 실패 - 해당 프로젝트 없음")
     void deleteProject_NotFoundProject() {
