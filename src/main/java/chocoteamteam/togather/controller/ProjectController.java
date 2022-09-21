@@ -84,6 +84,6 @@ public class ProjectController {
             @AuthenticationPrincipal LoginMember member,
             @PathVariable Long projectId
     ) {
-        return ResponseEntity.ok(projectService.deleteProject(projectId, member));
+        return ResponseEntity.ok(projectService.deleteProject(projectId, member.getId(), member.getRole()));
     }
 }

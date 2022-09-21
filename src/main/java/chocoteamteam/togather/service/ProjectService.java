@@ -76,16 +76,19 @@ public class ProjectService {
         Project project = projectRepository.findByIdQuery(projectId)
                 .orElseThrow(() -> new ProjectException(NOT_FOUND_PROJECT));
         validate(project, memberId);
-        project.update(form);
-        calcAndUpdateTechStack(project, form);
-        return ProjectDto.from(project);
+        return updateProject(form, project);
     }
-
 
     private void validate(Project project, Long memberId) {
         if (!Objects.equals(project.getMember().getId(), memberId)) {
             throw new ProjectException(NOT_MATCH_MEMBER_PROJECT);
         }
+    }
+
+    private ProjectDto updateProject(UpdateProjectForm form, Project project) {
+        project.update(form);
+        calcAndUpdateTechStack(project, form);
+        return ProjectDto.from(project);
     }
 
     private void calcAndUpdateTechStack(Project project, UpdateProjectForm form) {
@@ -108,7 +111,6 @@ public class ProjectService {
                 deleteProjectTechStacks.add(pt);
             }
         }
-
         updateProjectTechStack(project, deleteIds, addTechIds, deleteProjectTechStacks);
     }
 
@@ -140,15 +142,17 @@ public class ProjectService {
     }
 
     @Transactional
-    public ProjectDto deleteProject(Long projectId, LoginMember member) {
+    public ProjectDto deleteProject(Long projectId, Long memberId, Role role) {
         Project project = projectRepository.findByIdQuery(projectId)
                 .orElseThrow(() -> new ProjectException(NOT_FOUND_PROJECT));
 
-        if (!Objects.equals(project.getMember().getId(), member.getId()) &&
-                member.getRole() != Role.ROLE_ADMIN) {
-            throw new ProjectException(NOT_MATCH_MEMBER_PROJECT);
+        if (role != Role.ROLE_ADMIN) {
+            validate(project, memberId);
         }
 
+        return deleteProject(project);
+    }
+    private ProjectDto deleteProject(Project project) {
         projectTechStackRepository.deleteByProjectId(project.getId());
         projectRepository.deleteById(project.getId());
         return ProjectDto.from(project);

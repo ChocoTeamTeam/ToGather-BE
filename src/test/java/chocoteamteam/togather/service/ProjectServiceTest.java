@@ -1,6 +1,9 @@
 package chocoteamteam.togather.service;
 
-import chocoteamteam.togather.dto.*;
+import chocoteamteam.togather.dto.CreateProjectForm;
+import chocoteamteam.togather.dto.ProjectDetails;
+import chocoteamteam.togather.dto.ProjectDto;
+import chocoteamteam.togather.dto.UpdateProjectForm;
 import chocoteamteam.togather.entity.Member;
 import chocoteamteam.togather.entity.Project;
 import chocoteamteam.togather.entity.ProjectTechStack;
@@ -339,10 +342,7 @@ class ProjectServiceTest {
         given(projectRepository.findByIdQuery(anyLong()))
                 .willReturn(Optional.of(project));
         //when
-        projectService.deleteProject(1L, LoginMember.builder()
-                .id(project.getMember().getId())
-                .role(Role.ROLE_USER)
-                .build());
+        projectService.deleteProject(1L, member.getId(), Role.ROLE_USER);
         //then
         verify(projectRepository, times(1)).deleteById(project.getId());
     }
@@ -354,10 +354,7 @@ class ProjectServiceTest {
         given(projectRepository.findByIdQuery(anyLong()))
                 .willReturn(Optional.of(project));
         //when
-        projectService.deleteProject(3L, LoginMember.builder()
-                .id(1234L)
-                .role(Role.ROLE_ADMIN)
-                .build());
+        projectService.deleteProject(3L, 1234L, Role.ROLE_ADMIN);
         //then
         verify(projectRepository, times(1)).deleteById(project.getId());
     }
@@ -370,7 +367,7 @@ class ProjectServiceTest {
                 .willReturn(Optional.empty());
         //when
         ProjectException exception = assertThrows(ProjectException.class,
-                () -> projectService.deleteProject(1L, LoginMember.builder().build()));
+                () -> projectService.deleteProject(1L, 1234L, Role.ROLE_USER));
 
         //then
         assertEquals(ErrorCode.NOT_FOUND_PROJECT, exception.getErrorCode());
@@ -384,10 +381,7 @@ class ProjectServiceTest {
                 .willReturn(Optional.of(project));
         //when
         ProjectException exception = assertThrows(ProjectException.class,
-                () -> projectService.deleteProject(1L, LoginMember.builder()
-                        .id(9876L)
-                        .role(Role.ROLE_USER)
-                        .build()));
+                () -> projectService.deleteProject(1L, 1234L, Role.ROLE_USER));
         //then
         assertEquals(ErrorCode.NOT_MATCH_MEMBER_PROJECT, exception.getErrorCode());
     }
