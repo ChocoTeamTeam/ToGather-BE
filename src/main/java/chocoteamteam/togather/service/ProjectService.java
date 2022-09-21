@@ -114,6 +114,7 @@ public class ProjectService {
         return projectRepository.findAllOptionAndSearch(projectCondition);
     }
 
+    @Transactional
     public ProjectDetails getProject(Long projectId) {
         return ProjectDetails.fromEntity(projectRepository.findByIdQuery(projectId)
                 .orElseThrow(() -> new ProjectException(NOT_FOUND_PROJECT)));

@@ -26,6 +26,7 @@ public class ProjectDetails {
     private LocalDate deadline;
     private boolean offline;
     private List<TechStackDto> techStacks;
+    private List<CommentDto> comments;
 
     public static ProjectDetails fromEntity(Project project) {
         return ProjectDetails.builder()
@@ -41,6 +42,9 @@ public class ProjectDetails {
                 .techStacks(project.getProjectTechStacks()
                         .stream()
                         .map(projectTechStack -> TechStackDto.from(projectTechStack.getTechStack()))
+                        .collect(Collectors.toList()))
+                .comments(project.getComments().stream()
+                        .map(CommentDto::fromEntity)
                         .collect(Collectors.toList()))
                 .build();
     }
