@@ -17,7 +17,6 @@ import org.springframework.security.web.access.AccessDeniedHandler;
 import org.springframework.stereotype.Component;
 
 @RequiredArgsConstructor
-@Component
 public class JwtAccessDeniedHandler implements AccessDeniedHandler {
 
 	private final ObjectMapper objectMapper;

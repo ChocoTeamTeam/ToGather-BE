@@ -3,6 +3,8 @@ package chocoteamteam.togather.config;
 import chocoteamteam.togather.component.security.JwtAccessDeniedHandler;
 import chocoteamteam.togather.component.security.JwtAuthenticationFilter;
 import chocoteamteam.togather.component.security.JwtEntryPoint;
+import chocoteamteam.togather.service.JwtService;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.security.config.annotation.method.configuration.EnableGlobalMethodSecurity;
@@ -20,9 +22,8 @@ import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 @EnableWebSecurity
 public class SecurityConfig {
 
-	private final JwtAuthenticationFilter jwtAuthenticationFilter;
-	private final JwtEntryPoint jwtEntryPoint;
-	private final JwtAccessDeniedHandler jwtAccessDeniedHandler;
+	private final JwtService jwtService;
+	private final ObjectMapper objectMapper;
 
 
 	@Bean
@@ -42,10 +43,10 @@ public class SecurityConfig {
 		http.logout().disable();
 
 		http.exceptionHandling()
-			.authenticationEntryPoint(jwtEntryPoint)
-			.accessDeniedHandler(jwtAccessDeniedHandler);
+			.authenticationEntryPoint(jwtEntryPoint())
+			.accessDeniedHandler(jwtAccessDeniedHandler());
 
-		http.addFilterBefore(jwtAuthenticationFilter,
+		http.addFilterBefore(jwtAuthenticationFilter(),
 			UsernamePasswordAuthenticationFilter.class);
 
 		return http.build();
@@ -63,6 +64,21 @@ public class SecurityConfig {
 		UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
 		source.registerCorsConfiguration("/**", configuration);
 		return source;
+	}
+
+	@Bean
+	public JwtEntryPoint jwtEntryPoint() {
+		return new JwtEntryPoint(objectMapper);
+	}
+
+	@Bean
+	public JwtAccessDeniedHandler jwtAccessDeniedHandler() {
+		return new JwtAccessDeniedHandler(objectMapper);
+	}
+
+	@Bean
+	public JwtAuthenticationFilter jwtAuthenticationFilter() {
+		return new JwtAuthenticationFilter(jwtService);
 	}
 
 }
