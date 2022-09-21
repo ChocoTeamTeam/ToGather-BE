@@ -18,7 +18,6 @@ import org.springframework.security.web.AuthenticationEntryPoint;
 import org.springframework.stereotype.Component;
 
 @RequiredArgsConstructor
-@Component
 public class JwtEntryPoint implements AuthenticationEntryPoint {
 
 	private final ObjectMapper objectMapper;
