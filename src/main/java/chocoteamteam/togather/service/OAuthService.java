@@ -88,7 +88,7 @@ public class OAuthService {
             throw new CustomOAuthException(ErrorCode.MISS_MATCH_PROVIDER);
         }
 
-        if (!member.getStatus().toString().equals(MemberStatus.PERMITTED.toString())) {
+        if (member.getStatus() != MemberStatus.PERMITTED) {
             throw new CustomOAuthException(ErrorCode.MEMBER_STATUS_WITHDRAWAL);
         }
 
