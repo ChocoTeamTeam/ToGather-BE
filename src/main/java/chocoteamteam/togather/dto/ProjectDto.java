@@ -25,7 +25,7 @@ public class ProjectDto {
     private Boolean offline;
     private String location;
     private LocalDate deadline;
-    private List<ProjectTechStackDto> projectTechStacks;
+    private List<TechStackDto> techStacks;
 
     public static ProjectDto from(Project project) {
         return ProjectDto.builder()
@@ -38,8 +38,8 @@ public class ProjectDto {
                 .offline(project.getOffline())
                 .location(project.getLocation())
                 .deadline(project.getDeadline())
-                .projectTechStacks(project.getProjectTechStacks().stream()
-                        .map(ProjectTechStackDto::from)
+                .techStacks(project.getProjectTechStacks().stream()
+                        .map(pt -> TechStackDto.from(pt.getTechStack()))
                         .collect(Collectors.toList()))
                 .build();
     }
