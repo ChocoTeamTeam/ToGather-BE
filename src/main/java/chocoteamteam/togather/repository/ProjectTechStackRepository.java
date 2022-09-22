@@ -10,9 +10,9 @@ import java.util.List;
 
 public interface ProjectTechStackRepository extends JpaRepository<ProjectTechStack, Long> {
 
-    @Query(value = "select tech_stack_id from project_tech_stack where project_id=:id", nativeQuery = true)
-    List<Long> findTechStackIdsByProjectId(@Param("id") Long projectId);
+    @Modifying(clearAutomatically = true, flushAutomatically = true)
+    @Query("delete from ProjectTechStack pt where pt.id in :ids")
+    void deleteAllByIdInQuery(@Param("ids") List<Long> ids);
 
-    @Modifying
-    List<ProjectTechStack> deleteAllByIdIn(List<Long> ids);
+    void deleteByProjectId(Long projectId);
 }
