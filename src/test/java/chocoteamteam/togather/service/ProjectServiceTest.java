@@ -1,6 +1,9 @@
 package chocoteamteam.togather.service;
 
-import chocoteamteam.togather.dto.*;
+import chocoteamteam.togather.dto.CreateProjectForm;
+import chocoteamteam.togather.dto.ProjectDetails;
+import chocoteamteam.togather.dto.ProjectDto;
+import chocoteamteam.togather.dto.UpdateProjectForm;
 import chocoteamteam.togather.entity.*;
 import chocoteamteam.togather.exception.ErrorCode;
 import chocoteamteam.togather.exception.ProjectException;
@@ -117,9 +120,8 @@ class ProjectServiceTest {
         assertEquals(project.getStatus(), projectDto.getStatus());
         assertEquals(project.getLocation(), projectDto.getLocation());
         assertEquals(project.getDeadline(), projectDto.getDeadline());
-        assertEquals(project.getId(), projectDto.getProjectTechStacks().get(1).getProjectId());
-        assertEquals(techStacks.get(0).getName(), projectDto.getProjectTechStacks().get(0).getTechStack().getName());
-        assertEquals(project.getProjectTechStacks().size(), projectDto.getProjectTechStacks().size());
+        assertEquals(techStacks.get(0).getName(), projectDto.getTechStacks().get(0).getName());
+        assertEquals(project.getProjectTechStacks().size(), projectDto.getTechStacks().size());
         verify(projectTechStackRepository, times(1)).saveAll(any());
     }
 
@@ -216,11 +218,11 @@ class ProjectServiceTest {
                         .build()
         );
         //then
-        assertEquals(newTech.size(), projectDto.getProjectTechStacks().size());
-        assertEquals(techStack3.getId(), projectDto.getProjectTechStacks().get(0).getTechStack().getId());
-        assertEquals(techStack4.getId(), projectDto.getProjectTechStacks().get(1).getTechStack().getId());
-        assertEquals(techStack5.getId(), projectDto.getProjectTechStacks().get(2).getTechStack().getId());
-        assertEquals(techStack6.getId(), projectDto.getProjectTechStacks().get(3).getTechStack().getId());
+        assertEquals(newTech.size(), projectDto.getTechStacks().size());
+        assertEquals(techStack3.getId(), projectDto.getTechStacks().get(0).getId());
+        assertEquals(techStack4.getId(), projectDto.getTechStacks().get(1).getId());
+        assertEquals(techStack5.getId(), projectDto.getTechStacks().get(2).getId());
+        assertEquals(techStack6.getId(), projectDto.getTechStacks().get(3).getId());
         assertEquals("수정 제목", projectDto.getTitle());
         verify(projectTechStackRepository, times(1)).deleteAllByIdInQuery(List.of(1L, 2L));
         verify(projectTechStackRepository, times(1)).saveAll(any());
@@ -298,17 +300,6 @@ class ProjectServiceTest {
     @Test
     @DisplayName("프로젝트 상세조회 성공 (댓글 추가)")
     void getProject_success() {
-        project = Project.builder()
-                .id(999L)
-                .member(member)
-                .title("제목999")
-                .content("내용999")
-                .personnel(10)
-                .status(ProjectStatus.RECRUITING)
-                .location("서울")
-                .offline(true)
-                .deadline(LocalDate.of(2022, 9, 12))
-                .build();
 
         project.addComment(Comment.builder().member(member).id(1L).build());
         project.addComment(Comment.builder().member(member).id(2L).build());
