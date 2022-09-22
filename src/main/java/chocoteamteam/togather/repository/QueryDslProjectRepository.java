@@ -10,5 +10,5 @@ import java.util.Optional;
 public interface QueryDslProjectRepository {
     List<SimpleProjectDto> findAllOptionAndSearch(ProjectCondition projectCondition);
 
-    Optional<Project> findByIdQuery(Long projectId);
+    Optional<Project> findByIdWithMemberAndTechStack(Long projectId);
 }

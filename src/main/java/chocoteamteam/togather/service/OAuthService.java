@@ -1,14 +1,7 @@
 package chocoteamteam.togather.service;
 
-import chocoteamteam.togather.dto.LoginResponse;
-import chocoteamteam.togather.dto.OAuthTokenResponse;
-import chocoteamteam.togather.dto.SignUpControllerDto;
+import chocoteamteam.togather.dto.*;
 import chocoteamteam.togather.dto.SignUpControllerDto.Response;
-import chocoteamteam.togather.dto.SignUpServiceDto;
-import chocoteamteam.togather.dto.SignUpTokenMemberInfo;
-import chocoteamteam.togather.dto.TechStackDto;
-import chocoteamteam.togather.dto.TokenMemberInfo;
-import chocoteamteam.togather.dto.Tokens;
 import chocoteamteam.togather.entity.Member;
 import chocoteamteam.togather.entity.MemberTechStack;
 import chocoteamteam.togather.entity.TechStack;
@@ -42,6 +35,8 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.util.MultiValueMap;
 import org.springframework.web.reactive.function.client.WebClient;
+
+import static chocoteamteam.togather.exception.ErrorCode.NOT_FOUND_TECH_STACK;
 
 @RequiredArgsConstructor
 @Service
@@ -88,10 +83,15 @@ public class OAuthService {
             throw new CustomOAuthException(ErrorCode.MISS_MATCH_PROVIDER);
         }
 
+        if (member.getStatus() != MemberStatus.PERMITTED) {
+            throw new CustomOAuthException(ErrorCode.MEMBER_STATUS_WITHDRAWAL);
+        }
+
         Tokens tokens = getTokens(member);
 
         return LoginResponse.builder()
             .id(member.getId())
+            .nickname(member.getNickname())
             .profileImage(member.getProfileImage())
             .techStackDtos(getTechStackDtosFromMember(member))
             .accessToken(tokens.getAccessToken())
@@ -160,7 +160,7 @@ public class OAuthService {
     private List<TechStack> getTechsById(List<Long> techStackDtos) {
         List<TechStack> techStacks = techStackRepository.findAllById(techStackDtos);
         if (techStacks.isEmpty()) {
-            throw new TechStackException("기술이 존재하지 않습니다.");
+            throw new TechStackException(NOT_FOUND_TECH_STACK);
         }
         return techStacks;
     }

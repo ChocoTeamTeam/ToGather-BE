@@ -31,7 +31,7 @@ public class QueryDslProjectRepositoryImpl implements QueryDslProjectRepository 
     private final JPAQueryFactory jpaQueryFactory;
 
     @Override
-    public Optional<Project> findByIdQuery(Long projectId) {
+    public Optional<Project> findByIdWithMemberAndTechStack(Long projectId) {
         return Optional.ofNullable(jpaQueryFactory
                 .selectFrom(project)
                 .where(project.id.eq(projectId))

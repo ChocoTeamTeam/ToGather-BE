@@ -15,6 +15,7 @@ import lombok.Setter;
 public class LoginResponse {
 
     private Long id;
+    private String nickname;
     private String profileImage;
     private List<TechStackDto> techStackDtos;
     private String signUpToken;
