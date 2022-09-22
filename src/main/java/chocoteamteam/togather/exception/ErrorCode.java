@@ -23,7 +23,11 @@ public enum ErrorCode {
     NOT_FOUND_PROJECT(HttpStatus.BAD_REQUEST, "프로젝트를 찾을 수 없습니다"),
     INVALID_TOKEN(HttpStatus.UNAUTHORIZED,"유효하지 않은 인증 토큰 입니다."),
     SERVER_ERROR(HttpStatus.INTERNAL_SERVER_ERROR,"서버 에러 입니다."),
-    NO_PERMISSION(HttpStatus.FORBIDDEN,"요청에 대한 권한이 없습니다.");
+    NO_PERMISSION(HttpStatus.FORBIDDEN,"요청에 대한 권한이 없습니다."),
+
+
+    NOT_FOUND_COMMENT(HttpStatus.BAD_REQUEST, "해당 댓글을 찾을 수 없습니다."),
+    ;
 
     private final HttpStatus httpStatus;
     private final String errorMessage;

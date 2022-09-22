@@ -41,6 +41,14 @@ public class Project extends BaseTimeEntity {
     @OneToMany(mappedBy = "project", cascade =  CascadeType.PERSIST, orphanRemoval = true)
     private final List<ProjectTechStack> projectTechStacks = new ArrayList<>();
 
+    @OneToMany(mappedBy = "project", cascade = CascadeType.PERSIST, orphanRemoval = true)
+    private final List<Comment> comments = new ArrayList<>();
+
+    public void addComment(Comment comment) {
+        this.comments.add(comment);
+        comment.setProject(this);
+    }
+
     public void update(UpdateProjectForm form) {
         this.title = form.getTitle();
         this.content = form.getContent();
