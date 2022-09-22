@@ -72,8 +72,7 @@ public class ProjectService {
             UpdateProjectForm form
     ) {
 
-        //프로젝트, 멤버, 모집기술스택, 기술스택 한번에 가져옴
-        Project project = projectRepository.findByIdQuery(projectId)
+        Project project = projectRepository.findByIdWithMemberAndTechStack(projectId)
                 .orElseThrow(() -> new ProjectException(NOT_FOUND_PROJECT));
         validate(project, memberId);
         return updateProject(form, project);
@@ -138,13 +137,13 @@ public class ProjectService {
 
     @Transactional
     public ProjectDetails getProject(Long projectId) {
-        return ProjectDetails.fromEntity(projectRepository.findByIdQuery(projectId)
+        return ProjectDetails.fromEntity(projectRepository.findByIdWithMemberAndTechStack(projectId)
                 .orElseThrow(() -> new ProjectException(NOT_FOUND_PROJECT)));
     }
 
     @Transactional
     public ProjectDto deleteProject(Long projectId, Long memberId, Role role) {
-        Project project = projectRepository.findByIdQuery(projectId)
+        Project project = projectRepository.findByIdWithMemberAndTechStack(projectId)
                 .orElseThrow(() -> new ProjectException(NOT_FOUND_PROJECT));
 
         if (role != Role.ROLE_ADMIN) {
