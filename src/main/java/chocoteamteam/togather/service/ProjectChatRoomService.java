@@ -39,7 +39,7 @@ public class ProjectChatRoomService {
 			.name(form.getRoomName())
 			.build()));
 	}
-	private void authenticateProjectMember(Long projectId, Long memberId) {
+	private void authenticateProjectMember(long projectId, long memberId) {
 		if (!projectMemberRepository.existsByProject_IdAndMember_Id(projectId, memberId)) {
 			throw new ProjectMemberException(ErrorCode.NOT_PROJECT_MEMBER);
 		}

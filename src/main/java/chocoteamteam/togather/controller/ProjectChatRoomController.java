@@ -34,8 +34,9 @@ public class ProjectChatRoomController {
 	)
 	@PreAuthorize("hasRole('USER')")
 	@PostMapping("/{projectId}/chats")
-	public ResponseEntity<ChatRoomDto> createProjectChat(@ApiIgnore @AuthenticationPrincipal LoginMember member,
-		@PathVariable Long projectId,@RequestBody @Valid CreateChatRoomForm form) {
+	public ResponseEntity<ChatRoomDto> createProjectChat(
+		@ApiIgnore @AuthenticationPrincipal LoginMember member,
+		@PathVariable long projectId, @RequestBody @Valid CreateChatRoomForm form) {
 
 		form.setProjectId(projectId);
 		form.setMemberId(member.getId());
