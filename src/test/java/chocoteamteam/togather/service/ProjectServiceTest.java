@@ -1,10 +1,7 @@
 package chocoteamteam.togather.service;
 
 import chocoteamteam.togather.dto.*;
-import chocoteamteam.togather.entity.Member;
-import chocoteamteam.togather.entity.Project;
-import chocoteamteam.togather.entity.ProjectTechStack;
-import chocoteamteam.togather.entity.TechStack;
+import chocoteamteam.togather.entity.*;
 import chocoteamteam.togather.exception.ErrorCode;
 import chocoteamteam.togather.exception.ProjectException;
 import chocoteamteam.togather.repository.MemberRepository;
@@ -293,16 +290,8 @@ class ProjectServiceTest {
     }
 
     @Test
-    @DisplayName("프로젝트 상세조회 성공")
+    @DisplayName("프로젝트 상세조회 성공 (댓글 추가)")
     void getProject_success() {
-        member = Member.builder()
-                .id(9L)
-                .email("togather@to.com")
-                .nickname("두개더")
-                .profileImage("img_url")
-                .build();
-
-
         project = Project.builder()
                 .id(999L)
                 .member(member)
@@ -314,16 +303,20 @@ class ProjectServiceTest {
                 .offline(true)
                 .deadline(LocalDate.of(2022, 9, 12))
                 .build();
+
+        project.addComment(Comment.builder().member(member).id(1L).build());
+        project.addComment(Comment.builder().member(member).id(2L).build());
+        project.addComment(Comment.builder().member(member).id(3L).build());
         //given
         given(projectRepository.findByIdQuery(anyLong()))
                 .willReturn(Optional.of(project));
-
 
         //when
         ProjectDetails projectDetails = projectService.getProject(1L);
         //then
 
         assertEquals(999L, projectDetails.getId());
+        assertEquals(3, projectDetails.getComments().size());
     }
 
     @Test
