@@ -44,6 +44,7 @@ public class JwtEntryPoint implements AuthenticationEntryPoint {
 				.errorCode(ErrorCode.INVALID_TOKEN)
 				.errorMessage(ErrorCode.INVALID_TOKEN.getErrorMessage())
 				.build();
+			response.setStatus(HttpStatus.UNAUTHORIZED.value());
 		}
 
 		response.getWriter().write(objectMapper.writeValueAsString(errorResponse));
