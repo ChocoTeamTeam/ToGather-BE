@@ -12,6 +12,7 @@ import chocoteamteam.togather.entity.Member;
 import chocoteamteam.togather.entity.MemberTechStack;
 import chocoteamteam.togather.entity.TechStack;
 import chocoteamteam.togather.exception.CustomOAuthException;
+import chocoteamteam.togather.exception.ErrorCode;
 import chocoteamteam.togather.exception.TechStackException;
 import chocoteamteam.togather.repository.MemberRepository;
 import chocoteamteam.togather.repository.MemberTechStackRepository;
@@ -138,7 +139,7 @@ class OAuthServiceTest {
                 .techStackDtoList(techStackDtos)
                 .build()))
             .isInstanceOf(TechStackException.class)
-            .hasMessage("기술이 존재하지 않습니다.");
+            .hasMessage(ErrorCode.NOT_FOUND_TECH_STACK.getErrorMessage());
     }
 
     @DisplayName("회원 가입 실패 - 이미 존재하는 닉네임")
@@ -165,7 +166,7 @@ class OAuthServiceTest {
                 .techStackDtoList(techStackDtos)
                 .build()))
             .isInstanceOf(CustomOAuthException.class)
-            .hasMessage("이미 존재하는 닉네임입니다.");
+            .hasMessage(ErrorCode.EXIST_TRUE_MEMBER_NICKNAME.getErrorMessage());
     }
 
 }
