@@ -49,4 +49,12 @@ public class ProjectChatRoomService {
 			throw new ChatRoomException(ErrorCode.MAXIMUM_CHAT_ROOM);
 		}
 	}
+
+	@Transactional(readOnly = true)
+	public List<ChatRoomDto> getChatRooms(long projectId, long memberId) {
+		authenticateProjectMember(projectId,memberId);
+
+		return ChatRoomDto.of(chatRoomRepository.findByProject_Id(projectId));
+	}
+
 }
