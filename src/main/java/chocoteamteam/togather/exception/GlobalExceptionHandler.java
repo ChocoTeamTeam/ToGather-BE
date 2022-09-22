@@ -33,4 +33,16 @@ public class GlobalExceptionHandler {
         log.error("{} is occured", e.getErrorCode());
         return new ErrorResponse(e.getStatus(), e.getErrorCode(), e.getErrorMessage());
     }
+
+    @ExceptionHandler(ProjectMemberException.class)
+    public ErrorResponse projectMemberExceptionHandler(ProjectMemberException e) {
+        log.error("{} is occured", e.getErrorCode());
+        return new ErrorResponse(e.getStatus(), e.getErrorCode(), e.getErrorMessage());
+    }
+
+    @ExceptionHandler(ChatRoomException.class)
+    public ErrorResponse chatRoomExceptionHandler(ChatRoomException e) {
+        log.error("{} is occured", e.getErrorCode());
+        return new ErrorResponse(e.getStatus(), e.getErrorCode(), e.getErrorMessage());
+    }
 }
