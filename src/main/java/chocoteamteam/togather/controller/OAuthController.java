@@ -5,6 +5,7 @@ import chocoteamteam.togather.dto.LoginResponse;
 import chocoteamteam.togather.dto.SignUpControllerDto;
 import chocoteamteam.togather.dto.SignUpServiceDto;
 import chocoteamteam.togather.dto.TokenMemberInfo;
+import chocoteamteam.togather.dto.Tokens;
 import chocoteamteam.togather.service.JwtService;
 import chocoteamteam.togather.service.OAuthService;
 import chocoteamteam.togather.type.MemberStatus;
@@ -36,13 +37,15 @@ import springfox.documentation.annotations.ApiIgnore;
 public class OAuthController {
 
     private final OAuthService oAuthService;
+    private final JwtService jwtService;
 
     @Operation(
         summary = "로그인", description = "Provider들이 제공하는 code를 RequestBody에 입력",
         tags = {"OAuth"}
     )
     @PostMapping("/login/{provider}")
-    public ResponseEntity<LoginResponse> login(@RequestBody String code, @PathVariable String provider) {
+    public ResponseEntity<LoginResponse> login(@RequestBody String code,
+        @PathVariable String provider) {
         return ResponseEntity.ok().body(oAuthService.login(code, provider));
     }
 
@@ -68,11 +71,19 @@ public class OAuthController {
         security = {@SecurityRequirement(name = "Authorization")},
         tags = {"OAuth"}
     )
-    @Secured({"ROLE_USER","ROLE_ADMIN"})
+    @Secured({"ROLE_USER", "ROLE_ADMIN"})
     @PostMapping("/logout")
     public ResponseEntity logout(@ApiIgnore @AuthenticationPrincipal LoginMember loginMember) {
         oAuthService.logout(loginMember.getId());
         return ResponseEntity.ok().body("");
     }
 
+    @Operation(
+        summary = "토큰 재발급", description = "로그인 되어있는 유저나 어드민은 로그아웃 할 수 있습니다.",
+        tags = {"OAuth"}
+    )
+    @PostMapping("/refresh")
+    public ResponseEntity<Tokens> refreshToken(@RequestBody String refreshToken) {
+        return ResponseEntity.ok().body(jwtService.refreshTokens(refreshToken));
+    }
 }

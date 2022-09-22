@@ -1,13 +1,7 @@
 package chocoteamteam.togather.service;
 
-import chocoteamteam.togather.dto.CreateProjectForm;
-import chocoteamteam.togather.dto.ProjectDetails;
-import chocoteamteam.togather.dto.ProjectDto;
-import chocoteamteam.togather.dto.UpdateProjectForm;
-import chocoteamteam.togather.entity.Member;
-import chocoteamteam.togather.entity.Project;
-import chocoteamteam.togather.entity.ProjectTechStack;
-import chocoteamteam.togather.entity.TechStack;
+import chocoteamteam.togather.dto.*;
+import chocoteamteam.togather.entity.*;
 import chocoteamteam.togather.exception.ErrorCode;
 import chocoteamteam.togather.exception.ProjectException;
 import chocoteamteam.togather.repository.MemberRepository;
@@ -15,6 +9,7 @@ import chocoteamteam.togather.repository.ProjectRepository;
 import chocoteamteam.togather.repository.ProjectTechStackRepository;
 import chocoteamteam.togather.repository.TechStackRepository;
 import chocoteamteam.togather.type.ProjectStatus;
+import chocoteamteam.togather.type.Role;
 import chocoteamteam.togather.type.TechCategory;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
@@ -295,16 +290,8 @@ class ProjectServiceTest {
     }
 
     @Test
-    @DisplayName("프로젝트 상세조회 성공")
+    @DisplayName("프로젝트 상세조회 성공 (댓글 추가)")
     void getProject_success() {
-        member = Member.builder()
-                .id(9L)
-                .email("togather@to.com")
-                .nickname("두개더")
-                .profileImage("img_url")
-                .build();
-
-
         project = Project.builder()
                 .id(999L)
                 .member(member)
@@ -316,15 +303,78 @@ class ProjectServiceTest {
                 .offline(true)
                 .deadline(LocalDate.of(2022, 9, 12))
                 .build();
+
+        project.addComment(Comment.builder().member(member).id(1L).build());
+        project.addComment(Comment.builder().member(member).id(2L).build());
+        project.addComment(Comment.builder().member(member).id(3L).build());
         //given
         given(projectRepository.findByIdQuery(anyLong()))
                 .willReturn(Optional.of(project));
-
 
         //when
         ProjectDetails projectDetails = projectService.getProject(1L);
         //then
 
         assertEquals(999L, projectDetails.getId());
+        assertEquals(3, projectDetails.getComments().size());
+    }
+
+    @Test
+    @DisplayName("프로젝트 삭제 성공 - 본인 글")
+    void deleteProject_MyProject() {
+        //given
+        given(projectRepository.findByIdQuery(anyLong()))
+                .willReturn(Optional.of(project));
+        //when
+        projectService.deleteProject(1L, LoginMember.builder()
+                .id(project.getMember().getId())
+                .role(Role.ROLE_USER)
+                .build());
+        //then
+        verify(projectRepository,times(1)).deleteById(project.getId());
+    }
+
+    @Test
+    @DisplayName("프로젝트 삭제 성공 - ADMIN")
+    void deleteProject_byAdmin() {
+        //given
+        given(projectRepository.findByIdQuery(anyLong()))
+                .willReturn(Optional.of(project));
+        //when
+        projectService.deleteProject(3L, LoginMember.builder()
+                .id(1234L)
+                .role(Role.ROLE_ADMIN)
+                .build());
+        //then
+        verify(projectRepository,times(1)).deleteById(project.getId());
+    }
+    @Test
+    @DisplayName("프로젝트 삭제 실패 - 해당 프로젝트 없음")
+    void deleteProject_NotFoundProject() {
+        //given
+        given(projectRepository.findByIdQuery(anyLong()))
+                .willReturn(Optional.empty());
+        //when
+        ProjectException exception = assertThrows(ProjectException.class,
+                () -> projectService.deleteProject(1L, LoginMember.builder().build()));
+
+        //then
+        assertEquals(ErrorCode.NOT_FOUND_PROJECT, exception.getErrorCode());
+    }
+
+    @Test
+    @DisplayName("프로젝트 삭제 실패 - 해당 프로젝트 삭제 권한 없음 (본인 글 x)")
+    void deleteProject_NotMyProject() {
+        //given
+        given(projectRepository.findByIdQuery(anyLong()))
+                .willReturn(Optional.of(project));
+        //when
+        ProjectException exception = assertThrows(ProjectException.class,
+                () -> projectService.deleteProject(1L, LoginMember.builder()
+                        .id(9876L)
+                        .role(Role.ROLE_USER)
+                        .build()));
+        //then
+        assertEquals(ErrorCode.NOT_MATCH_MEMBER_PROJECT, exception.getErrorCode());
     }
 }

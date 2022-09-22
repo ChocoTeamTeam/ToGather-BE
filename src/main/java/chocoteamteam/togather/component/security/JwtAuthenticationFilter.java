@@ -5,6 +5,7 @@ import static chocoteamteam.togather.exception.ErrorCode.*;
 
 import chocoteamteam.togather.dto.LoginMember;
 import chocoteamteam.togather.exception.MemberException;
+import chocoteamteam.togather.exception.TokenException;
 import chocoteamteam.togather.service.JwtService;
 import chocoteamteam.togather.type.MemberStatus;
 import java.io.IOException;
@@ -24,7 +25,6 @@ import org.springframework.web.filter.OncePerRequestFilter;
 
 @Slf4j
 @RequiredArgsConstructor
-@Component
 public class JwtAuthenticationFilter extends OncePerRequestFilter {
 
 	private final JwtService jwtService;
@@ -48,10 +48,9 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
 
 				saveLoginMemberInSecurityContext(loginMember);
 
-			} catch (RuntimeException e) {
+			} catch (Exception e) {
 				SecurityContextHolder.clearContext();
-
-				request.setAttribute("errorMessage", e.getMessage());
+				request.setAttribute("jwtError",e);
 			}
 		}
 	}

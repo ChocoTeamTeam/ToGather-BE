@@ -2,6 +2,7 @@ package chocoteamteam.togather.exception;
 
 import chocoteamteam.togather.dto.ErrorResponse;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.security.core.token.Token;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 
@@ -23,6 +24,12 @@ public class GlobalExceptionHandler {
 
     @ExceptionHandler(CustomOAuthException.class)
     public ErrorResponse customOAuthException(CustomOAuthException e) {
+        log.error("{} is occured", e.getErrorCode());
+        return new ErrorResponse(e.getStatus(), e.getErrorCode(), e.getErrorMessage());
+    }
+
+	  @ExceptionHandler(TokenException.class)
+    public ErrorResponse tokenExceptionHandler(TokenException e) {
         log.error("{} is occured", e.getErrorCode());
         return new ErrorResponse(e.getStatus(), e.getErrorCode(), e.getErrorMessage());
     }

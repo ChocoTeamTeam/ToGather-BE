@@ -4,15 +4,15 @@ import static chocoteamteam.togather.component.jwt.JwtUtils.BEARER_PREFIX;
 import static chocoteamteam.togather.component.jwt.JwtUtils.KEY_ID;
 import static chocoteamteam.togather.component.jwt.JwtUtils.KEY_PROVIDER;
 
-import chocoteamteam.togather.dto.SignUpTokenMemberInfo;
-import chocoteamteam.togather.exception.InvalidSignUpTokenException;
-import chocoteamteam.togather.repository.RefreshTokenRepository;
-import chocoteamteam.togather.component.jwt.JwtUtils;
 import chocoteamteam.togather.component.jwt.JwtIssuer;
 import chocoteamteam.togather.component.jwt.JwtParser;
+import chocoteamteam.togather.component.jwt.JwtUtils;
+import chocoteamteam.togather.dto.SignUpTokenMemberInfo;
 import chocoteamteam.togather.dto.TokenMemberInfo;
 import chocoteamteam.togather.dto.Tokens;
-import chocoteamteam.togather.exception.InvalidRefreshTokenException;
+import chocoteamteam.togather.exception.ErrorCode;
+import chocoteamteam.togather.exception.TokenException;
+import chocoteamteam.togather.repository.RefreshTokenRepository;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
 import lombok.NonNull;
@@ -57,7 +57,7 @@ public class JwtService {
 		Claims claims = jwtParser.parseToken(refreshToken, jwtUtils.getEncodedRefreshKey());
 
 		String savedToken = refreshTokenRepository.find(claims.get(KEY_ID, Long.class))
-			.orElseThrow(() -> new InvalidRefreshTokenException("Refresh Token이 유효하지 않습니다."));
+			.orElseThrow(() -> new TokenException(ErrorCode.INVALID_TOKEN));
 
 		validateRefreshTokens(refreshToken, savedToken);
 
@@ -66,7 +66,7 @@ public class JwtService {
 
 	private void validateRefreshTokens(String refreshToken, String savedToken) {
 		if (!refreshToken.equals(savedToken)) {
-			throw new InvalidRefreshTokenException("Refresh Token이 유효하지 않습니다.");
+			throw new TokenException(ErrorCode.INVALID_TOKEN);
 		}
 	}
 
@@ -88,7 +88,7 @@ public class JwtService {
 		Claims claims = jwtParser.parseToken(signUpToken, jwtUtils.getEncodedSignupKey());
 
 		if (!StringUtils.hasText(claims.get(KEY_PROVIDER, String.class))) {
-			throw new InvalidSignUpTokenException("유효한 회원가입 토큰이 아닙니다.");
+			throw new TokenException(ErrorCode.INVALID_TOKEN);
 		}
 
 		return SignUpTokenMemberInfo.from(claims);

@@ -1,5 +1,6 @@
 package chocoteamteam.togather.component.security;
 
+import chocoteamteam.togather.dto.LoginMember;
 import java.util.Collection;
 import lombok.Getter;
 import org.springframework.security.authentication.AbstractAuthenticationToken;
@@ -8,10 +9,10 @@ import org.springframework.security.core.GrantedAuthority;
 @Getter
 public class JwtAuthenticationToken extends AbstractAuthenticationToken {
 
-	private Object principal;
+	private LoginMember principal;
 	private Object credentials;
 
-	public JwtAuthenticationToken(Object principal, Object credentials, Collection<? extends GrantedAuthority> authorities) {
+	public JwtAuthenticationToken(LoginMember principal, Object credentials, Collection<? extends GrantedAuthority> authorities) {
 		super(authorities);
 		this.principal = principal;
 		this.credentials = credentials;
@@ -24,7 +25,8 @@ public class JwtAuthenticationToken extends AbstractAuthenticationToken {
 	}
 
 	@Override
-	public Object getPrincipal() {
+	public LoginMember getPrincipal() {
 		return this.principal;
 	}
+
 }
