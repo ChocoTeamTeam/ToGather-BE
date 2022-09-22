@@ -18,7 +18,6 @@ import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 import org.springframework.context.annotation.Import;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 
-import javax.annotation.PostConstruct;
 import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -114,7 +113,7 @@ class QueryDslProjectRepositoryImplTest {
     void findByIdQueryTest() {
         //given
         //when
-        Project project = projectRepository.findByIdQuery(1L).get();
+        Project project = projectRepository.findByIdWithMemberAndTechStack(1L).get();
 
         //then
         assertEquals(1L, project.getId());

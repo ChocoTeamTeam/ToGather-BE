@@ -200,7 +200,7 @@ class ProjectServiceTest {
         //새로 입력받은 기술 스택 ID
         List<Long> newTech = new ArrayList<>(List.of(3L, 4L, 5L, 6L));
 
-        given(projectRepository.findByIdQuery(anyLong()))
+        given(projectRepository.findByIdWithMemberAndTechStack(anyLong()))
                 .willReturn(Optional.of(testProject));
 
         given(techStackRepository.findAllById(any()))
@@ -231,7 +231,7 @@ class ProjectServiceTest {
     void updateProject_NotFoundProject() {
         //given
 
-        given(projectRepository.findByIdQuery(anyLong()))
+        given(projectRepository.findByIdWithMemberAndTechStack(anyLong()))
                 .willReturn(Optional.empty());
         //when
         ProjectException exception = assertThrows(ProjectException.class,
@@ -246,7 +246,7 @@ class ProjectServiceTest {
     void updateProject_NotMatchMemberProject() {
 
         //given
-        given(projectRepository.findByIdQuery(anyLong()))
+        given(projectRepository.findByIdWithMemberAndTechStack(anyLong()))
                 .willReturn(Optional.of(project));
         //when
         ProjectException exception = assertThrows(ProjectException.class,
@@ -260,7 +260,7 @@ class ProjectServiceTest {
     @DisplayName("프로젝트 수정 실패 - 해당 기술스택 없음")
     void updateProject_NotFoundTechStack() {
         //given
-        given(projectRepository.findByIdQuery(anyLong()))
+        given(projectRepository.findByIdWithMemberAndTechStack(anyLong()))
                 .willReturn(Optional.of(project));
         given(techStackRepository.findAllById(any()))
                 .willReturn(new ArrayList<>());
@@ -285,7 +285,7 @@ class ProjectServiceTest {
     @DisplayName("프로젝트 상세조회 실패")
     void getProject_fail() {
         //given
-        given(projectRepository.findByIdQuery(anyLong()))
+        given(projectRepository.findByIdWithMemberAndTechStack(anyLong()))
                 .willReturn(Optional.empty());
         //when
         ProjectException exception = assertThrows(ProjectException.class,
@@ -314,7 +314,7 @@ class ProjectServiceTest {
         project.addComment(Comment.builder().member(member).id(2L).build());
         project.addComment(Comment.builder().member(member).id(3L).build());
         //given
-        given(projectRepository.findByIdQuery(anyLong()))
+        given(projectRepository.findByIdWithMemberAndTechStack(anyLong()))
                 .willReturn(Optional.of(project));
 
         //when
@@ -329,7 +329,7 @@ class ProjectServiceTest {
     @DisplayName("프로젝트 삭제 성공 - 본인 글")
     void deleteProject_MyProject() {
         //given
-        given(projectRepository.findByIdQuery(anyLong()))
+        given(projectRepository.findByIdWithMemberAndTechStack(anyLong()))
                 .willReturn(Optional.of(project));
         //when
         projectService.deleteProject(1L, member.getId(), Role.ROLE_USER);
@@ -341,7 +341,7 @@ class ProjectServiceTest {
     @DisplayName("프로젝트 삭제 성공 - ADMIN")
     void deleteProject_byAdmin() {
         //given
-        given(projectRepository.findByIdQuery(anyLong()))
+        given(projectRepository.findByIdWithMemberAndTechStack(anyLong()))
                 .willReturn(Optional.of(project));
         //when
         projectService.deleteProject(3L, 1234L, Role.ROLE_ADMIN);
@@ -353,7 +353,7 @@ class ProjectServiceTest {
     @DisplayName("프로젝트 삭제 실패 - 해당 프로젝트 없음")
     void deleteProject_NotFoundProject() {
         //given
-        given(projectRepository.findByIdQuery(anyLong()))
+        given(projectRepository.findByIdWithMemberAndTechStack(anyLong()))
                 .willReturn(Optional.empty());
         //when
         ProjectException exception = assertThrows(ProjectException.class,
@@ -367,7 +367,7 @@ class ProjectServiceTest {
     @DisplayName("프로젝트 삭제 실패 - 해당 프로젝트 삭제 권한 없음 (본인 글 x)")
     void deleteProject_NotMyProject() {
         //given
-        given(projectRepository.findByIdQuery(anyLong()))
+        given(projectRepository.findByIdWithMemberAndTechStack(anyLong()))
                 .willReturn(Optional.of(project));
         //when
         ProjectException exception = assertThrows(ProjectException.class,
