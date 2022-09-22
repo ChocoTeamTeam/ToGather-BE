@@ -9,6 +9,7 @@ import chocoteamteam.togather.exception.ProjectMemberException;
 import chocoteamteam.togather.repository.ChatRoomRepository;
 import chocoteamteam.togather.repository.ProjectMemberRepository;
 import chocoteamteam.togather.repository.ProjectRepository;
+import java.util.List;
 import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -31,7 +32,7 @@ public class ProjectChatRoomService {
 	public ChatRoomDto createChatRoom(@NonNull CreateChatRoomForm form) {
 		authenticateProjectMember(form.getProjectId(), form.getMemberId());
 
-		checkChatRoomMaximum(form);
+		checkChatRoomMaximum(form.getProjectId());
 
 		return ChatRoomDto.from(chatRoomRepository.save(ChatRoom.builder()
 			.project(projectRepository.getReferenceById(form.getProjectId()))
@@ -43,13 +44,9 @@ public class ProjectChatRoomService {
 			throw new ProjectMemberException(ErrorCode.NOT_PROJECT_MEMBER);
 		}
 	}
-	private void checkChatRoomMaximum(CreateChatRoomForm input) {
-		if (chatRoomRepository.countByProject_Id(input.getProjectId()) >= TEAM_CHAT_MAXIMUM) {
+	private void checkChatRoomMaximum(long projectId) {
+		if (chatRoomRepository.countByProject_Id(projectId) >= TEAM_CHAT_MAXIMUM) {
 			throw new ChatRoomException(ErrorCode.MAXIMUM_CHAT_ROOM);
 		}
 	}
-
-
-
-
 }
