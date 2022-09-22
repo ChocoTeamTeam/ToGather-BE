@@ -1,17 +1,13 @@
 package chocoteamteam.togather.entity;
 
+import chocoteamteam.togather.dto.UpdateTechStackForm;
 import chocoteamteam.togather.type.TechCategory;
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.EnumType;
-import javax.persistence.Enumerated;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+
+import javax.persistence.*;
 
 @Getter
 @Builder
@@ -29,4 +25,9 @@ public class TechStack extends BaseTimeEntity {
     private TechCategory category;
     private String image;
 
+    public void update(UpdateTechStackForm form) {
+        this.name = form.getName();
+        this.category = form.getCategory();
+        this.image = form.getImage();
+    }
 }
