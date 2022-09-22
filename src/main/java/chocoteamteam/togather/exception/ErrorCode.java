@@ -25,11 +25,8 @@ public enum ErrorCode {
     SERVER_ERROR(HttpStatus.INTERNAL_SERVER_ERROR,"서버 에러 입니다."),
     NO_PERMISSION(HttpStatus.FORBIDDEN,"요청에 대한 권한이 없습니다."),
     NOT_PROJECT_MEMBER(HttpStatus.BAD_REQUEST,"프로젝트의 팀원이 아닙니다."),
-    MAXIMUM_CHAT_ROOM(HttpStatus.BAD_REQUEST,"더이상 채팅방을 열 수 없습니다.");
-
-
-    NOT_FOUND_COMMENT(HttpStatus.BAD_REQUEST, "해당 댓글을 찾을 수 없습니다."),
-    ;
+    MAXIMUM_CHAT_ROOM(HttpStatus.BAD_REQUEST,"더이상 채팅방을 열 수 없습니다."),
+    NOT_FOUND_COMMENT(HttpStatus.BAD_REQUEST, "해당 댓글을 찾을 수 없습니다.");
 
     private final HttpStatus httpStatus;
     private final String errorMessage;
