@@ -1,5 +1,7 @@
 package chocoteamteam.togather.controller;
 
+import chocoteamteam.togather.dto.ChatDetailDto;
+import chocoteamteam.togather.dto.ChatDetailDto;
 import chocoteamteam.togather.dto.ChatRoomDto;
 import chocoteamteam.togather.dto.CreateChatRoomForm;
 import chocoteamteam.togather.dto.LoginMember;
@@ -47,7 +49,7 @@ public class ProjectChatRoomController {
 	}
 
 	@Operation(
-		summary = "채팅방 조회", description = "프로젝트 멤버만 조회가능",
+		summary = "채팅방 리스트 조회", description = "프로젝트 멤버만 조회가능",
 		security = {@SecurityRequirement(name = "Authorization")},
 		tags = {"Chat"}
 	)
@@ -60,6 +62,24 @@ public class ProjectChatRoomController {
 		return ResponseEntity.ok()
 			.body(projectChatRoomService.getChatRooms(projectId, member.getId()));
 	}
+
+	// 채팅방 상세조회
+	@Operation(
+		summary = "채팅방 상세 조회", description = "프로젝트 멤버만 조회가능, 메시지들도 함께 조회",
+		security = {@SecurityRequirement(name = "Authorization")},
+		tags = {"Chat"}
+	)
+	@PreAuthorize("hasRole('USER')")
+	@GetMapping("/{projectId}/chats/{chatId}")
+	public ResponseEntity<ChatDetailDto> getProjectChat(
+		@ApiIgnore @AuthenticationPrincipal LoginMember member,
+		@PathVariable long projectId, @PathVariable long chatId) {
+
+		return ResponseEntity.ok()
+			.body(projectChatRoomService
+				.getChatRoom(projectId, member.getId(), chatId));
+	}
+
 
 
 }

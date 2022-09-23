@@ -12,6 +12,8 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 import chocoteamteam.togather.config.SecurityConfig;
+import chocoteamteam.togather.dto.ChatDetailDto;
+import chocoteamteam.togather.dto.ChatMessageDto;
 import chocoteamteam.togather.dto.ChatRoomDto;
 import chocoteamteam.togather.dto.CreateChatRoomForm;
 import chocoteamteam.togather.service.JwtService;
@@ -106,4 +108,38 @@ class ProjectChatRoomControllerTest {
 		assertThat(projectIdCaptor.getValue()).isEqualTo(1L);
 		assertThat(memberIdCaptor.getValue()).isEqualTo(1L);
 	}
+
+	@WithLoginMember
+	@DisplayName("채팅방 상세 조회 API 성공")
+	@Test
+	void getProjectChat_success() throws Exception {
+		//given
+		ChatMessageDto message = ChatMessageDto.builder()
+			.message("test")
+			.nickname("tester")
+			.build();
+
+		List<ChatMessageDto> messages = Arrays.asList(message);
+
+		ChatDetailDto dto = ChatDetailDto.builder()
+			.roomId(1L)
+			.messages(messages)
+			.build();
+
+
+		given(projectChatRoomService.getChatRoom(anyLong(), anyLong(),anyLong()))
+			.willReturn(dto);
+
+		//when
+		//then
+		mockMvc.perform(get("/projects/1/chats/1"))
+			.andDo(print())
+			.andExpect(status().isOk())
+			.andExpect(jsonPath("$.roomId").value(dto.getRoomId()))
+			.andExpect(jsonPath("$.messages[0].message").value(message.getMessage()))
+			.andExpect(jsonPath("$.messages[0].nickname").value(message.getNickname()));
+
+	}
+
+
 }
