@@ -1,5 +1,6 @@
 package chocoteamteam.togather.service;
 
+import chocoteamteam.togather.dto.ChatDetailDto;
 import chocoteamteam.togather.dto.ChatRoomDto;
 import chocoteamteam.togather.dto.CreateChatRoomForm;
 import chocoteamteam.togather.entity.ChatRoom;
@@ -9,6 +10,7 @@ import chocoteamteam.togather.exception.ProjectMemberException;
 import chocoteamteam.togather.repository.ChatRoomRepository;
 import chocoteamteam.togather.repository.ProjectMemberRepository;
 import chocoteamteam.togather.repository.ProjectRepository;
+import chocoteamteam.togather.repository.impl.QuerydslChatRepository;
 import java.util.List;
 import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
@@ -26,6 +28,7 @@ public class ProjectChatRoomService {
 	private final ChatRoomRepository chatRoomRepository;
 	private final ProjectRepository projectRepository;
 	private final ProjectMemberRepository projectMemberRepository;
+	private final QuerydslChatRepository querydslChatRepository;
 
 
 	@Transactional
@@ -55,6 +58,17 @@ public class ProjectChatRoomService {
 		authenticateProjectMember(projectId,memberId);
 
 		return ChatRoomDto.of(chatRoomRepository.findByProject_Id(projectId));
+	}
+
+	@Transactional(readOnly = true)
+	public ChatDetailDto getChatRoom(long projectId, long memberId, long chatRoomId) {
+		authenticateProjectMember(projectId, memberId);
+
+		return ChatDetailDto.builder()
+			.roomId(chatRoomId)
+			.messages(querydslChatRepository.findAllByChatRoomId(chatRoomId))
+			.build();
+
 	}
 
 }
