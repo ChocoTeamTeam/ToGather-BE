@@ -1,17 +1,20 @@
 package chocoteamteam.togather.dto;
 
-import java.util.List;
+import javax.validation.constraints.NotBlank;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-@NoArgsConstructor
 @AllArgsConstructor
+@NoArgsConstructor
 @Builder
 @Data
-public class ChatDetailDto {
+public class ChangeChatRoomNameForm {
+	private long projectId;
+	private long memberId;
 	private long roomId;
+
+	@NotBlank
 	private String roomName;
-	private List<ChatMessageDto> messages;
 }

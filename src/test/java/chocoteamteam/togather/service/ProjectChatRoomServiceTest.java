@@ -6,6 +6,7 @@ import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyLong;
 import static org.mockito.BDDMockito.given;
 
+import chocoteamteam.togather.dto.ChangeChatRoomNameForm;
 import chocoteamteam.togather.dto.ChatDetailDto;
 import chocoteamteam.togather.dto.ChatMessageDto;
 import chocoteamteam.togather.dto.ChatRoomDto;
@@ -225,8 +226,76 @@ class ProjectChatRoomServiceTest {
 			.hasMessage(ErrorCode.CHATROOM_NOT_MATCHED_PROJECT.getErrorMessage());
 	}
 
+	@DisplayName("프로젝트 채팅방 이름 변경 성공")
+	@Test
+	void changeChatRoomName_success(){
+		//given
+		given(projectMemberRepository.existsByProject_IdAndMember_Id(anyLong(), anyLong()))
+			.willReturn(true);
+		given(chatRoomRepository.findById(anyLong()))
+			.willReturn(Optional.of(chatRoom));
+
+		ChangeChatRoomNameForm form = ChangeChatRoomNameForm.builder()
+			.roomId(1L)
+			.memberId(1L)
+			.projectId(1L)
+			.roomName("change")
+			.build();
+
+		//when
+		projectChatRoomService.changeChatRoomName(form);
+
+		//then
+		assertThat(chatRoom.getName()).isEqualTo(form.getRoomName());
+	}
+
+	@DisplayName("프로젝트 채팅방 이름 변경 실패 - 채팅방이 존재하지 않는 경우")
+	@Test
+	void changeChatRoomName_fail_notFoundChatRoom(){
+		//given
+		given(projectMemberRepository.existsByProject_IdAndMember_Id(anyLong(), anyLong()))
+			.willReturn(true);
+
+		given(chatRoomRepository.findById(anyLong()))
+			.willReturn(Optional.empty());
+
+		ChangeChatRoomNameForm form = ChangeChatRoomNameForm.builder()
+			.roomId(1L)
+			.memberId(1L)
+			.projectId(1L)
+			.roomName("change")
+			.build();
+
+		//when
+		//then
+		assertThatThrownBy(() -> projectChatRoomService.changeChatRoomName(form))
+			.isInstanceOf(ChatRoomException.class)
+			.hasMessage(ErrorCode.NOT_FOUND_CHATROOM.getErrorMessage());
+	}
+
+	@DisplayName("프로젝트 채팅방 이름 변경 실패 - 요청한 채팅방이 프로젝트의 채팅방이 아닌 경우")
+	@Test
+	void changeChatRoomName_fail_chatroomNotMatchedProject(){
+		//given
+		given(projectMemberRepository.existsByProject_IdAndMember_Id(anyLong(), anyLong()))
+			.willReturn(true);
 
 
+		given(chatRoomRepository.findById(anyLong()))
+			.willReturn(Optional.of(chatRoom));
 
+		ChangeChatRoomNameForm form = ChangeChatRoomNameForm.builder()
+			.roomId(1L)
+			.memberId(1L)
+			.projectId(2L)
+			.roomName("change")
+			.build();
+
+		//when
+		//then
+		assertThatThrownBy(() -> projectChatRoomService.changeChatRoomName(form))
+			.isInstanceOf(ChatRoomException.class)
+			.hasMessage(ErrorCode.CHATROOM_NOT_MATCHED_PROJECT.getErrorMessage());
+	}
 
 }

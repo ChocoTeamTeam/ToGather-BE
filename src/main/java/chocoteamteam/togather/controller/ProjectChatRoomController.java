@@ -1,5 +1,6 @@
 package chocoteamteam.togather.controller;
 
+import chocoteamteam.togather.dto.ChangeChatRoomNameForm;
 import chocoteamteam.togather.dto.ChatDetailDto;
 import chocoteamteam.togather.dto.ChatDetailDto;
 import chocoteamteam.togather.dto.ChatRoomDto;
@@ -18,6 +19,7 @@ import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -80,6 +82,26 @@ public class ProjectChatRoomController {
 				.getChatRoom(projectId, member.getId(), chatId));
 	}
 
+	@Operation(
+		summary = "채팅방 이름 수정", description = "채팅방 이름 수정",
+		security = {@SecurityRequirement(name = "Authorization")},
+		tags = {"Chat"}
+	)
+	@PreAuthorize("hasRole('USER')")
+	@PutMapping("/{projectId}/chats/{chatId}")
+	public ResponseEntity changeProjectChatName(
+		@ApiIgnore @AuthenticationPrincipal LoginMember member,
+		@PathVariable long projectId, @PathVariable long chatId,
+		@RequestBody ChangeChatRoomNameForm form) {
+
+		form.setProjectId(projectId);
+		form.setMemberId(member.getId());
+		form.setRoomId(chatId);
+
+		projectChatRoomService.changeChatRoomName(form);
+
+		return ResponseEntity.ok().body("");
+	}
 
 
 }
