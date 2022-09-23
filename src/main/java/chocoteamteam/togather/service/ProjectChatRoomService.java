@@ -57,7 +57,7 @@ public class ProjectChatRoomService {
 	public List<ChatRoomDto> getChatRooms(long projectId, long memberId) {
 		authenticateProjectMember(projectId,memberId);
 
-		return ChatRoomDto.of(chatRoomRepository.findByProject_Id(projectId));
+		return ChatRoomDto.of(chatRoomRepository.findAllByProject_Id(projectId));
 	}
 
 	@Transactional(readOnly = true)

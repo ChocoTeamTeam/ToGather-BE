@@ -8,5 +8,5 @@ public interface ChatRoomRepository extends JpaRepository<ChatRoom, Long> {
 
 	long countByProject_Id(long projectId);
 
-	List<ChatRoom> findByProject_Id(long projectId);
+	List<ChatRoom> findAllByProject_Id(long projectId);
 }
