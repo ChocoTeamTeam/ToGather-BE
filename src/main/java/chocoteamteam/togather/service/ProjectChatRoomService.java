@@ -44,7 +44,7 @@ public class ProjectChatRoomService {
 	}
 	private void authenticateProjectMember(long projectId, long memberId) {
 		if (!projectMemberRepository.existsByProject_IdAndMember_Id(projectId, memberId)) {
-			throw new ProjectMemberException(ErrorCode.NOT_PROJECT_MEMBER);
+			throw new ProjectMemberException(ErrorCode.NO_PERMISSION);
 		}
 	}
 	private void checkChatRoomMaximum(long projectId) {
@@ -64,8 +64,16 @@ public class ProjectChatRoomService {
 	public ChatDetailDto getChatRoom(long projectId, long memberId, long chatRoomId) {
 		authenticateProjectMember(projectId, memberId);
 
+		ChatRoom chatRoom = chatRoomRepository.findById(chatRoomId)
+			.orElseThrow(() -> new ChatRoomException(ErrorCode.NOT_FOUND_CHATROOM));
+
+		if (projectId != chatRoom.getProject().getId()) {
+			throw new ChatRoomException(ErrorCode.NOT_FOUND_CHATROOM);
+		}
+
 		return ChatDetailDto.builder()
 			.roomId(chatRoomId)
+			.roomName(chatRoom.getName())
 			.messages(querydslChatRepository.findAllByChatRoomId(chatRoomId))
 			.build();
 

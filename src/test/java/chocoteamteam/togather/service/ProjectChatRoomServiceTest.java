@@ -21,6 +21,7 @@ import chocoteamteam.togather.repository.ProjectRepository;
 import chocoteamteam.togather.repository.impl.QuerydslChatRepository;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Optional;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -120,7 +121,7 @@ class ProjectChatRoomServiceTest {
 
 		given(projectMemberRepository.existsByProject_IdAndMember_Id(anyLong(), anyLong()))
 			.willReturn(true);
-		given(chatRoomRepository.findByProject_Id(anyLong()))
+		given(chatRoomRepository.findAllByProject_Id(anyLong()))
 			.willReturn(list);
 
 	    //when
@@ -159,6 +160,8 @@ class ProjectChatRoomServiceTest {
 
 		given(projectMemberRepository.existsByProject_IdAndMember_Id(anyLong(), anyLong()))
 			.willReturn(true);
+		given(chatRoomRepository.findById(anyLong()))
+			.willReturn(Optional.of(chatRoom));
 		given(querydslChatRepository.findAllByChatRoomId(anyLong()))
 			.willReturn(messages);
 
@@ -167,11 +170,14 @@ class ProjectChatRoomServiceTest {
 
 		//then
 		assertThat(dto.getMessages().size()).isEqualTo(messages.size());
+		assertThat(dto.getRoomId()).isEqualTo(chatRoom.getId());
+		assertThat(dto.getRoomName()).isEqualTo(chatRoom.getName());
+		assertThat(dto.getMessages().get(0).getMessage()).isEqualTo(message.getMessage());
 		assertThat(dto.getMessages().get(0).getMessage()).isEqualTo(message.getMessage());
 		assertThat(dto.getMessages().get(0).getNickname()).isEqualTo(message.getNickname());
 	}
 
-	@DisplayName("프로젝트 채팅방 메세지 조회 실패 - 프로젝트 멤버가 아닌 경우")
+	@DisplayName("프로젝트 채팅방 상세 조회 실패 - 프로젝트 멤버가 아닌 경우")
 	@Test
 	void getChatRoom_fail_notProjectMember(){
 		//given
@@ -183,6 +189,40 @@ class ProjectChatRoomServiceTest {
 		assertThatThrownBy(() -> projectChatRoomService.getChatRoom(1L, 1L,1L))
 			.isInstanceOf(ProjectMemberException.class)
 			.hasMessage(ErrorCode.NOT_PROJECT_MEMBER.getErrorMessage());
+	}
+
+	@DisplayName("프로젝트 채팅방 상세 조회 실패 - 채팅방이 존재하지 않는 경우")
+	@Test
+	void getChatRoom_fail_notFoundChatRoom(){
+		//given
+		given(projectMemberRepository.existsByProject_IdAndMember_Id(anyLong(), anyLong()))
+			.willReturn(true);
+
+		given(chatRoomRepository.findById(anyLong()))
+			.willReturn(Optional.empty());
+
+		//when
+		//then
+		assertThatThrownBy(() -> projectChatRoomService.getChatRoom(1L, 1L,1L))
+			.isInstanceOf(ChatRoomException.class)
+			.hasMessage(ErrorCode.NOT_FOUND_CHATROOM.getErrorMessage());
+	}
+
+	@DisplayName("프로젝트 채팅방 상세 조회 실패 - 요청한 채팅방이 프로젝트의 채팅방이 아닌 경우")
+	@Test
+	void getChatRoom_fail_chatroomNotMatchedProject(){
+		//given
+		given(projectMemberRepository.existsByProject_IdAndMember_Id(anyLong(), anyLong()))
+			.willReturn(true);
+
+		given(chatRoomRepository.findById(anyLong()))
+			.willReturn(Optional.of(chatRoom));
+
+		//when
+		//then
+		assertThatThrownBy(() -> projectChatRoomService.getChatRoom(2L, 1L,1L))
+			.isInstanceOf(ChatRoomException.class)
+			.hasMessage(ErrorCode.CHATROOM_NOT_MATCHED_PROJECT.getErrorMessage());
 	}
 
 
