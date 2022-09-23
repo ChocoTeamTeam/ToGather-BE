@@ -1,0 +1,38 @@
+package chocoteamteam.togather.repository.impl;
+
+import static chocoteamteam.togather.entity.QChatMessage.chatMessage;
+import static chocoteamteam.togather.entity.QMember.member;
+
+import chocoteamteam.togather.dto.ChatMessageDto;
+import com.querydsl.core.types.Projections;
+import com.querydsl.jpa.impl.JPAQueryFactory;
+import java.util.List;
+import lombok.RequiredArgsConstructor;
+import org.springframework.stereotype.Repository;
+import org.springframework.transaction.annotation.Transactional;
+
+@RequiredArgsConstructor
+@Repository
+@Transactional
+public class QuerydslChatRepository {
+
+	private final JPAQueryFactory jpaQueryFactory;
+
+	public List<ChatMessageDto> findAllByChatRoomId(long chatRoomId) {
+		List<ChatMessageDto> result = jpaQueryFactory.select(
+				Projections.fields(ChatMessageDto.class,
+					member.nickname.as("nickname"),
+					member.profileImage.as("profileImage"),
+					chatMessage.message.as("message"),
+					chatMessage.createdAt.as("time")
+				)).from(chatMessage)
+			.innerJoin(chatMessage.sender, member)
+			.where(chatMessage.chatRoom.id.eq(chatRoomId))
+			.orderBy(chatMessage.createdAt.desc())
+			.limit(1000)
+			.fetch();
+
+		return result;
+	}
+
+}
