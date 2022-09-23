@@ -4,22 +4,17 @@ import chocoteamteam.togather.dto.LoginMember;
 import chocoteamteam.togather.dto.LoginResponse;
 import chocoteamteam.togather.dto.SignUpControllerDto;
 import chocoteamteam.togather.dto.SignUpServiceDto;
-import chocoteamteam.togather.dto.TokenMemberInfo;
 import chocoteamteam.togather.dto.Tokens;
 import chocoteamteam.togather.service.JwtService;
 import chocoteamteam.togather.service.OAuthService;
-import chocoteamteam.togather.type.MemberStatus;
-import chocoteamteam.togather.type.Role;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import javax.validation.Valid;
-import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotEmpty;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.annotation.Secured;
-import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -27,6 +22,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import springfox.documentation.annotations.ApiIgnore;
 
@@ -43,8 +39,8 @@ public class OAuthController {
         summary = "로그인", description = "Provider들이 제공하는 code를 RequestBody에 입력",
         tags = {"OAuth"}
     )
-    @PostMapping("/login/{provider}")
-    public ResponseEntity<LoginResponse> login(@RequestBody String code,
+    @GetMapping("/login/{provider}")
+    public ResponseEntity<LoginResponse> login(@RequestParam String code,
         @PathVariable String provider) {
         return ResponseEntity.ok().body(oAuthService.login(code, provider));
     }
