@@ -7,4 +7,6 @@ import org.springframework.data.jpa.repository.JpaRepository;
 public interface ChatRoomRepository extends JpaRepository<ChatRoom, Long> {
 
 	long countByProject_Id(long projectId);
+
+	List<ChatRoom> findByProject_Id(long projectId);
 }

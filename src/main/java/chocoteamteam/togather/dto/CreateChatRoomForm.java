@@ -11,8 +11,8 @@ import lombok.NoArgsConstructor;
 @Builder
 @Data
 public class CreateChatRoomForm {
-	private Long memberId;
-	private Long projectId;
+	private long memberId;
+	private long projectId;
 
 	@NotBlank
 	private String roomName;

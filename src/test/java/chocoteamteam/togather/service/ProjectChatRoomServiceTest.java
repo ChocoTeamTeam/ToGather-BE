@@ -16,6 +16,8 @@ import chocoteamteam.togather.exception.ProjectMemberException;
 import chocoteamteam.togather.repository.ChatRoomRepository;
 import chocoteamteam.togather.repository.ProjectMemberRepository;
 import chocoteamteam.togather.repository.ProjectRepository;
+import java.util.Arrays;
+import java.util.List;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -75,7 +77,7 @@ class ProjectChatRoomServiceTest {
 		assertThat(dto.getRoomName()).isEqualTo(chatRoom.getName());
 	}
 
-	@DisplayName("프로젝트 채팅방 생성 실패 - 프로젝트 멤버가 아닌데 생성하려는 경우")
+	@DisplayName("프로젝트 채팅방 생성 실패 - 프로젝트 멤버가 아닌 경우")
 	@Test
 	void createChatRoom_fail_notProjectMember() {
 		//given
@@ -103,6 +105,40 @@ class ProjectChatRoomServiceTest {
 		assertThatThrownBy(() -> projectChatRoomService.createChatRoom(form))
 			.isInstanceOf(ChatRoomException.class)
 			.hasMessage(ErrorCode.MAXIMUM_CHAT_ROOM.getErrorMessage());
+	}
+
+	@DisplayName("프로젝트 채팅방 리스트 조회 성공")
+	@Test
+	void getChatRooms_success(){
+	    //given
+		List<ChatRoom> list = Arrays.asList(chatRoom);
+
+		given(projectMemberRepository.existsByProject_IdAndMember_Id(anyLong(), anyLong()))
+			.willReturn(true);
+		given(chatRoomRepository.findByProject_Id(anyLong()))
+			.willReturn(list);
+
+	    //when
+		List<ChatRoomDto> chatRooms = projectChatRoomService.getChatRooms(1L, 1L);
+
+		//then
+		assertThat(chatRooms.size()).isEqualTo(list.size());
+		assertThat(chatRooms.get(0).getRoomId()).isEqualTo(chatRoom.getId());
+		assertThat(chatRooms.get(0).getRoomName()).isEqualTo(chatRoom.getName());
+	}
+
+	@DisplayName("프로젝트 채팅방 리스트 조회 실패 - 프로젝트 멤버가 아닌 경우")
+	@Test
+	void getChatRooms_fail_notProjectMember(){
+	    //given
+		given(projectMemberRepository.existsByProject_IdAndMember_Id(anyLong(), anyLong()))
+			.willReturn(false);
+
+	    //when
+		//then
+		assertThatThrownBy(() -> projectChatRoomService.getChatRooms(1L, 1L))
+			.isInstanceOf(ProjectMemberException.class)
+			.hasMessage(ErrorCode.NOT_PROJECT_MEMBER.getErrorMessage());
 	}
 
 
