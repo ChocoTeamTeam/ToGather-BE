@@ -18,15 +18,20 @@ import java.util.List;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
+import org.junit.jupiter.api.MethodOrderer;
+import org.junit.jupiter.api.Order;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.TestInstance;
+import org.junit.jupiter.api.TestMethodOrder;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 import org.springframework.boot.test.autoconfigure.orm.jpa.TestEntityManager;
 import org.springframework.context.annotation.Import;
 import org.springframework.transaction.annotation.Transactional;
 
+@TestMethodOrder(MethodOrderer.OrderAnnotation.class)
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
 @Import({QueryDslTestConfig.class,QuerydslChatRepository.class})
 @DataJpaTest
@@ -84,6 +89,7 @@ class QuerydslChatRepositoryTest {
 	}
 	@DisplayName("채팅방 채팅메시지 조회 성공 - 최신순으로, 최대 1000건")
 	@Test
+	@Order(1)
 	@Transactional
 	void findAllByTeamId_success() {
 
@@ -95,4 +101,16 @@ class QuerydslChatRepositoryTest {
 		assertThat(chatMessageDto.getProfileImage()).isEqualTo(member.getProfileImage());
 		assertThat(chatMessageDto.getMessage()).isEqualTo("test");
 	}
+
+	@DisplayName("채팅방 채팅메시지 삭제 성공")
+	@Test
+	@Order(2)
+	@Transactional
+	void deleteAllByChatRoomId_success() {
+
+		long delCnt = querydslChatRepository.deleteAllByChatRoomId(1L);
+
+		assertThat(delCnt).isEqualTo(10000);
+	}
+
 }
