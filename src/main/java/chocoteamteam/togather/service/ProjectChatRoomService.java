@@ -1,5 +1,6 @@
 package chocoteamteam.togather.service;
 
+import chocoteamteam.togather.dto.ChangeChatRoomNameForm;
 import chocoteamteam.togather.dto.ChatDetailDto;
 import chocoteamteam.togather.dto.ChatRoomDto;
 import chocoteamteam.togather.dto.CreateChatRoomForm;
@@ -64,12 +65,7 @@ public class ProjectChatRoomService {
 	public ChatDetailDto getChatRoom(long projectId, long memberId, long chatRoomId) {
 		authenticateProjectMember(projectId, memberId);
 
-		ChatRoom chatRoom = chatRoomRepository.findById(chatRoomId)
-			.orElseThrow(() -> new ChatRoomException(ErrorCode.NOT_FOUND_CHATROOM));
-
-		if (projectId != chatRoom.getProject().getId()) {
-			throw new ChatRoomException(ErrorCode.NOT_FOUND_CHATROOM);
-		}
+		ChatRoom chatRoom = getProjectChat(projectId, chatRoomId);
 
 		return ChatDetailDto.builder()
 			.roomId(chatRoomId)
@@ -77,6 +73,25 @@ public class ProjectChatRoomService {
 			.messages(querydslChatRepository.findAllByChatRoomId(chatRoomId))
 			.build();
 
+	}
+
+	@Transactional
+	public void changeChatRoomName(ChangeChatRoomNameForm form) {
+		authenticateProjectMember(form.getProjectId(), form.getMemberId());
+
+		ChatRoom chatRoom = getProjectChat(form.getProjectId(), form.getRoomId());
+
+		chatRoom.changeName(form.getRoomName());
+	}
+
+	private ChatRoom getProjectChat(long projectId, long chatRoomId) {
+		ChatRoom chatRoom = chatRoomRepository.findById(chatRoomId)
+			.orElseThrow(() -> new ChatRoomException(ErrorCode.NOT_FOUND_CHATROOM));
+
+		if (projectId != chatRoom.getProject().getId()) {
+			throw new ChatRoomException(ErrorCode.CHATROOM_NOT_MATCHED_PROJECT);
+		}
+		return chatRoom;
 	}
 
 }
