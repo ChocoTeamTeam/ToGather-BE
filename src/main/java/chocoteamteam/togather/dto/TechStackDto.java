@@ -35,11 +35,11 @@ public class TechStackDto {
     public static List<TechStackDto> fromMemberTechStackInfoDtos(
         List<MemberTechStackInfoDto> memberTechStackInfoDtos) {
         return memberTechStackInfoDtos.stream()
-            .map(memberTechStackInfoDto -> new TechStackDto(
-                memberTechStackInfoDto.getId(),
-                memberTechStackInfoDto.getTechName(),
-                null,
-                memberTechStackInfoDto.getTechImage())
+            .map(memberTechStackInfoDto -> TechStackDto.builder()
+                .id(memberTechStackInfoDto.getTechId())
+                .name(memberTechStackInfoDto.getTechName())
+                .image(memberTechStackInfoDto.getTechImage())
+                .build()
             ).collect(Collectors.toList());
     }
 }
