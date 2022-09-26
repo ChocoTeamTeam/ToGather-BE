@@ -18,6 +18,6 @@ public class GoogleOAuth2MemberInfo extends OAuth2MemberInfo {
     }
 
     public Optional<String> getEmail() {
-        return Optional.of((String)attributes.get("email"));
+        return Optional.ofNullable((String)attributes.get("email"));
     }
 }

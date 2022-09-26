@@ -21,6 +21,6 @@ public class NaverOAuth2MemberInfo extends OAuth2MemberInfo {
 
     public Optional<String> getEmail() {
         Map<String, Object> response = (Map<String, Object>) attributes.get("response");
-        return Optional.of((String) response.get("email"));
+        return Optional.ofNullable((String) response.get("email"));
     }
 }
