@@ -88,6 +88,7 @@ class MemberServiceTest {
             .id(1L)
             .nickname("test")
             .profileImage("test.png")
+            .techId(1L)
             .techName("java")
             .techImage("java.png")
             .build();
@@ -104,6 +105,7 @@ class MemberServiceTest {
         // given
         given(memberTechStackCustomRepository.findAllByMemberId(any()))
             .willReturn(List.of(memberTechStackInfoDto));
+
 
         // when
         MemberDetailResponse response = memberService.getDetail(1L);
