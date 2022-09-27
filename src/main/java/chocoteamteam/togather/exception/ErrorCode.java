@@ -16,6 +16,7 @@ public enum ErrorCode {
     MEMBER_STATUS_WITHDRAWAL(HttpStatus.UNAUTHORIZED, "탈퇴한 회원입니다."),
     ABNORMAL_ACCESS(HttpStatus.UNAUTHORIZED, "비정상적인 접근입니다."),
 
+    EXIST_FALSE_GITHUB_EMAIL(HttpStatus.BAD_REQUEST,"Github의 공개된 이메일이 존재하지 않습니다."),
     MISS_MATCH_MEMBER(HttpStatus.BAD_REQUEST, "본인 정보만 수정할 수 있습니다."),
     EXIST_TRUE_MEMBER_NICKNAME(HttpStatus.BAD_REQUEST, "이미 존재하는 닉네임입니다."),
     MISS_MATCH_PROVIDER(HttpStatus.BAD_REQUEST, "다른 SNS 계정으로 회원가입이 돼있습니다."),

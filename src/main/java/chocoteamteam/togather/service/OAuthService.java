@@ -22,6 +22,7 @@ import java.nio.charset.StandardCharsets;
 import java.util.Collections;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 import java.util.Optional;
 import java.util.stream.Collectors;
 import lombok.NonNull;
@@ -57,14 +58,20 @@ public class OAuthService {
             providerType);
 
         OAuthTokenResponse oAuthToken = getOAuth2Token(code, provider);
-
         Map<String, Object> attributes = getAttributes(oAuthToken, provider);
-
         OAuth2MemberInfo oAuth2MemberInfo = OAuth2MemberInfoFactory
             .getOAuth2MemberInfo(providerType.toUpperCase(), attributes);
 
-        String email = oAuth2MemberInfo.getEmail()
-            .orElseThrow(() -> new CustomOAuthException(ErrorCode.NOT_FOUND_EMAIL));
+        Optional<String> optionalEmail = oAuth2MemberInfo.getEmail();
+
+        if (optionalEmail.isEmpty()) {
+            if (Objects.equals(ProviderType.GITHUB.toString(), providerType.toUpperCase()) && !oAuth2MemberInfo.getName().isEmpty()) {
+                throw new CustomOAuthException(ErrorCode.EXIST_FALSE_GITHUB_EMAIL);
+            }
+            throw new CustomOAuthException(ErrorCode.NOT_FOUND_EMAIL);
+        }
+
+        String email = optionalEmail.get();
 
         Optional<Member> optionalMember = memberRepository.findByEmail(email);
 
@@ -197,6 +204,7 @@ public class OAuthService {
             .bodyValue(tokenRequest(code, provider))
             .retrieve()
             .bodyToMono(OAuthTokenResponse.class)
+//            .bodyToMono(new )
             .block();
     }
 

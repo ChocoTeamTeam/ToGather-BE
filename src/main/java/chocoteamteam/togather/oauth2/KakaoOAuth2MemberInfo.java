@@ -20,6 +20,6 @@ public class KakaoOAuth2MemberInfo extends OAuth2MemberInfo {
 
     public Optional<String> getEmail() {
         Map<String, Object> kakaoAccount = (Map<String, Object>) attributes.get("kakao_account");
-        return Optional.of((String) kakaoAccount.get("email"));
+        return Optional.ofNullable((String) kakaoAccount.get("email"));
     }
 }
