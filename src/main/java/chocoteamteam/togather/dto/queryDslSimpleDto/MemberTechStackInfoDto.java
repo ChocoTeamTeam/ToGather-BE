@@ -17,6 +17,7 @@ public class MemberTechStackInfoDto {
     private Long id;
     private String nickname;
     private String profileImage;
+    private Long techId;
     private String techName;
     private String techImage;
 

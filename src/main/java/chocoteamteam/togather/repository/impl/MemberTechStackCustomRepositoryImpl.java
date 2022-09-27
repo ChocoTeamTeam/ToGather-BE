@@ -23,6 +23,7 @@ public class MemberTechStackCustomRepositoryImpl implements MemberTechStackCusto
                 memberTechStack.member.id,
                 memberTechStack.member.nickname,
                 memberTechStack.member.profileImage,
+                memberTechStack.techStack.id,
                 memberTechStack.techStack.name,
                 memberTechStack.techStack.image
             ))
