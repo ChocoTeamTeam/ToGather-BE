@@ -16,6 +16,7 @@ public class StompConfig implements WebSocketMessageBrokerConfigurer {
         registry.addEndpoint("/stomp/chat")
             .setAllowedOrigins("http://*.*.*.*:8080")
             .withSockJS();
+        registry.setErrorHandler(chatErrorHandler);
     }
 
     @Override
