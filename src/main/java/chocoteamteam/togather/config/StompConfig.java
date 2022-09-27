@@ -24,4 +24,8 @@ public class StompConfig implements WebSocketMessageBrokerConfigurer {
         registry.setApplicationDestinationPrefixes("/app");
         registry.enableStompBrokerRelay("/queue", "/topic", "/exchange", "/amq/queue");
     }
+    @Override
+    public void configureClientInboundChannel(ChannelRegistration registration) {
+        registration.interceptors(stompJwtHandler);
+    }
 }
