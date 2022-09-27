@@ -84,6 +84,16 @@ public class ProjectChatRoomService {
 		chatRoom.changeName(form.getRoomName());
 	}
 
+	@Transactional
+	public void deleteChatRoom(long projectId, long memberId, long chatRoomId) {
+		authenticateProjectMember(projectId, memberId);
+
+		ChatRoom chatRoom = getProjectChat(projectId, chatRoomId);
+
+		querydslChatRepository.deleteAllByChatRoomId(chatRoomId);
+		chatRoomRepository.delete(chatRoom);
+	}
+
 	private ChatRoom getProjectChat(long projectId, long chatRoomId) {
 		ChatRoom chatRoom = chatRoomRepository.findById(chatRoomId)
 			.orElseThrow(() -> new ChatRoomException(ErrorCode.NOT_FOUND_CHATROOM));

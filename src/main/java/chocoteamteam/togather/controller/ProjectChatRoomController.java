@@ -16,6 +16,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -99,6 +100,22 @@ public class ProjectChatRoomController {
 		form.setRoomId(chatId);
 
 		projectChatRoomService.changeChatRoomName(form);
+
+		return ResponseEntity.ok().body("");
+	}
+
+	@Operation(
+		summary = "채팅방 삭제", description = "채팅방 삭제 시, 저장된 메시지도 함께 삭제",
+		security = {@SecurityRequirement(name = "Authorization")},
+		tags = {"Chat"}
+	)
+	@PreAuthorize("hasRole('USER')")
+	@DeleteMapping("/{projectId}/chats/{chatId}")
+	public ResponseEntity deleteProjectChat(
+		@ApiIgnore @AuthenticationPrincipal LoginMember member,
+		@PathVariable long projectId, @PathVariable long chatId) {
+
+		projectChatRoomService.deleteChatRoom(projectId, member.getId(), chatId);
 
 		return ResponseEntity.ok().body("");
 	}
