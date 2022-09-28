@@ -14,6 +14,7 @@ import java.util.List;
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
+@Table(indexes = {@Index(name = "status_index", columnList = "status")})
 @Entity
 public class Project extends BaseTimeEntity {
     @Id
@@ -30,7 +31,7 @@ public class Project extends BaseTimeEntity {
 
     private Integer personnel;
 
-    @Enumerated(EnumType.STRING)
+    @Enumerated(EnumType.STRING) // 인덱싱하기
     private ProjectStatus status;
 
     private Boolean offline;
