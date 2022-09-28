@@ -22,9 +22,7 @@ public class InterestService {
 
     public void add(Long memberId, Long projectId, Long loginMemberId) {
 
-        if (!checkRequestMemberIdAndLoginMemberId(memberId, loginMemberId)) {
-            throw new InterestException(ErrorCode.NO_PERMISSION);
-        }
+        checkRequestMemberIdAndLoginMemberId(memberId, loginMemberId);
 
         Member member = memberRepository.findById(memberId)
             .orElseThrow(() -> new InterestException(ErrorCode.NOT_FOUND_MEMBER));
@@ -38,7 +36,9 @@ public class InterestService {
 
     }
 
-    private boolean checkRequestMemberIdAndLoginMemberId(Long requestMemberId, Long loginMemberId) {
-        return Objects.equals(requestMemberId, loginMemberId);
+    private void checkRequestMemberIdAndLoginMemberId(Long requestMemberId, Long loginMemberId) {
+        if (!Objects.equals(requestMemberId, loginMemberId)) {
+            throw new InterestException(ErrorCode.NO_PERMISSION);
+        }
     }
 }
