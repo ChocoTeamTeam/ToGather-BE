@@ -15,8 +15,8 @@ import chocoteamteam.togather.type.ProjectStatus;
 import chocoteamteam.togather.type.Role;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
-import javax.transaction.Transactional;
 import java.util.*;
 
 import static chocoteamteam.togather.exception.ErrorCode.*;
@@ -130,12 +130,12 @@ public class ProjectService {
         }
     }
 
-
+    @Transactional(readOnly = true)
     public List<SimpleProjectDto> getProjectList(ProjectCondition projectCondition) {
         return projectRepository.findAllOptionAndSearch(projectCondition);
     }
 
-    @Transactional
+    @Transactional(readOnly = true)
     public ProjectDetails getProject(Long projectId) {
         return ProjectDetails.fromEntity(projectRepository.findByIdWithMemberAndTechStack(projectId)
                 .orElseThrow(() -> new ProjectException(NOT_FOUND_PROJECT)));
