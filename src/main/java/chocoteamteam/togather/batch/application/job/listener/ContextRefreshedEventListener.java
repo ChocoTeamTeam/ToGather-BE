@@ -40,7 +40,8 @@ public class ContextRefreshedEventListener implements ApplicationListener<Contex
                 jobRepository.update(jobExecution);// repository update
                 log.info("Updated job execution status : job id = {}", jobExecution.getJobId());
             }
+            log.info("stopped running jobs.");
         }
-        log.info("stopped running jobs.");
+
     }
 }
