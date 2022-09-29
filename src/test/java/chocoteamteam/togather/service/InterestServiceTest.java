@@ -1,9 +1,11 @@
 package chocoteamteam.togather.service;
 
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.mockito.ArgumentMatchers.anyLong;
 import static org.mockito.BDDMockito.given;
 
+import chocoteamteam.togather.entity.Interest;
 import chocoteamteam.togather.entity.Member;
 import chocoteamteam.togather.entity.Project;
 import chocoteamteam.togather.exception.ErrorCode;
@@ -42,9 +44,28 @@ class InterestServiceTest {
             Optional.ofNullable(Project.builder().id(1L).build()));
 
         // when
-        interestService.add(1L, 1L, 1L);
+        String result = interestService.addOrRemove(1L, 1L, 1L);
 
         // then
+        assertThat(result).isEqualTo("add");
+    }
+
+    @DisplayName("관심 공고 취소 - 성공")
+    @Test
+    void remove_success(){
+        // given
+        given(interestRepository.findByMemberIdAndProjectId(anyLong(), anyLong()))
+            .willReturn(Optional.ofNullable(Interest.builder()
+                .id(1L)
+                .member(Member.builder().id(1L).build())
+                .project(Project.builder().id(1L).build())
+                .build()));
+
+        // when
+        String result = interestService.addOrRemove(1L, 1L, 1L);
+
+        // then
+        assertThat(result).isEqualTo("remove");
     }
 
     @DisplayName("관심 공고 추가 - 실패 회원 없음")
@@ -55,7 +76,7 @@ class InterestServiceTest {
         // when
 
         // then
-        assertThatThrownBy(() -> interestService.add(1L, 1L, 1L))
+        assertThatThrownBy(() -> interestService.addOrRemove(1L, 1L, 1L))
             .isInstanceOf(InterestException.class)
             .hasMessage(ErrorCode.NOT_FOUND_MEMBER.getErrorMessage());
     }
@@ -69,7 +90,7 @@ class InterestServiceTest {
         // when
 
         // then
-        assertThatThrownBy(() -> interestService.add(1L, 1L, 1L))
+        assertThatThrownBy(() -> interestService.addOrRemove(1L, 1L, 1L))
             .isInstanceOf(InterestException.class)
             .hasMessage(ErrorCode.NOT_FOUND_PROJECT.getErrorMessage());
     }
@@ -82,7 +103,7 @@ class InterestServiceTest {
         // when
 
         // then
-        assertThatThrownBy(() -> interestService.add(1L, 1L, 2L))
+        assertThatThrownBy(() -> interestService.addOrRemove(1L, 1L, 2L))
             .isInstanceOf(InterestException.class)
             .hasMessage(ErrorCode.NO_PERMISSION.getErrorMessage());
     }
