@@ -39,7 +39,7 @@ public class QueryDslProjectRepositoryImpl implements QueryDslProjectRepository 
                 .leftJoin(project.projectTechStacks, projectTechStack).fetchJoin()
                 .leftJoin(projectTechStack.techStack, techStack).fetchJoin()
                 .fetchOne());
-    }
+}
 
     @Override
     public List<SimpleProjectDto> findAllOptionAndSearch(ProjectCondition projectCondition) {
@@ -48,27 +48,36 @@ public class QueryDslProjectRepositoryImpl implements QueryDslProjectRepository 
             return Collections.emptyList();
         }
 
+        return findProjectAndTechStacksByIdList(projectIds);
+    }
+
+    private List<SimpleProjectDto> findProjectAndTechStacksByIdList(List<Long> projectIds) {
         return new ArrayList<>(jpaQueryFactory
                 .from(project)
                 .where(project.id.in(projectIds))
-                .innerJoin(project.projectTechStacks, projectTechStack)
+                .leftJoin(project.projectTechStacks, projectTechStack)
+                .leftJoin(projectTechStack.techStack, techStack)
                 .transform(GroupBy.groupBy(project.id)
-                        .as(new QSimpleProjectDto(
-                                project.id,
-                                new QSimpleMemberDto(
-                                        project.member.id,
-                                        project.member.nickname,
-                                        project.member.profileImage),
-                                project.title,
-                                project.personnel,
-                                project.status,
-                                project.deadline,
-                                list(new QSimpleTechStackDto(
-                                        projectTechStack.techStack.id,
-                                        projectTechStack.techStack.name,
-                                        projectTechStack.techStack.image))
-                        )))
+                        .as(simpleProjectDto()))
                 .values());
+    }
+
+    private QSimpleProjectDto simpleProjectDto() {
+        return new QSimpleProjectDto(
+                project.id,
+                new QSimpleMemberDto(
+                        project.member.id,
+                        project.member.nickname,
+                        project.member.profileImage),
+                project.title,
+                project.personnel,
+                project.status,
+                project.deadline,
+                list(new QSimpleTechStackDto(
+                        projectTechStack.techStack.id,
+                        projectTechStack.techStack.name,
+                        projectTechStack.techStack.image))
+        );
     }
 
     /*
