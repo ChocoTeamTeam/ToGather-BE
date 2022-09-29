@@ -8,7 +8,6 @@ import chocoteamteam.togather.exception.InterestException;
 import chocoteamteam.togather.repository.InterestRepository;
 import chocoteamteam.togather.repository.MemberRepository;
 import chocoteamteam.togather.repository.ProjectRepository;
-import java.util.Objects;
 import java.util.Optional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -23,19 +22,17 @@ public class InterestService {
     private final ProjectRepository projectRepository;
 
     @Transactional
-    public String addOrRemove(Long memberId, Long projectId, Long loginMemberId) {
-
-        checkRequestMemberIdAndLoginMemberId(memberId, loginMemberId);
+    public String addOrRemove(Long projectId, Long loginMemberId) {
 
         Optional<Interest> interestOptional = interestRepository.findByMemberIdAndProjectId(
-            memberId, projectId);
+            loginMemberId, projectId);
 
         if (interestOptional.isPresent()) {
             remove(interestOptional.get());
             return "remove";
         }
 
-        add(memberId, projectId);
+        add(loginMemberId, projectId);
         return "add";
 
     }
@@ -58,9 +55,4 @@ public class InterestService {
         interestRepository.delete(interest);
     }
 
-    private void checkRequestMemberIdAndLoginMemberId(Long requestMemberId, Long loginMemberId) {
-        if (!Objects.equals(requestMemberId, loginMemberId)) {
-            throw new InterestException(ErrorCode.NO_PERMISSION);
-        }
-    }
 }

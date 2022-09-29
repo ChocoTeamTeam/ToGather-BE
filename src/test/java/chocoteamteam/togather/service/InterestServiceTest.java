@@ -44,7 +44,7 @@ class InterestServiceTest {
             Optional.ofNullable(Project.builder().id(1L).build()));
 
         // when
-        String result = interestService.addOrRemove(1L, 1L, 1L);
+        String result = interestService.addOrRemove(1L, 1L);
 
         // then
         assertThat(result).isEqualTo("add");
@@ -52,7 +52,7 @@ class InterestServiceTest {
 
     @DisplayName("관심 공고 취소 - 성공")
     @Test
-    void remove_success(){
+    void remove_success() {
         // given
         given(interestRepository.findByMemberIdAndProjectId(anyLong(), anyLong()))
             .willReturn(Optional.ofNullable(Interest.builder()
@@ -62,7 +62,7 @@ class InterestServiceTest {
                 .build()));
 
         // when
-        String result = interestService.addOrRemove(1L, 1L, 1L);
+        String result = interestService.addOrRemove(1L, 1L);
 
         // then
         assertThat(result).isEqualTo("remove");
@@ -70,44 +70,30 @@ class InterestServiceTest {
 
     @DisplayName("관심 공고 추가 - 실패 회원 없음")
     @Test
-    void add_failed_NOT_FOUND_MEMBER(){
+    void add_failed_NOT_FOUND_MEMBER() {
         // given
 
         // when
 
         // then
-        assertThatThrownBy(() -> interestService.addOrRemove(1L, 1L, 1L))
+        assertThatThrownBy(() -> interestService.addOrRemove(1L, 1L))
             .isInstanceOf(InterestException.class)
             .hasMessage(ErrorCode.NOT_FOUND_MEMBER.getErrorMessage());
     }
 
     @DisplayName("관심 공고 추가 - 실패 프로젝트 없음")
     @Test
-    void add_failed_NOT_FOUND_PROJECT(){
+    void add_failed_NOT_FOUND_PROJECT() {
         // given
         given(memberRepository.findById(anyLong())).willReturn(
             Optional.ofNullable(Member.builder().id(1L).build()));
         // when
 
         // then
-        assertThatThrownBy(() -> interestService.addOrRemove(1L, 1L, 1L))
+        assertThatThrownBy(() -> interestService.addOrRemove(1L, 1L))
             .isInstanceOf(InterestException.class)
             .hasMessage(ErrorCode.NOT_FOUND_PROJECT.getErrorMessage());
     }
-
-    @DisplayName("관심 공고 추가 - 실패 로그인한 회원과 요청한 회원 다름")
-    @Test
-    void add_failed_no_permission(){
-        // given
-
-        // when
-
-        // then
-        assertThatThrownBy(() -> interestService.addOrRemove(1L, 1L, 2L))
-            .isInstanceOf(InterestException.class)
-            .hasMessage(ErrorCode.NO_PERMISSION.getErrorMessage());
-    }
-
 
 
 }
