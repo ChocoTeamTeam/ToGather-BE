@@ -52,4 +52,14 @@ public class GlobalExceptionHandler {
         log.error("{} is occured", e.getErrorCode());
         return new ErrorResponse(e.getStatus(), e.getErrorCode(), e.getErrorMessage());
     }
+
+    @ExceptionHandler(ApplicantException.class)
+    public ErrorResponse applicantExceptionHandler(ApplicantException e) {
+
+        log.error("{} is occured", e.getErrorCode());
+        return new ErrorResponse(e.getStatus(), e.getErrorCode(), e.getErrorMessage());
+    }
+
+
+
 }
