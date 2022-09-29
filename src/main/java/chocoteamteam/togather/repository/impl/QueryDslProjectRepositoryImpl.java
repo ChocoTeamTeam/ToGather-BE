@@ -48,6 +48,10 @@ public class QueryDslProjectRepositoryImpl implements QueryDslProjectRepository 
             return Collections.emptyList();
         }
 
+        return findProjectAndTechStacksByIdList(projectIds);
+    }
+
+    private List<SimpleProjectDto> findProjectAndTechStacksByIdList(List<Long> projectIds) {
         return new ArrayList<>(jpaQueryFactory
                 .from(project)
                 .where(project.id.in(projectIds))
