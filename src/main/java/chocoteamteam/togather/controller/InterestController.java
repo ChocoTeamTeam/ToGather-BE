@@ -22,12 +22,13 @@ public class InterestController {
     private final InterestService interestService;
 
     @Operation(
-        summary = "관심 공고 추가 api", description = "특정 프로젝트를 관심있는 프로젝트로 등록합니다.",
+        summary = "관심 공고 추가, 취소 api", description = "특정 프로젝트를 관심있는 프로젝트 등록하거나 등록돼있는 상태면 취소합니다.",
         security = {@SecurityRequirement(name = "Authorization")}, tags = {"Interest"}
     )
     @PostMapping
-    public ResponseEntity<?> add(@RequestBody @Valid CreateInterestForm form, @AuthenticationPrincipal LoginMember loginMember) {
-        interestService.add(form.getMemberId(), form.getProjectId(), loginMember.getId());
+    public ResponseEntity<?> addOrRemove(@RequestBody @Valid CreateInterestForm form, @AuthenticationPrincipal LoginMember loginMember) {
+        interestService.addOrRemove(form.getMemberId(), form.getProjectId(),
+            loginMember.getId());
         return ResponseEntity.ok().body("");
     }
 
