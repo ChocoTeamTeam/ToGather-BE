@@ -24,7 +24,7 @@ import lombok.NoArgsConstructor;
 @Builder
 @Table(indexes = @Index(name = "idx_member_project",columnList = "member_id,project_id"))
 @Entity
-public class Applicant {
+public class Applicant extends BaseTimeEntity {
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
