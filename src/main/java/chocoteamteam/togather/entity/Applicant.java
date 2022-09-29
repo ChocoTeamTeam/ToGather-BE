@@ -12,6 +12,7 @@ import javax.persistence.Index;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
+import javax.persistence.UniqueConstraint;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -22,7 +23,12 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @AllArgsConstructor(access = AccessLevel.PROTECTED)
 @Builder
-@Table(indexes = @Index(name = "idx_member_project",columnList = "member_id,project_id"))
+@Table(
+	uniqueConstraints = {
+		@UniqueConstraint(name = "unique_member_project",
+			columnNames = {"member_id", "project_id"})
+	}
+)
 @Entity
 public class Applicant extends BaseTimeEntity {
 
@@ -30,11 +36,11 @@ public class Applicant extends BaseTimeEntity {
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long id;
 
-	@ManyToOne(fetch = FetchType.LAZY,optional = false)
+	@ManyToOne(fetch = FetchType.LAZY, optional = false)
 	@JoinColumn
 	private Member member;
 
-	@ManyToOne(fetch = FetchType.LAZY,optional = false)
+	@ManyToOne(fetch = FetchType.LAZY, optional = false)
 	@JoinColumn
 	private Project project;
 
