@@ -89,19 +89,5 @@ public class ProjectController {
     ) {
         return ResponseEntity.ok(projectService.deleteProject(projectId, member.getId(), member.getRole()));
     }
-	@Operation(
-		summary = "프로젝트 참여 신청",
-		description = "프로젝트에 참여 신청합니다.",
-		security = {@SecurityRequirement(name = "Authorization")}, tags = {"Project"}
-	)
-	@PreAuthorize("hasRole('USER')")
-	@PostMapping("/{projectId}/apply")
-	public ResponseEntity applyProject(
-		@ApiIgnore @AuthenticationPrincipal LoginMember member,
-		@PathVariable Long projectId
-	) {
-		projectApplicantService.addApplicant(projectId, member.getId());
 
-		return ResponseEntity.ok().body("");
-	}
 }

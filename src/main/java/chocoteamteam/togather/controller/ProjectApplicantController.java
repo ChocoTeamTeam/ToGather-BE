@@ -13,6 +13,7 @@ import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import springfox.documentation.annotations.ApiIgnore;
@@ -24,6 +25,22 @@ import springfox.documentation.annotations.ApiIgnore;
 public class ProjectApplicantController {
 
 	private final ProjectApplicantService projectApplicantService;
+
+	@Operation(
+		summary = "프로젝트 참여 신청",
+		description = "프로젝트에 참여 신청합니다.",
+		security = {@SecurityRequirement(name = "Authorization")}, tags = {"Project"}
+	)
+	@PreAuthorize("hasRole('USER')")
+	@PostMapping("/{projectId}/applicants")
+	public ResponseEntity applyProject(
+		@ApiIgnore @AuthenticationPrincipal LoginMember member,
+		@PathVariable Long projectId
+	) {
+		projectApplicantService.addApplicant(projectId, member.getId());
+
+		return ResponseEntity.ok().body("");
+	}
 
 	@Operation(
 		summary = "프로젝트 신청자 리스트 조회 ",
@@ -38,6 +55,7 @@ public class ProjectApplicantController {
 		return ResponseEntity.ok()
 			.body(projectApplicantService.getApplicants(projectId, member.getId()));
 	}
+
 
 
 
