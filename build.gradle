@@ -23,6 +23,7 @@ configurations {
 
 repositories {
     mavenCentral()
+    maven { url "https://jitpack.io" }
 }
 
 dependencies {
@@ -43,6 +44,11 @@ dependencies {
 
     implementation "com.querydsl:querydsl-jpa:${queryDslVersion}"
     implementation "com.querydsl:querydsl-apt:${queryDslVersion}"
+
+    implementation 'com.github.jojoldu.spring-batch-querydsl:spring-batch-querydsl-reader:2.4.8'
+
+    compile 'com.github.jojoldu.spring-batch-querydsl:spring-batch-querydsl-reader:2.4.8'
+    compileOnly 'com.github.jojoldu.spring-batch-querydsl:spring-batch-querydsl-reader:2.4.8'
 
     compileOnly 'org.projectlombok:lombok'
     runtimeOnly 'com.h2database:h2'
