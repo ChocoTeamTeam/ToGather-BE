@@ -1,5 +1,6 @@
 package chocoteamteam.togather.batch.application.job;
 
+import chocoteamteam.togather.batch.application.job.param.ProjectStatusJobParam;
 import chocoteamteam.togather.entity.Project;
 import chocoteamteam.togather.repository.ProjectRepository;
 import chocoteamteam.togather.type.ProjectStatus;
@@ -25,6 +26,7 @@ import org.springframework.data.domain.Sort;
 import java.time.LocalDate;
 import java.util.Map;
 
+
 @Slf4j
 @Configuration
 @RequiredArgsConstructor
@@ -33,6 +35,7 @@ public class ProjectStatusJobConfig {
     private final JobBuilderFactory jobBuilderFactory;
     private final StepBuilderFactory stepBuilderFactory;
     private final ProjectRepository projectRepository;
+    private final ProjectStatusJobParam projectStatusJobParam;
 
     @Bean
     public Job changeProjectStatusJob(JobExecutionListener jobExecutionListener) {
@@ -57,17 +60,18 @@ public class ProjectStatusJobConfig {
     @Bean
     @StepScope
     public RepositoryItemReader<Project> changeProjectStatusReader() {
-        LocalDate now = LocalDate.now();
         return new RepositoryItemReaderBuilder<Project>()
                 .name("changeProjectStatusReader")
                 .repository(projectRepository)
                 .methodName("findAllByStatusAndDeadlineBefore")
-                .arguments(ProjectStatus.RECRUITING, now)
+                .arguments(ProjectStatus.RECRUITING, projectStatusJobParam.getNowDate())
                 .pageSize(CHUNK_SIZE)
                 .sorts(Map.of("id", Sort.DEFAULT_DIRECTION))
                 .build();
     }
 
+    @Bean
+    @StepScope
     public ItemProcessor<Project, Project> changeProjectStatusProcessor() {
         return project -> {
             project.setStatus(ProjectStatus.COMPLETED);
@@ -75,6 +79,8 @@ public class ProjectStatusJobConfig {
         };
     }
 
+    @Bean
+    @StepScope
     public RepositoryItemWriter<Project> changeProjectStatusWriter() {
         return new RepositoryItemWriterBuilder<Project>()
                 .repository(projectRepository)

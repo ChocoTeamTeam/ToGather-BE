@@ -14,6 +14,7 @@ import org.springframework.batch.core.repository.JobRestartException;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
 
+import java.time.LocalDate;
 import java.util.Date;
 
 @Slf4j
@@ -23,12 +24,12 @@ public class ProjectStatusJobScheduler {
     private final JobLauncher jobLauncher;
     private final Job changeProjectStatusJob;
 
-    @Scheduled(cron = "0 0 1 * * *")
+    @Scheduled(cron = "0 5 0 * * *")
     public void runJob() throws JobInstanceAlreadyCompleteException, JobExecutionAlreadyRunningException, JobParametersInvalidException, JobRestartException {
         log.info("ProjectStatusJobScheduler start!");
 
         jobLauncher.run(changeProjectStatusJob, new JobParametersBuilder()
-                .addDate("date", new Date())
+                .addString("nowDate", LocalDate.now().toString())
                 .toJobParameters());
     }
 
