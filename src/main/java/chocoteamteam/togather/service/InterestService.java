@@ -25,6 +25,8 @@ public class InterestService {
     private final MemberRepository memberRepository;
     private final ProjectRepository projectRepository;
 
+    private static final int MAX_INTEREST = 5;
+
     @Transactional
     public String addOrRemove(Long projectId, Long loginMemberId) {
 
@@ -34,6 +36,10 @@ public class InterestService {
         if (interestOptional.isPresent()) {
             remove(interestOptional.get());
             return "remove";
+        }
+
+        if (interestRepository.countByMemberId(loginMemberId) >= MAX_INTEREST) {
+            throw new InterestException(ErrorCode.MAXIMUM_PROJECT_INTEREST);
         }
 
         add(loginMemberId, projectId);

@@ -15,7 +15,7 @@ public enum ErrorCode {
     MEMBER_STATUS_BANNED(HttpStatus.UNAUTHORIZED, "정지된 회원입니다."),
     MEMBER_STATUS_WITHDRAWAL(HttpStatus.UNAUTHORIZED, "탈퇴한 회원입니다."),
     ABNORMAL_ACCESS(HttpStatus.UNAUTHORIZED, "비정상적인 접근입니다."),
-
+    MAXIMUM_PROJECT_INTEREST(HttpStatus.BAD_REQUEST, "더 이상 관심 프로젝트를 추가할 수 없습니다."),
     EXIST_FALSE_GITHUB_EMAIL(HttpStatus.BAD_REQUEST,"Github의 공개된 이메일이 존재하지 않습니다."),
     MISS_MATCH_MEMBER(HttpStatus.BAD_REQUEST, "본인 정보만 수정할 수 있습니다."),
     EXIST_TRUE_MEMBER_NICKNAME(HttpStatus.BAD_REQUEST, "이미 존재하는 닉네임입니다."),

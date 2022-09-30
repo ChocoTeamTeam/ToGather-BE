@@ -100,6 +100,19 @@ class InterestServiceTest {
             .hasMessage(ErrorCode.NOT_FOUND_PROJECT.getErrorMessage());
     }
 
+    @DisplayName("관심 공고 추가 - 실패 관심 공고 추가 제한")
+    @Test
+    void add_failed_MAXIMUM() {
+        // given
+        given(interestRepository.countByMemberId(anyLong())).willReturn(5L);
+        // when
+
+        // then
+        assertThatThrownBy(() -> interestService.addOrRemove(1L, 1L))
+            .isInstanceOf(InterestException.class)
+            .hasMessage(ErrorCode.MAXIMUM_PROJECT_INTEREST.getErrorMessage());
+    }
+
     @DisplayName("관심 공고 조회 - 성공")
     @Test
     void getDetails_success() {

@@ -9,6 +9,8 @@ public interface InterestRepository extends JpaRepository<Interest, Long> {
 
     Optional<Interest> findByMemberIdAndProjectId(Long memberId, Long projectId);
 
+    long countByMemberId(Long memberId);
+
     List<Interest> findAllByMemberId(Long memberId);
 
 }
