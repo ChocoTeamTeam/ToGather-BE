@@ -64,7 +64,7 @@ public class QueryDslProjectRepositoryImpl implements QueryDslProjectRepository 
     @Override
     public List<SimpleProjectDto> findAllOptionAndSearch(ProjectCondition projectCondition) {
         List<Long> projectIds = getMultiConditionSearchId(projectCondition);
-        if (projectIds.size() == 0) {
+        if (projectIds.isEmpty()) {
             return Collections.emptyList();
         }
 

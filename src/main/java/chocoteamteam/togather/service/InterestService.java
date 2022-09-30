@@ -9,7 +9,7 @@ import chocoteamteam.togather.exception.InterestException;
 import chocoteamteam.togather.repository.InterestRepository;
 import chocoteamteam.togather.repository.MemberRepository;
 import chocoteamteam.togather.repository.ProjectRepository;
-import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -68,7 +68,7 @@ public class InterestService {
             .map(e -> e.getProject().getId()).collect(Collectors.toList());
 
         if (projectIds.isEmpty()) {
-            return new ArrayList<>();
+            return Collections.emptyList();
         }
 
         return projectRepository.findAllInterestProjectByIds(projectIds);
