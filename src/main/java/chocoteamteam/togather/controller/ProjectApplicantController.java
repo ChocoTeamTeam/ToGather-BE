@@ -3,6 +3,8 @@ package chocoteamteam.togather.controller;
 import chocoteamteam.togather.dto.ApplicantDto;
 import chocoteamteam.togather.dto.LoginMember;
 import chocoteamteam.togather.service.ProjectApplicantService;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
@@ -23,6 +25,11 @@ public class ProjectApplicantController {
 
 	private final ProjectApplicantService projectApplicantService;
 
+	@Operation(
+		summary = "프로젝트 신청자 리스트 조회 ",
+		description = "프로젝트에 신청자들을 조회합니다. WAIT 상태인 신청자만 조회됩니다.",
+		security = {@SecurityRequirement(name = "Authorization")}, tags = {"Project_Applicant"}
+	)
 	@PreAuthorize("hasRole('USER')")
 	@GetMapping("/{projectId}/applicants")
 	public ResponseEntity<List<ApplicantDto>> getApplicants(
