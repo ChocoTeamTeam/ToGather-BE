@@ -8,7 +8,7 @@ import org.springframework.http.HttpStatus;
 @RequiredArgsConstructor
 public enum ErrorCode {
 
-    NOT_MATCH_MEMBER_PROJECT(HttpStatus.BAD_REQUEST, "해당 게시글에 대한 권한이 없습니다"),
+    NOT_MATCH_MEMBER_PROJECT(HttpStatus.FORBIDDEN, "해당 프로젝트에 대한 권한이 없습니다"),
     NOT_FOUND_TECH_STACK(HttpStatus.BAD_REQUEST, "해당 기술 스택을 찾을 수 없습니다"),
     NOT_FOUND_MEMBER(HttpStatus.BAD_REQUEST, "회원을 찾을 수 없습니다"),
     MEMBER_STATUS_WAIT(HttpStatus.UNAUTHORIZED, "대기중인 회원입니다."),

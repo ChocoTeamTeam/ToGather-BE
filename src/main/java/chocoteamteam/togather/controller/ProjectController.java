@@ -1,7 +1,7 @@
 package chocoteamteam.togather.controller;
 
 import chocoteamteam.togather.dto.*;
-import chocoteamteam.togather.service.ProjectApplyService;
+import chocoteamteam.togather.service.ProjectApplicantService;
 import chocoteamteam.togather.service.ProjectService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
@@ -21,7 +21,7 @@ import springfox.documentation.annotations.ApiIgnore;
 @RequestMapping("/projects")
 public class ProjectController {
     private final ProjectService projectService;
-	private final ProjectApplyService projectApplyService;
+	private final ProjectApplicantService projectApplicantService;
 
     @Operation(
             summary = "프로젝트 모집글 등록",
@@ -89,19 +89,5 @@ public class ProjectController {
     ) {
         return ResponseEntity.ok(projectService.deleteProject(projectId, member.getId(), member.getRole()));
     }
-	@Operation(
-		summary = "프로젝트 참여 신청",
-		description = "프로젝트에 참여 신청합니다.",
-		security = {@SecurityRequirement(name = "Authorization")}, tags = {"Project"}
-	)
-	@PreAuthorize("hasRole('USER')")
-	@PostMapping("/{projectId}/apply")
-	public ResponseEntity applyProject(
-		@ApiIgnore @AuthenticationPrincipal LoginMember member,
-		@PathVariable Long projectId
-	) {
-		projectApplyService.applyProject(projectId, member.getId());
 
-		return ResponseEntity.ok().body("");
-	}
 }
