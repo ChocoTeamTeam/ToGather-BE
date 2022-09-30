@@ -7,6 +7,8 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
+import javax.persistence.Table;
+import javax.persistence.UniqueConstraint;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
@@ -17,6 +19,12 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @Getter
 @Builder
+@Table(
+    uniqueConstraints = {
+        @UniqueConstraint(
+            columnNames = {"member_id", "project_id"}
+        )
+})
 public class Interest extends BaseTimeEntity{
 
     @Id
@@ -24,11 +32,11 @@ public class Interest extends BaseTimeEntity{
     private Long id;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(unique = true)
+    @JoinColumn
     private Member member;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(unique = true)
+    @JoinColumn
     private Project project;
 
 }

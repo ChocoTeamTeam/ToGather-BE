@@ -2,9 +2,11 @@ package chocoteamteam.togather.service;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
+import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyLong;
 import static org.mockito.BDDMockito.given;
 
+import chocoteamteam.togather.dto.InterestDetail;
 import chocoteamteam.togather.entity.Interest;
 import chocoteamteam.togather.entity.Member;
 import chocoteamteam.togather.entity.Project;
@@ -13,6 +15,9 @@ import chocoteamteam.togather.exception.InterestException;
 import chocoteamteam.togather.repository.InterestRepository;
 import chocoteamteam.togather.repository.MemberRepository;
 import chocoteamteam.togather.repository.ProjectRepository;
+import chocoteamteam.togather.type.ProjectStatus;
+import java.time.LocalDate;
+import java.util.List;
 import java.util.Optional;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -95,5 +100,35 @@ class InterestServiceTest {
             .hasMessage(ErrorCode.NOT_FOUND_PROJECT.getErrorMessage());
     }
 
+    @DisplayName("관심 공고 조회 - 성공")
+    @Test
+    void getDetails_success() {
+        // given
+        LocalDate now = LocalDate.now();
+        given(interestRepository.findAllByMemberId(anyLong()))
+            .willReturn(List.of(Interest.builder()
+                .project(Project.builder()
+                    .id(1L)
+                    .build())
+                .build()));
+        given(projectRepository.findAllInterestProjectByIds(any()))
+            .willReturn(List.of(InterestDetail.builder()
+                .projectId(1L)
+                .title("title")
+                .writer("writer")
+                .status(ProjectStatus.RECRUITING)
+                .deadline(now)
+                .build()));
+
+        // when
+        List<InterestDetail> details = interestService.getDetails(1L);
+
+        // then
+        assertThat(details.get(0).getProjectId()).isEqualTo(1L);
+        assertThat(details.get(0).getTitle()).isEqualTo("title");
+        assertThat(details.get(0).getWriter()).isEqualTo("writer");
+        assertThat(details.get(0).getStatus()).isEqualTo(ProjectStatus.RECRUITING);
+        assertThat(details.get(0).getDeadline()).isEqualTo(now);
+    }
 
 }

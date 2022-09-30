@@ -1,5 +1,6 @@
 package chocoteamteam.togather.service;
 
+import chocoteamteam.togather.dto.InterestDetail;
 import chocoteamteam.togather.entity.Interest;
 import chocoteamteam.togather.entity.Member;
 import chocoteamteam.togather.entity.Project;
@@ -8,7 +9,10 @@ import chocoteamteam.togather.exception.InterestException;
 import chocoteamteam.togather.repository.InterestRepository;
 import chocoteamteam.togather.repository.MemberRepository;
 import chocoteamteam.togather.repository.ProjectRepository;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -49,6 +53,18 @@ public class InterestService {
             .project(project)
             .build());
 
+    }
+
+    public List<InterestDetail> getDetails(Long loginMemberId) {
+
+        List<Long> projectIds = interestRepository.findAllByMemberId(loginMemberId).stream()
+            .map(e -> e.getProject().getId()).collect(Collectors.toList());
+
+        if (projectIds.isEmpty()) {
+            return new ArrayList<>();
+        }
+
+        return projectRepository.findAllInterestProjectByIds(projectIds);
     }
 
     private void remove(Interest interest) {

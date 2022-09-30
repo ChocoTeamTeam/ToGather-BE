@@ -8,6 +8,7 @@ import javax.validation.constraints.Positive;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -27,6 +28,15 @@ public class InterestController {
         @AuthenticationPrincipal LoginMember loginMember) {
         interestService.addOrRemove(projectId, loginMember.getId());
         return ResponseEntity.ok().body("");
+    }
+
+    @Operation(
+        summary = "관심 공고 조회", description = "관심 프로젝트로 등록한 프로젝들을 조회 합니다.",
+        security = {@SecurityRequirement(name = "Authorization")}, tags = {"Interest"}
+    )
+    @GetMapping("/members/{memberId}/interests")
+    public ResponseEntity<?> getDetails(@AuthenticationPrincipal LoginMember loginMember) {
+        return ResponseEntity.ok(interestService.getDetails(loginMember.getId()));
     }
 
 }
