@@ -24,6 +24,13 @@ spring:
         show_sql: true
         jdbc:
           batch_size: 100
+        default_batch_fetch_size: 100
+
+  batch:
+    jdbc:
+      initialize-schema: always
+    job:
+      enabled: false
 
   redis:
     host: localhost
