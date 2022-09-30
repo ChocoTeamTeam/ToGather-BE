@@ -1,6 +1,7 @@
 package chocoteamteam.togather.repository.impl;
 
 
+import chocoteamteam.togather.dto.InterestDetail;
 import chocoteamteam.togather.dto.ProjectCondition;
 import chocoteamteam.togather.dto.queryDslSimpleDto.QSimpleMemberDto;
 import chocoteamteam.togather.dto.queryDslSimpleDto.QSimpleProjectDto;
@@ -9,6 +10,7 @@ import chocoteamteam.togather.dto.queryDslSimpleDto.SimpleProjectDto;
 import chocoteamteam.togather.entity.Project;
 import chocoteamteam.togather.repository.QueryDslProjectRepository;
 import com.querydsl.core.group.GroupBy;
+import com.querydsl.core.types.Projections;
 import com.querydsl.core.types.dsl.BooleanExpression;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import lombok.RequiredArgsConstructor;
@@ -28,7 +30,25 @@ import static com.querydsl.core.group.GroupBy.list;
 @RequiredArgsConstructor
 @Repository
 public class QueryDslProjectRepositoryImpl implements QueryDslProjectRepository {
+
     private final JPAQueryFactory jpaQueryFactory;
+
+    @Override
+    public List<InterestDetail> findAllInterestProjectByIds(List<Long> projectIds) {
+        return new ArrayList<>(jpaQueryFactory
+            .select(Projections.fields(InterestDetail.class,
+                project.id.as("projectId"),
+                project.title.as("title"),
+                project.status.as("status"),
+                project.deadline.as("deadline"),
+                project.member.nickname.as("writer")
+            ))
+            .from(project)
+            .join(project.member)
+            .where(project.id.in(projectIds))
+            .fetch());
+
+    }
 
     @Override
     public Optional<Project> findByIdWithMemberAndTechStack(Long projectId) {
@@ -44,7 +64,7 @@ public class QueryDslProjectRepositoryImpl implements QueryDslProjectRepository 
     @Override
     public List<SimpleProjectDto> findAllOptionAndSearch(ProjectCondition projectCondition) {
         List<Long> projectIds = getMultiConditionSearchId(projectCondition);
-        if (projectIds.size() == 0) {
+        if (projectIds.isEmpty()) {
             return Collections.emptyList();
         }
 
