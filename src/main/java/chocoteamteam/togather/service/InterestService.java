@@ -61,6 +61,7 @@ public class InterestService {
 
     }
 
+    @Transactional(readOnly = true)
     public List<InterestDetail> getDetails(Long loginMemberId) {
 
         List<Long> projectIds = interestRepository.findAllByMemberId(loginMemberId).stream()
