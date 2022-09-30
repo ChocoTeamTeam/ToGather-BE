@@ -2,6 +2,7 @@ package chocoteamteam.togather.batch.application.job;
 
 import chocoteamteam.togather.batch.BatchTestConfig;
 import chocoteamteam.togather.batch.application.job.listener.JobExecutionLogger;
+import chocoteamteam.togather.batch.application.job.param.ProjectStatusJobParam;
 import chocoteamteam.togather.entity.Member;
 import chocoteamteam.togather.entity.Project;
 import chocoteamteam.togather.repository.MemberRepository;
@@ -14,6 +15,7 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.batch.core.BatchStatus;
 import org.springframework.batch.core.JobExecution;
+import org.springframework.batch.core.JobParametersBuilder;
 import org.springframework.batch.test.JobLauncherTestUtils;
 import org.springframework.batch.test.context.SpringBatchTest;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -29,7 +31,8 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 @SpringBatchTest
 @SpringBootTest
 @ExtendWith(SpringExtension.class)
-@ContextConfiguration(classes = {ProjectStatusJobConfig.class, BatchTestConfig.class, QueryDslTestConfig.class, JobExecutionLogger.class})
+@ContextConfiguration(classes = {ProjectStatusJobConfig.class, BatchTestConfig.class, QueryDslTestConfig.class,
+        JobExecutionLogger.class, ProjectStatusJobParam.class})
 class ProjectStatusJobConfigTest {
     @Autowired
     private JobLauncherTestUtils jobLauncherTestUtils;
@@ -63,7 +66,9 @@ class ProjectStatusJobConfigTest {
     @Test
     @DisplayName("마감일 지난 프로젝트 상태 변경 Job 테스트")
     public void projectStatusJobTest() throws Exception {
-        JobExecution jobExecution = jobLauncherTestUtils.launchJob();
+        JobExecution jobExecution = jobLauncherTestUtils.launchJob(new JobParametersBuilder()
+                .addString("nowDate", LocalDate.now().toString())
+                .toJobParameters());
 
         assertEquals(BatchStatus.COMPLETED, jobExecution.getStatus());
         assertEquals(ProjectStatus.COMPLETED, projectRepository.findById(1L).get().getStatus());
