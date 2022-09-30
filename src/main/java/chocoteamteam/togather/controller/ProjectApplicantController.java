@@ -29,7 +29,7 @@ public class ProjectApplicantController {
 	@Operation(
 		summary = "프로젝트 참여 신청",
 		description = "프로젝트에 참여 신청합니다.",
-		security = {@SecurityRequirement(name = "Authorization")}, tags = {"Project"}
+		security = {@SecurityRequirement(name = "Authorization")}, tags = {"Project_Applicant"}
 	)
 	@PreAuthorize("hasRole('USER')")
 	@PostMapping("/{projectId}/applicants")
