@@ -1,10 +1,8 @@
 package chocoteamteam.togather.batch.schduler;
 
-import chocoteamteam.togather.batch.application.job.ProjectStatusJobConfig;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.batch.core.Job;
-import org.springframework.batch.core.JobParameters;
 import org.springframework.batch.core.JobParametersBuilder;
 import org.springframework.batch.core.JobParametersInvalidException;
 import org.springframework.batch.core.launch.JobLauncher;
@@ -15,7 +13,6 @@ import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
 
 import java.time.LocalDate;
-import java.util.Date;
 
 @Slf4j
 @RequiredArgsConstructor
@@ -26,8 +23,6 @@ public class ProjectStatusJobScheduler {
 
     @Scheduled(cron = "0 5 0 * * *")
     public void runJob() throws JobInstanceAlreadyCompleteException, JobExecutionAlreadyRunningException, JobParametersInvalidException, JobRestartException {
-        log.info("ProjectStatusJobScheduler start!");
-
         jobLauncher.run(changeProjectStatusJob, new JobParametersBuilder()
                 .addString("nowDate", LocalDate.now().toString())
                 .toJobParameters());
