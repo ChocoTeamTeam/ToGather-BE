@@ -18,10 +18,11 @@ public class StompConfig implements WebSocketMessageBrokerConfigurer {
 
     private final StompJwtHandler stompJwtHandler;
     private final ChatErrorHandler chatErrorHandler;
+
     @Override
     public void registerStompEndpoints(StompEndpointRegistry registry) {
         registry.addEndpoint("/stomp/chat")
-            .setAllowedOrigins("http://*.*.*.*:8080")
+            .setAllowedOriginPatterns("*")
             .withSockJS();
         registry.setErrorHandler(chatErrorHandler);
     }
@@ -30,7 +31,14 @@ public class StompConfig implements WebSocketMessageBrokerConfigurer {
     public void configureMessageBroker(MessageBrokerRegistry registry) {
         registry.setPathMatcher(new AntPathMatcher("."));
         registry.setApplicationDestinationPrefixes("/app");
-        registry.enableStompBrokerRelay("/queue", "/topic", "/exchange", "/amq/queue");
+        registry.enableStompBrokerRelay("/queue", "/topic", "/exchange", "/amq/queue")
+            .setRelayHost("localhost")
+            .setRelayPort(61613)
+            .setClientLogin("admin")
+            .setClientPasscode("admin")
+            .setSystemLogin("admin")
+            .setSystemPasscode("admin");
+
     }
     @Override
     public void configureClientInboundChannel(ChannelRegistration registration) {

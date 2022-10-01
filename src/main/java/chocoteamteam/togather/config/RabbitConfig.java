@@ -56,8 +56,8 @@ public class RabbitConfig {
     public ConnectionFactory connectionFactory() {
         CachingConnectionFactory factory = new CachingConnectionFactory();
         factory.setHost("localhost");
-        factory.setUsername("root");
-        factory.setPassword("root");
+        factory.setUsername("admin");
+        factory.setPassword("admin");
         return factory;
     }
 
