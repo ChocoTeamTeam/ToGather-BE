@@ -31,7 +31,7 @@ public class techStackStatisticsJobScheduler {
         LocalDateTime now = LocalDateTime.of(LocalDate.now(), LocalTime.MIN);
         jobLauncher.run(techStackStatisticsJob, new JobParametersBuilder()
                 .addString("startDate", now.minusDays(7).toString())
-                .addString("endDate", now.minusDays(1).toString())
+                .addString("endDate", now.toString())
                 .addLong("weeks", (long) (now.get(WeekFields.ISO.weekOfYear()) - 1))
                 .toJobParameters());
     }

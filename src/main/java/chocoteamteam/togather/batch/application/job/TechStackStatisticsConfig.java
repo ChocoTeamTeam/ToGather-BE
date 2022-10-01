@@ -71,7 +71,7 @@ public class TechStackStatisticsConfig {
                 .from(projectTechStack)
                 .innerJoin(projectTechStack.project, project)
                 .innerJoin(projectTechStack.techStack, techStack)
-                .where(project.createdAt.between(jobParam.getStartDate(), jobParam.getEndDate().plusDays(7))) // test 수정
+                .where(project.createdAt.between(jobParam.getStartDate(), jobParam.getEndDate()))
                 .groupBy(techStack.id)
         );
     }
