@@ -61,6 +61,12 @@ public class ProjectApplicantController {
 			.body(projectApplicantService.getApplicants(projectId, member.getId()));
 	}
 
+
+	@Operation(
+		summary = "프로젝트 신청자 수락",
+		description = "프로젝트 신청자의 신청을 수락합니다.",
+		security = {@SecurityRequirement(name = "Authorization")}, tags = {"Project_Applicant"}
+	)
 	@PreAuthorize("hasRole('USER')")
 	@PutMapping("/{projectId}/applicants/{memberId}/accept")
 	public ResponseEntity acceptApplicant(
@@ -77,6 +83,12 @@ public class ProjectApplicantController {
 		return ResponseEntity.ok().body("");
 	}
 
+
+	@Operation(
+		summary = "프로젝트 신청자 거절",
+		description = "프로젝트에 신청자의 신청을 거절합니다.",
+		security = {@SecurityRequirement(name = "Authorization")}, tags = {"Project_Applicant"}
+	)
 	@PreAuthorize("hasRole('USER')")
 	@PutMapping("/{projectId}/applicants/{memberId}/reject")
 	public ResponseEntity rejectApplicant(
@@ -93,6 +105,12 @@ public class ProjectApplicantController {
 		return ResponseEntity.ok().body("");
 	}
 
+
+	@Operation(
+		summary = "프로젝트 신청자 취소",
+		description = "프로젝트에 신청자를 삭제합니다.",
+		security = {@SecurityRequirement(name = "Authorization")}, tags = {"Project_Applicant"}
+	)
 	@PreAuthorize("hasRole('USER') and principal.id == #memberId or hasRole('ADMIN')")
 	@DeleteMapping("/{projectId}/applicants/{memberId}")
 	public ResponseEntity deleteApplicant(
