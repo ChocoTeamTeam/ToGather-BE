@@ -2,15 +2,9 @@ package chocoteamteam.togather.service;
 
 import chocoteamteam.togather.dto.*;
 import chocoteamteam.togather.dto.queryDslSimpleDto.SimpleProjectDto;
-import chocoteamteam.togather.entity.Member;
-import chocoteamteam.togather.entity.Project;
-import chocoteamteam.togather.entity.ProjectTechStack;
-import chocoteamteam.togather.entity.TechStack;
+import chocoteamteam.togather.entity.*;
 import chocoteamteam.togather.exception.ProjectException;
-import chocoteamteam.togather.repository.MemberRepository;
-import chocoteamteam.togather.repository.ProjectRepository;
-import chocoteamteam.togather.repository.ProjectTechStackRepository;
-import chocoteamteam.togather.repository.TechStackRepository;
+import chocoteamteam.togather.repository.*;
 import chocoteamteam.togather.type.ProjectStatus;
 import chocoteamteam.togather.type.Role;
 import lombok.RequiredArgsConstructor;
@@ -28,6 +22,7 @@ public class ProjectService {
     private final MemberRepository memberRepository;
     private final TechStackRepository techStackRepository;
     private final ProjectTechStackRepository projectTechStackRepository;
+    private final ProjectMemberRepository projectMemberRepository;
 
     @Transactional
     public ProjectDto createProject(Long memberId, CreateProjectForm form) {
@@ -43,6 +38,11 @@ public class ProjectService {
                 .offline(form.getOffline())
                 .location(form.getLocation())
                 .deadline(form.getDeadline())
+                .build());
+
+        projectMemberRepository.save(ProjectMember.builder()
+                .project(project)
+                .member(member)
                 .build());
 
         saveProjectTechs(project, getTechStacks(form.getTechStackIds()));

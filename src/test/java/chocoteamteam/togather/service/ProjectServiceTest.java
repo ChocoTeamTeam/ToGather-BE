@@ -7,10 +7,7 @@ import chocoteamteam.togather.dto.UpdateProjectForm;
 import chocoteamteam.togather.entity.*;
 import chocoteamteam.togather.exception.ErrorCode;
 import chocoteamteam.togather.exception.ProjectException;
-import chocoteamteam.togather.repository.MemberRepository;
-import chocoteamteam.togather.repository.ProjectRepository;
-import chocoteamteam.togather.repository.ProjectTechStackRepository;
-import chocoteamteam.togather.repository.TechStackRepository;
+import chocoteamteam.togather.repository.*;
 import chocoteamteam.togather.type.ProjectStatus;
 import chocoteamteam.togather.type.Role;
 import chocoteamteam.togather.type.TechCategory;
@@ -18,6 +15,7 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.ArgumentCaptor;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
@@ -46,6 +44,9 @@ class ProjectServiceTest {
     private TechStackRepository techStackRepository;
     @Mock
     private ProjectTechStackRepository projectTechStackRepository;
+
+    @Mock
+    private ProjectMemberRepository projectMemberRepository;
     @InjectMocks
     private ProjectService projectService;
 
@@ -89,6 +90,12 @@ class ProjectServiceTest {
     @DisplayName("프로젝트 등록 성공")
     void createProjectSuccess() {
         //given
+        ProjectMember projectMember = ProjectMember.builder()
+                .id(1L)
+                .member(member)
+                .project(project)
+                .build();
+
         given(memberRepository.findById(anyLong()))
                 .willReturn(Optional.of(member));
 
@@ -97,6 +104,9 @@ class ProjectServiceTest {
 
         given(techStackRepository.findAllById(any()))
                 .willReturn(techStacks);
+
+        given(projectMemberRepository.save(any()))
+                .willReturn(projectMember);
 
         //when
         CreateProjectForm form = new CreateProjectForm(
@@ -110,6 +120,7 @@ class ProjectServiceTest {
                 List.of(1000L, 1001L)
         );
         ProjectDto projectDto = projectService.createProject(8L, form);
+        ArgumentCaptor<ProjectMember> captor = ArgumentCaptor.forClass(ProjectMember.class);
 
         //then
         assertEquals(project.getId(), projectDto.getId());
@@ -123,6 +134,7 @@ class ProjectServiceTest {
         assertEquals(techStacks.get(0).getName(), projectDto.getTechStacks().get(0).getName());
         assertEquals(project.getProjectTechStacks().size(), projectDto.getTechStacks().size());
         verify(projectTechStackRepository, times(1)).saveAll(any());
+        verify(projectMemberRepository, times(1)).save(captor.capture());
     }
 
     @Test
