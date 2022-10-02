@@ -4,11 +4,13 @@ import chocoteamteam.togather.dto.ApplicantDto;
 import chocoteamteam.togather.dto.ManageApplicantForm;
 import chocoteamteam.togather.entity.Applicant;
 import chocoteamteam.togather.entity.Project;
+import chocoteamteam.togather.entity.ProjectMember;
 import chocoteamteam.togather.exception.ApplicantException;
 import chocoteamteam.togather.exception.ErrorCode;
 import chocoteamteam.togather.exception.ProjectException;
 import chocoteamteam.togather.repository.ApplicantRepository;
 import chocoteamteam.togather.repository.MemberRepository;
+import chocoteamteam.togather.repository.ProjectMemberRepository;
 import chocoteamteam.togather.repository.ProjectRepository;
 import chocoteamteam.togather.type.ApplicantStatus;
 import java.util.List;
@@ -23,6 +25,8 @@ public class ProjectApplicantService {
 	private final ProjectRepository projectRepository;
 	private final ApplicantRepository applicantRepository;
 	private final MemberRepository memberRepository;
+
+	private final ProjectMemberRepository projectMemberRepository;
 
 	@Transactional
 	public void applyForProject(Long memberId, Long projectId) {
@@ -67,7 +71,18 @@ public class ProjectApplicantService {
 
 		Applicant applicant = findApplicant(form.getProjectId(),form.getApplicantMemberId());
 
+		// 메소드 자체를 분리해야할 듯? 왜냐하면 수락하는 순간 ProjectMember가 생성되어야함
+
 		applicant.changeStatus(form.getStatus());
+
+		if (ApplicantStatus.ACCEPTED.equals(form.getStatus())) {
+			ProjectMember projectMember = ProjectMember.builder()
+				.project(projectRepository.getReferenceById(form.getProjectId()))
+				.member(memberRepository.getReferenceById(form.getApplicantMemberId()))
+				.build();
+
+			projectMemberRepository.save(projectMember);
+		}
 	}
 
 	@Transactional

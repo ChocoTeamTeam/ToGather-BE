@@ -13,11 +13,13 @@ import chocoteamteam.togather.dto.ManageApplicantForm;
 import chocoteamteam.togather.entity.Applicant;
 import chocoteamteam.togather.entity.Member;
 import chocoteamteam.togather.entity.Project;
+import chocoteamteam.togather.entity.ProjectMember;
 import chocoteamteam.togather.exception.ApplicantException;
 import chocoteamteam.togather.exception.ErrorCode;
 import chocoteamteam.togather.exception.ProjectException;
 import chocoteamteam.togather.repository.ApplicantRepository;
 import chocoteamteam.togather.repository.MemberRepository;
+import chocoteamteam.togather.repository.ProjectMemberRepository;
 import chocoteamteam.togather.repository.ProjectRepository;
 import chocoteamteam.togather.type.ApplicantStatus;
 import java.util.Arrays;
@@ -43,6 +45,9 @@ class ProjectApplicantServiceTest {
 
 	@Mock
 	MemberRepository memberRepository;
+
+	@Mock
+	ProjectMemberRepository projectMemberRepository;
 
 	@InjectMocks
 	ProjectApplicantService projectApplicantService;
@@ -159,11 +164,25 @@ class ProjectApplicantServiceTest {
 			.status(ApplicantStatus.ACCEPTED)
 			.build();
 
+		ProjectMember projectMember = ProjectMember.builder()
+			.member(member)
+			.project(project)
+			.build();
+
 		given(projectRepository.findById(anyLong()))
 			.willReturn(Optional.of(project));
 
 		given(applicantRepository.findByProjectIdAndMemberId(anyLong(), anyLong()))
 			.willReturn(Optional.of(applicant));
+
+		given(projectRepository.getReferenceById(anyLong()))
+			.willReturn(project);
+
+		given(memberRepository.getReferenceById(anyLong()))
+			.willReturn(member);
+
+		given(projectMemberRepository.save(any()))
+			.willReturn(projectMember);
 
 		//when
 		projectApplicantService.manageApplicant(form);
