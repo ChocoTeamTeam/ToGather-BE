@@ -1,5 +1,6 @@
 package chocoteamteam.togather.batch.schduler;
 
+
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.batch.core.Job;
@@ -13,19 +14,26 @@ import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.LocalTime;
+import java.time.temporal.WeekFields;
 
 @Slf4j
 @RequiredArgsConstructor
 @Component
-public class ProjectStatusJobScheduler {
+public class techStackStatisticsJobScheduler {
     private final JobLauncher jobLauncher;
-    private final Job changeProjectStatusJob;
+    private final Job techStackStatisticsJob;
 
-    @Scheduled(cron = "0 5 0 * * *")
+    // 월 실행, 지난 주 월 ~ 일 통계
+    @Scheduled(cron = "0 30 0 ? * MON")
     public void runJob() throws JobInstanceAlreadyCompleteException, JobExecutionAlreadyRunningException, JobParametersInvalidException, JobRestartException {
-        jobLauncher.run(changeProjectStatusJob, new JobParametersBuilder()
-                .addString("nowDate", LocalDate.now().toString())
+        LocalDate now = LocalDate.now();
+        jobLauncher.run(techStackStatisticsJob, new JobParametersBuilder()
+                .addString("startDate", LocalDateTime.of(now.minusDays(7), LocalTime.MIN).toString())
+                .addString("endDate", LocalDateTime.of(now.minusDays(1), LocalTime.MAX).toString())
+                .addLong("weeks", (long) (now.get(WeekFields.ISO.weekOfYear()) - 1))
                 .toJobParameters());
-    }
 
+    }
 }
