@@ -2,7 +2,9 @@ package chocoteamteam.togather.controller;
 
 import chocoteamteam.togather.dto.ApplicantDto;
 import chocoteamteam.togather.dto.LoginMember;
+import chocoteamteam.togather.dto.ManageApplicantForm;
 import chocoteamteam.togather.service.ProjectApplicantService;
+import chocoteamteam.togather.type.ApplicantStatus;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import io.swagger.v3.oas.annotations.tags.Tag;
@@ -11,9 +13,12 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import springfox.documentation.annotations.ApiIgnore;
@@ -37,7 +42,7 @@ public class ProjectApplicantController {
 		@ApiIgnore @AuthenticationPrincipal LoginMember member,
 		@PathVariable Long projectId
 	) {
-		projectApplicantService.addApplicant(projectId, member.getId());
+		projectApplicantService.applyForProject(projectId, member.getId());
 
 		return ResponseEntity.ok().body("");
 	}
@@ -56,8 +61,46 @@ public class ProjectApplicantController {
 			.body(projectApplicantService.getApplicants(projectId, member.getId()));
 	}
 
+	@PreAuthorize("hasRole('USER')")
+	@PutMapping("/{projectId}/applicants/{memberId}/accept")
+	public ResponseEntity acceptApplicant(
+		@PathVariable Long projectId, @PathVariable Long memberId,
+		@AuthenticationPrincipal LoginMember member) {
 
+		projectApplicantService.manageApplicant(ManageApplicantForm.builder()
+			.projectId(projectId)
+			.applicantMemberId(memberId)
+			.projectOwnerMemberId(member.getId())
+			.status(ApplicantStatus.ACCEPTED)
+			.build());
 
+		return ResponseEntity.ok().body("");
+	}
 
+	@PreAuthorize("hasRole('USER')")
+	@PutMapping("/{projectId}/applicants/{memberId}/reject")
+	public ResponseEntity rejectApplicant(
+		@PathVariable Long projectId, @PathVariable Long memberId,
+		@AuthenticationPrincipal LoginMember member) {
+
+		projectApplicantService.manageApplicant(ManageApplicantForm.builder()
+			.projectId(projectId)
+			.applicantMemberId(memberId)
+			.projectOwnerMemberId(member.getId())
+			.status(ApplicantStatus.ACCEPTED)
+			.build());
+
+		return ResponseEntity.ok().body("");
+	}
+
+	@PreAuthorize("hasRole('USER') and principal.id == #memberId or hasRole('ADMIN')")
+	@DeleteMapping("/{projectId}/applicants/{memberId}")
+	public ResponseEntity deleteApplicant(
+		@PathVariable Long projectId, @PathVariable Long memberId) {
+
+		projectApplicantService.deleteApplicant(projectId, memberId);
+
+		return ResponseEntity.ok().body("");
+	}
 
 }
