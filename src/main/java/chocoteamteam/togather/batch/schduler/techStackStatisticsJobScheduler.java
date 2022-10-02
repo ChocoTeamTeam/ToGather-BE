@@ -28,11 +28,12 @@ public class techStackStatisticsJobScheduler {
     // 월 실행, 지난 주 월 ~ 일 통계
     @Scheduled(cron = "0 30 0 ? * MON")
     public void runJob() throws JobInstanceAlreadyCompleteException, JobExecutionAlreadyRunningException, JobParametersInvalidException, JobRestartException {
-        LocalDateTime now = LocalDateTime.of(LocalDate.now(), LocalTime.MIN);
+        LocalDate now = LocalDate.now();
         jobLauncher.run(techStackStatisticsJob, new JobParametersBuilder()
-                .addString("startDate", now.minusDays(7).toString())
-                .addString("endDate", now.toString())
+                .addString("startDate", LocalDateTime.of(now.minusDays(7), LocalTime.MIN).toString())
+                .addString("endDate", LocalDateTime.of(now.minusDays(1), LocalTime.MAX).toString())
                 .addLong("weeks", (long) (now.get(WeekFields.ISO.weekOfYear()) - 1))
                 .toJobParameters());
+
     }
 }
