@@ -52,7 +52,7 @@ public class TechStackStatisticsConfig {
     public Step techStackStatisticsStep() {
         return stepBuilderFactory
                 .get("techStackStatisticsStep")
-                .<TechStatisticsDto, WeeklyTechStatistics>chunk(10)
+                .<TechStatisticsDto, WeeklyTechStatistics>chunk(CHUNK_SIZE)
                 .reader(techStackStatisticsReader())
                 .processor(techStackStatisticsProcessor())
                 .writer(techStackStatisticsWriter())
