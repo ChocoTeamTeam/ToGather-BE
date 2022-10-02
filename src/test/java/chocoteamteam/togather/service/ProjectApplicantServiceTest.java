@@ -257,6 +257,35 @@ class ProjectApplicantServiceTest {
 			.hasMessage(ErrorCode.NOT_FOUND_APPLICANT.getErrorMessage());
 	}
 
+	@DisplayName("프로젝트 신청자 관리 실패 - WAIT이 아닌 경우")
+	@Test
+	void manageApplicant_fail_alreadyApplyProject(){
+		//given
+		Applicant applicant = Applicant.builder()
+			.id(1L)
+			.status(ApplicantStatus.REJECTED)
+			.build();
+
+		ManageApplicantForm form = ManageApplicantForm.builder()
+			.projectId(project.getId())
+			.applicantMemberId(member.getId())
+			.projectOwnerMemberId(owner.getId())
+			.status(ApplicantStatus.ACCEPTED)
+			.build();
+
+		given(projectRepository.findById(anyLong()))
+			.willReturn(Optional.of(project));
+
+		given(applicantRepository.findByProjectIdAndMemberId(anyLong(), anyLong()))
+			.willReturn(Optional.of(applicant));
+
+		//when
+		//then
+		assertThatThrownBy(() -> projectApplicantService.manageApplicant(form))
+			.isInstanceOf(ApplicantException.class)
+			.hasMessage(ErrorCode.ALREADY_CHECKED_APPLICANT.getErrorMessage());
+	}
+
 	@DisplayName("프로젝트 신청자 삭제 성공")
 	@Test
 	void deleteApplicant_success() {
@@ -270,7 +299,7 @@ class ProjectApplicantServiceTest {
 			.willReturn(Optional.of(applicant));
 
 		//when
-		projectApplicantService.deleteApplicant(1L,1L);
+		projectApplicantService.deleteApplicant(1L, 1L);
 
 		//then
 		verify(applicantRepository).delete(any());
@@ -288,8 +317,6 @@ class ProjectApplicantServiceTest {
 		assertThatThrownBy(() -> projectApplicantService.deleteApplicant(1L, 1L));
 
 	}
-
-
 
 
 }

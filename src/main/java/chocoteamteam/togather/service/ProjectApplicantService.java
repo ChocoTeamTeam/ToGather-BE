@@ -71,7 +71,9 @@ public class ProjectApplicantService {
 
 		Applicant applicant = findApplicant(form.getProjectId(),form.getApplicantMemberId());
 
-		// 메소드 자체를 분리해야할 듯? 왜냐하면 수락하는 순간 ProjectMember가 생성되어야함
+		if (!ApplicantStatus.WAIT.equals(applicant.getStatus())) {
+			throw new ApplicantException(ErrorCode.ALREADY_CHECKED_APPLICANT);
+		}
 
 		applicant.changeStatus(form.getStatus());
 
