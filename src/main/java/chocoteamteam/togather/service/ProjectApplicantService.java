@@ -1,6 +1,7 @@
 package chocoteamteam.togather.service;
 
 import chocoteamteam.togather.dto.ApplicantDto;
+import chocoteamteam.togather.dto.ManageApplicantForm;
 import chocoteamteam.togather.entity.Applicant;
 import chocoteamteam.togather.entity.Project;
 import chocoteamteam.togather.exception.ApplicantException;
@@ -24,7 +25,7 @@ public class ProjectApplicantService {
 	private final MemberRepository memberRepository;
 
 	@Transactional
-	public void addApplicant(Long memberId, Long projectId) {
+	public void applyForProject(Long memberId, Long projectId) {
 		validateApplicant(projectId, memberId);
 		saveApplicant(projectId, memberId);
 	}
@@ -45,19 +46,40 @@ public class ProjectApplicantService {
 
 	@Transactional(readOnly = true)
 	public List<ApplicantDto> getApplicants(Long projectId, Long memberId) {
-		Project project = projectRepository.findById(projectId)
-			.orElseThrow(() -> new ProjectException(ErrorCode.NOT_FOUND_PROJECT));
-
-		validateProjectOwner(memberId, project);
+		validateProjectOwnerByProjectId(memberId, projectId);
 
 		return applicantRepository.findAllByProjectId(projectId,
 			ApplicantStatus.WAIT);
 	}
 
-	private void validateProjectOwner(Long memberId, Project project) {
+	private void validateProjectOwnerByProjectId(Long memberId, Long projectId) {
+		Project project = projectRepository.findById(projectId)
+			.orElseThrow(() -> new ProjectException(ErrorCode.NOT_FOUND_PROJECT));
+
 		if (!project.getMember().getId().equals(memberId)) {
 			throw new ProjectException(ErrorCode.NOT_MATCH_MEMBER_PROJECT);
 		}
+	}
+
+	@Transactional
+	public void manageApplicant(ManageApplicantForm form) {
+		validateProjectOwnerByProjectId(form.getProjectOwnerMemberId(), form.getProjectId());
+
+		Applicant applicant = findApplicant(form.getProjectId(),form.getApplicantMemberId());
+
+		applicant.changeStatus(form.getStatus());
+	}
+
+	@Transactional
+	public void deleteApplicant(Long projectId, Long memberId) {
+		Applicant applicant = findApplicant(projectId, memberId);
+
+		applicantRepository.delete(applicant);
+	}
+
+	private Applicant findApplicant(Long projectId, Long memberId) {
+		return applicantRepository.findByProjectIdAndMemberId(projectId, memberId)
+			.orElseThrow(() -> new ApplicantException(ErrorCode.NOT_FOUND_APPLICANT));
 	}
 
 }
