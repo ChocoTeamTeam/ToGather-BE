@@ -47,4 +47,8 @@ public class Applicant extends BaseTimeEntity {
 	@Enumerated(EnumType.STRING)
 	private ApplicantStatus status;
 
+	public void changeStatus(ApplicantStatus status) {
+		this.status = status;
+	}
+
 }
