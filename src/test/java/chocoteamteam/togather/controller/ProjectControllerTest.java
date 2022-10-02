@@ -3,6 +3,7 @@ package chocoteamteam.togather.controller;
 import chocoteamteam.togather.config.SecurityConfig;
 import chocoteamteam.togather.dto.*;
 import chocoteamteam.togather.service.JwtService;
+import chocoteamteam.togather.service.ProjectApplicantService;
 import chocoteamteam.togather.service.ProjectService;
 import chocoteamteam.togather.testUtils.WithLoginMember;
 import chocoteamteam.togather.type.ProjectStatus;
@@ -42,6 +43,9 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 class ProjectControllerTest {
     @MockBean
     private ProjectService projectService;
+
+    @MockBean
+    private ProjectApplicantService projectApplicantService;
 
     @MockBean
     JwtService jwtService;

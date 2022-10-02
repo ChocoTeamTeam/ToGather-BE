@@ -31,7 +31,7 @@ public class Project extends BaseTimeEntity {
 
     private Integer personnel;
 
-    @Enumerated(EnumType.STRING) // 인덱싱하기
+    @Enumerated(EnumType.STRING)
     private ProjectStatus status;
 
     private Boolean offline;
