@@ -145,4 +145,7 @@ public class MemberService {
         }
     }
 
+    public boolean existNickname(String nickname) {
+        return memberRepository.existsByNickname(nickname);
+    }
 }
