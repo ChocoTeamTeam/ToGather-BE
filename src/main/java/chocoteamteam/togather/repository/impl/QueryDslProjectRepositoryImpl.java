@@ -62,6 +62,18 @@ public class QueryDslProjectRepositoryImpl implements QueryDslProjectRepository 
 }
 
     @Override
+    public List<SimpleProjectDto> findAllByMemberId(Long memberId) {
+        return new ArrayList<>(jpaQueryFactory
+                .from(project)
+                .where(project.member.id.eq(memberId))
+                .leftJoin(project.projectTechStacks, projectTechStack)
+                .leftJoin(projectTechStack.techStack, techStack)
+                .transform(GroupBy.groupBy(project.id)
+                        .as(simpleProjectDto()))
+                .values());
+    }
+
+    @Override
     public List<SimpleProjectDto> findAllOptionAndSearch(ProjectCondition projectCondition) {
         List<Long> projectIds = getMultiConditionSearchId(projectCondition);
         if (projectIds.isEmpty()) {

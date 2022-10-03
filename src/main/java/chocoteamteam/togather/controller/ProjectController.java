@@ -90,4 +90,16 @@ public class ProjectController {
         return ResponseEntity.ok(projectService.deleteProject(projectId, member.getId(), member.getRole()));
     }
 
+    @Operation(
+            summary = "내가 올린 프로젝트 목록 조회",
+            description = "내가 올린 프로젝트 모집글 목록을 조회합니다",
+            security = {@SecurityRequirement(name = "Authorization")}, tags = {"Project"}
+    )
+    @PreAuthorize("hasRole('USER') or hasRole('ADMIN')")
+    @GetMapping("/myProjects")
+    public ResponseEntity<?> getMyProjects(@AuthenticationPrincipal LoginMember member) {
+        return ResponseEntity.ok(projectService.getMyProjects(member.getId()));
+    }
+
+
 }

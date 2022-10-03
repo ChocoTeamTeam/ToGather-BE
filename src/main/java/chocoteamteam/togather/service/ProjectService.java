@@ -157,4 +157,9 @@ public class ProjectService {
         projectRepository.deleteById(project.getId());
         return ProjectDto.from(project);
     }
+
+    @Transactional(readOnly = true)
+    public List<SimpleProjectDto> getMyProjects(Long memberId) {
+        return projectRepository.findAllByMemberId(memberId);
+    }
 }

@@ -14,4 +14,6 @@ public interface QueryDslProjectRepository {
     List<InterestDetail> findAllInterestProjectByIds(List<Long> projectIds);
 
     Optional<Project> findByIdWithMemberAndTechStack(Long projectId);
+
+    List<SimpleProjectDto> findAllByMemberId(Long memberId);
 }
