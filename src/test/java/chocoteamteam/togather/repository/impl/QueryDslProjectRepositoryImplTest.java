@@ -2,14 +2,8 @@ package chocoteamteam.togather.repository.impl;
 
 import chocoteamteam.togather.dto.ProjectCondition;
 import chocoteamteam.togather.dto.queryDslSimpleDto.SimpleProjectDto;
-import chocoteamteam.togather.entity.Member;
-import chocoteamteam.togather.entity.Project;
-import chocoteamteam.togather.entity.ProjectTechStack;
-import chocoteamteam.togather.entity.TechStack;
-import chocoteamteam.togather.repository.MemberRepository;
-import chocoteamteam.togather.repository.ProjectRepository;
-import chocoteamteam.togather.repository.ProjectTechStackRepository;
-import chocoteamteam.togather.repository.TechStackRepository;
+import chocoteamteam.togather.entity.*;
+import chocoteamteam.togather.repository.*;
 import chocoteamteam.togather.type.ProjectStatus;
 import org.junit.jupiter.api.*;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -42,6 +36,9 @@ class QueryDslProjectRepositoryImplTest {
 
     @Autowired
     private TechStackRepository techStackRepository;
+
+    @Autowired
+    private ProjectMemberRepository projectMemberRepository;
 
     @BeforeAll
     public void dataSetup() {
@@ -147,6 +144,24 @@ class QueryDslProjectRepositoryImplTest {
         assertTrue(result.size() > 0);
         for (SimpleProjectDto simpleProjectDto : result) {
             assertEquals(1L, simpleProjectDto.getMember().getId());
+        }
+    }
+
+    @Test
+    @DisplayName("내가 참여중인 프로젝트 조회")
+    void find_my_participating_project() {
+        //given
+        projectMemberRepository.save(ProjectMember.builder()
+                .project(projectRepository.findById(1L).get())
+                .member(memberRepository.findById(1L).get()).build());
+
+        //when
+        List<ProjectMember> result = queryDslProjectRepository.findAllByProjectMemberId(1L);
+        //then
+
+        assertTrue(result.size() > 0);
+        for (ProjectMember projectMember : result) {
+            assertEquals(1L, projectMember.getMember().getId());
         }
     }
 
