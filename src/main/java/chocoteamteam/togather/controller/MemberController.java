@@ -20,6 +20,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 @Tag(name = "Member", description = "회원 관련 API")
@@ -63,6 +64,15 @@ public class MemberController {
 		memberService.modify(memberId, request, loginMember.getId());
 		return ResponseEntity.ok().body("");
 	}
+
+    @Operation(
+        summary = "회원 닉네임 중복 검사 Api", description = "회원의 닉네임이 중복되는지 확인할 수 있습니다.",
+        tags = {"Member"}
+    )
+    @GetMapping("/nickname/exist")
+    public ResponseEntity<Boolean> existNickname(@RequestParam String nickname) {
+        return ResponseEntity.ok(memberService.existNickname(nickname));
+    }
 
 }
 

@@ -15,6 +15,6 @@ public class ChatMessageDto {
 	private String nickname;
 	private String profileImage;
 	private String message;
-	private LocalDateTime time;
+	private LocalDateTime sendTime;
 
 }

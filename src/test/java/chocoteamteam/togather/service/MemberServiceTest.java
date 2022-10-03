@@ -261,4 +261,17 @@ class MemberServiceTest {
             .hasMessage(ErrorCode.NOT_FOUND_MEMBER.getErrorMessage());
     }
 
+    @DisplayName("닉네임 중복 검사 - 성공")
+    @Test
+    void existNickname_success(){
+        // given
+        given(memberRepository.existsByNickname(any())).willReturn(true);
+
+        // when
+        boolean response = memberService.existNickname("test");
+
+        // then
+        assertThat(response).isTrue();
+    }
+
 }
