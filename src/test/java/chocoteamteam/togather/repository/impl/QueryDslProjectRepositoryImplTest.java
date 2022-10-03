@@ -137,6 +137,20 @@ class QueryDslProjectRepositoryImplTest {
     }
 
     @Test
+    @DisplayName("내가 올린 프로젝트 조회")
+    void find_my_project() {
+        //given
+        //when
+        List<SimpleProjectDto> result = queryDslProjectRepository.findAllByMemberId(1L);
+        //then
+
+        assertTrue(result.size() > 0);
+        for (SimpleProjectDto simpleProjectDto : result) {
+            assertEquals(1L, simpleProjectDto.getMember().getId());
+        }
+    }
+
+    @Test
     @DisplayName("조회 페이징 테스트")
     void noOption_paging_test() {
         //given
