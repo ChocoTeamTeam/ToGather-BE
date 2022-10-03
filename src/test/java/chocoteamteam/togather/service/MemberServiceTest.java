@@ -17,7 +17,6 @@ import chocoteamteam.togather.entity.TechStack;
 import chocoteamteam.togather.exception.ErrorCode;
 import chocoteamteam.togather.exception.MemberException;
 import chocoteamteam.togather.repository.MemberRepository;
-import chocoteamteam.togather.repository.MemberTechStackCustomRepository;
 import chocoteamteam.togather.repository.MemberTechStackRepository;
 import chocoteamteam.togather.repository.RefreshTokenRepository;
 import chocoteamteam.togather.repository.TechStackRepository;
@@ -44,8 +43,6 @@ class MemberServiceTest {
     MemberTechStackRepository memberTechStackRepository;
     @Mock
     TechStackRepository techStackRepository;
-    @Mock
-    MemberTechStackCustomRepository memberTechStackCustomRepository;
     @Mock
     RefreshTokenRepository refreshTokenRepository;
     @InjectMocks
@@ -80,9 +77,9 @@ class MemberServiceTest {
             .status(MemberStatus.PERMITTED)
             .role(Role.ROLE_USER)
             .providerType(ProviderType.GOOGLE)
-            .memberTechStacks(
-                List.of(MemberTechStack.builder().id(1L).techStack(techStack).build()))
             .build();
+        member.getMemberTechStacks()
+            .add(MemberTechStack.builder().id(1L).techStack(techStack).build());
         memberTechStack = new MemberTechStack(1L, member, techStack);
         memberTechStackInfoDto = MemberTechStackInfoDto.builder()
             .id(1L)
@@ -103,7 +100,7 @@ class MemberServiceTest {
     @Test
     void getDetail_success_memberTechStack_exist_true() {
         // given
-        given(memberTechStackCustomRepository.findAllByMemberId(any()))
+        given(memberTechStackRepository.findAllByMemberId(any()))
             .willReturn(List.of(memberTechStackInfoDto));
 
 
