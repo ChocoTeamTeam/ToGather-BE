@@ -50,7 +50,7 @@ public class Member extends BaseTimeEntity{
     private ProviderType providerType;
 
     @OneToMany(mappedBy = "member")
-    private List<MemberTechStack> memberTechStacks = new ArrayList<>();
+    private final List<MemberTechStack> memberTechStacks = new ArrayList<>();
 
 
     public void changeStatus(MemberStatus status) {

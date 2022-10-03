@@ -9,7 +9,6 @@ import chocoteamteam.togather.entity.TechStack;
 import chocoteamteam.togather.exception.ErrorCode;
 import chocoteamteam.togather.exception.MemberException;
 import chocoteamteam.togather.repository.MemberRepository;
-import chocoteamteam.togather.repository.MemberTechStackCustomRepository;
 import chocoteamteam.togather.repository.MemberTechStackRepository;
 import chocoteamteam.togather.repository.RefreshTokenRepository;
 import chocoteamteam.togather.repository.TechStackRepository;
@@ -33,14 +32,13 @@ public class MemberService {
     private final RefreshTokenRepository refreshTokenRepository;
     private final TechStackRepository techStackRepository;
     private final MemberTechStackRepository memberTechStackRepository;
-    private final MemberTechStackCustomRepository memberTechStackCustomRepository;
 
 
     @Transactional(readOnly = true)
     public MemberDetailResponse getDetail(Long memberId) {
 
         List<MemberTechStackInfoDto> memberTechStackInfoDtos =
-            memberTechStackCustomRepository.findAllByMemberId(memberId);
+            memberTechStackRepository.findAllByMemberId(memberId);
 
         if (memberTechStackInfoDtos.isEmpty()) {
             Member member = getMember(memberId);
