@@ -100,6 +100,7 @@ public class QueryDslProjectRepositoryImpl implements QueryDslProjectRepository 
                 .where(project.id.in(projectIds))
                 .leftJoin(project.projectTechStacks, projectTechStack)
                 .leftJoin(projectTechStack.techStack, techStack)
+                .orderBy(project.id.desc())
                 .transform(GroupBy.groupBy(project.id)
                         .as(simpleProjectDto()))
                 .values());
