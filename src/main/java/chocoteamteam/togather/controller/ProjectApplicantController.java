@@ -100,7 +100,7 @@ public class ProjectApplicantController {
 			.projectId(projectId)
 			.applicantMemberId(memberId)
 			.projectOwnerMemberId(member.getId())
-			.status(ApplicantStatus.ACCEPTED)
+			.status(ApplicantStatus.REJECTED)
 			.build());
 
 		return ResponseEntity.ok().body("");
