@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html lang="ko" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>ToGather Weekly Report</title>
+</head>
+<body>
+<h3>ToGather Weekly Report</h3>
+<p>이번 주에 마감되는 공고예요! 회원님의 기술 스택 맞춤 공고니, 서둘러 확인해 보아요</p>
+
+<table class="project_list_table">
+    <tr th:each="project : ${projects}">
+        <td>
+            <a th:href="@{https://dokuny.blog/studyDetail/{projectId}(projectId=${project.id})}">
+                <div th:text="${project.subject}">프로젝트 공고글 제목</div>
+            </a>
+            <div>모집 마감 : <span th:text="${project.deadline}">모집 마감일</span></div>
+            <span th:each="techStackName : ${project.techStackNames}">
+                #<span th:text="${techStackName}">기술 스택 이름</span>
+            </span>
+        </td>
+    </tr>
+</table>
+</body>
+</html>
