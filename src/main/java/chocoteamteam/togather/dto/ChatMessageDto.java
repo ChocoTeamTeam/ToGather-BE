@@ -16,7 +16,7 @@ public class ChatMessageDto {
 	private String nickname;
 	private String profileImage;
 	private String message;
-	@JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd HH:mm:ss")
+	@JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy년MM월dd일 HH시mm분ss초")
 	private LocalDateTime sendTime;
 
 }
