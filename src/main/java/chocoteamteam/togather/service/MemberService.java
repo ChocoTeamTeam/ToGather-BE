@@ -2,6 +2,7 @@ package chocoteamteam.togather.service;
 
 import chocoteamteam.togather.dto.MemberDetailResponse;
 import chocoteamteam.togather.dto.SignUpControllerDto.Request;
+import chocoteamteam.togather.dto.TechStackDto;
 import chocoteamteam.togather.entity.Member;
 import chocoteamteam.togather.entity.MemberTechStack;
 import chocoteamteam.togather.entity.TechStack;
@@ -17,6 +18,7 @@ import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
 import java.util.Set;
+import java.util.stream.Collectors;
 import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -66,7 +68,7 @@ public class MemberService {
     }
 
     @Transactional
-    public void modify(Long memberId, Request request, Long loginId) {
+    public MemberDetailResponse modify(Long memberId, Request request, Long loginId) {
 
         //  로그인한 회원 Id와 요청을 보낸 회원 Id가 다를 경우 예외 발생
         if (!Objects.equals(loginId, memberId)) {
@@ -87,7 +89,9 @@ public class MemberService {
 
         // 삭제할 MemberTechStackId와 저장할 TechStackId를 구분
         List<MemberTechStack> memberTechStacks = member.getMemberTechStacks();
-        Set<Long> requestTechStackIds = new HashSet<>(request.getTechStackDtos());
+        Set<Long> requestTechStackIds = request.getTechStackDtos().stream()
+            .map(TechStackDto::getId)
+            .collect(Collectors.toSet());
         Set<Long> deleteMemberTechStackIds = new HashSet<>();
         initMemberTechStackDeleteAndInsertIds(
             memberTechStacks,
@@ -100,6 +104,13 @@ public class MemberService {
 
         // 저장할 TechStackId List 비어있지 않다면 저장
         saveByMemberTechStack(member, requestTechStackIds);
+
+        return MemberDetailResponse.builder()
+            .id(memberId)
+            .nickname(request.getNickname())
+            .profileImage(request.getProfileImage())
+            .techStackDtos(request.getTechStackDtos())
+            .build();
     }
 
     private void initMemberTechStackDeleteAndInsertIds(List<MemberTechStack> memberTechStacks,
