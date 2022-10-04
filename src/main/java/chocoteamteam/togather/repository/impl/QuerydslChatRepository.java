@@ -29,7 +29,7 @@ public class QuerydslChatRepository {
 					member.nickname.as("nickname"),
 					member.profileImage.as("profileImage"),
 					chatMessage.message.as("message"),
-					chatMessage.createdAt.as("time")
+					chatMessage.createdAt.as("sendTime")
 				)).from(chatMessage)
 			.innerJoin(chatMessage.sender, member)
 			.where(chatMessage.chatRoom.id.eq(chatRoomId))

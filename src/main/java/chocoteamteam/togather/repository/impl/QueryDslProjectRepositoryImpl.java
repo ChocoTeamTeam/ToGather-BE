@@ -9,6 +9,7 @@ import chocoteamteam.togather.dto.queryDslSimpleDto.QSimpleProjectDto;
 import chocoteamteam.togather.dto.queryDslSimpleDto.QSimpleTechStackDto;
 import chocoteamteam.togather.dto.queryDslSimpleDto.SimpleProjectDto;
 import chocoteamteam.togather.entity.Project;
+import chocoteamteam.togather.entity.ProjectMember;
 import chocoteamteam.togather.repository.QueryDslProjectRepository;
 import chocoteamteam.togather.type.ProjectStatus;
 import com.querydsl.core.group.GroupBy;
@@ -28,6 +29,7 @@ import java.util.Optional;
 
 import static chocoteamteam.togather.entity.QMember.member;
 import static chocoteamteam.togather.entity.QProject.project;
+import static chocoteamteam.togather.entity.QProjectMember.projectMember;
 import static chocoteamteam.togather.entity.QProjectTechStack.projectTechStack;
 import static chocoteamteam.togather.entity.QTechStack.techStack;
 import static com.querydsl.core.group.GroupBy.groupBy;
@@ -93,6 +95,27 @@ public class QueryDslProjectRepositoryImpl implements QueryDslProjectRepository 
     }
 
     @Override
+    public List<SimpleProjectDto> findAllByMemberId(Long memberId) {
+        return new ArrayList<>(jpaQueryFactory
+                .from(project)
+                .where(project.member.id.eq(memberId))
+                .leftJoin(project.projectTechStacks, projectTechStack)
+                .leftJoin(projectTechStack.techStack, techStack)
+                .transform(GroupBy.groupBy(project.id)
+                        .as(simpleProjectDto()))
+                .values());
+    }
+
+    @Override
+    public List<ProjectMember> findAllByProjectMemberId(Long memberId) {
+        return jpaQueryFactory
+                .selectFrom(projectMember)
+                .where(projectMember.member.id.eq(memberId))
+                .innerJoin(projectMember.project, project).fetchJoin()
+                .fetch();
+    }
+
+    @Override
     public List<SimpleProjectDto> findAllOptionAndSearch(ProjectCondition projectCondition) {
         List<Long> projectIds = getMultiConditionSearchId(projectCondition);
         if (projectIds.isEmpty()) {
@@ -108,6 +131,7 @@ public class QueryDslProjectRepositoryImpl implements QueryDslProjectRepository 
                 .where(project.id.in(projectIds))
                 .leftJoin(project.projectTechStacks, projectTechStack)
                 .leftJoin(projectTechStack.techStack, techStack)
+                .orderBy(project.id.desc())
                 .transform(GroupBy.groupBy(project.id)
                         .as(simpleProjectDto()))
                 .values());

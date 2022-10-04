@@ -4,12 +4,14 @@ import chocoteamteam.togather.dto.LoginMember;
 import chocoteamteam.togather.dto.LoginResponse;
 import chocoteamteam.togather.dto.SignUpControllerDto;
 import chocoteamteam.togather.dto.SignUpServiceDto;
+import chocoteamteam.togather.dto.TechStackDto;
 import chocoteamteam.togather.dto.Tokens;
 import chocoteamteam.togather.service.JwtService;
 import chocoteamteam.togather.service.OAuthService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import java.util.stream.Collectors;
 import javax.validation.Valid;
 import javax.validation.constraints.NotEmpty;
 import lombok.RequiredArgsConstructor;
@@ -57,7 +59,10 @@ public class OAuthController {
             .signUpToken(signUpToken)
             .nickname(request.getNickname())
             .profileImage(request.getProfileImage())
-            .techStackDtoList(request.getTechStackDtos())
+            .techStackDtoList(request.getTechStackDtos()
+                .stream()
+                .map(TechStackDto::getId)
+                .collect(Collectors.toList()))
             .build()));
     }
 

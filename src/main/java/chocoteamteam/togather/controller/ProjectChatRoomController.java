@@ -2,15 +2,14 @@ package chocoteamteam.togather.controller;
 
 import chocoteamteam.togather.dto.ChangeChatRoomNameForm;
 import chocoteamteam.togather.dto.ChatDetailDto;
-import chocoteamteam.togather.dto.ChatDetailDto;
 import chocoteamteam.togather.dto.ChatRoomDto;
+import chocoteamteam.togather.dto.ChatRoomsResponse;
 import chocoteamteam.togather.dto.CreateChatRoomForm;
 import chocoteamteam.togather.dto.LoginMember;
 import chocoteamteam.togather.service.ProjectChatRoomService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import io.swagger.v3.oas.annotations.tags.Tag;
-import java.util.List;
 import javax.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
@@ -58,13 +57,15 @@ public class ProjectChatRoomController {
 	)
 	@PreAuthorize("hasRole('USER')")
 	@GetMapping("/{projectId}/chats")
-	public ResponseEntity<List<ChatRoomDto>> getProjectChats(
+	public ResponseEntity<ChatRoomsResponse> getProjectChats(
 		@ApiIgnore @AuthenticationPrincipal LoginMember member,
 		@PathVariable long projectId) {
 
-		return ResponseEntity.ok()
-			.body(projectChatRoomService.getChatRooms(projectId, member.getId()));
-	}
+        return ResponseEntity.ok().body(new ChatRoomsResponse(
+                projectId,
+                projectChatRoomService.getChatRooms(projectId, member.getId()))
+            );
+    }
 
 	// 채팅방 상세조회
 	@Operation(

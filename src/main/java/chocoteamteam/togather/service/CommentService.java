@@ -39,7 +39,7 @@ public class CommentService {
 
     @Transactional
     public CommentDto modifyComment(Long commentId, String content, Long memberId) {
-        Comment comment = getCommentByMemberId(memberId, commentId);
+        Comment comment = getCommentByMemberId(commentId, memberId);
 
         comment.setContent(content);
         return CommentDto.fromEntity(comment);

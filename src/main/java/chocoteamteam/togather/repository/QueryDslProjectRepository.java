@@ -6,6 +6,7 @@ import chocoteamteam.togather.dto.ProjectCondition;
 import chocoteamteam.togather.dto.queryDslSimpleDto.SimpleProjectDto;
 import chocoteamteam.togather.entity.Project;
 import org.springframework.data.repository.query.Param;
+import chocoteamteam.togather.entity.ProjectMember;
 
 import java.time.LocalDate;
 import java.util.List;
@@ -22,4 +23,9 @@ public interface QueryDslProjectRepository {
             @Param("techStackIds") List<Long> techStackIds,
             @Param("startDate") LocalDate startDate,
             @Param("endDate") LocalDate endDate);
+
+    List<SimpleProjectDto> findAllByMemberId(Long memberId);
+
+    List<ProjectMember> findAllByProjectMemberId(Long memberId);
+
 }
