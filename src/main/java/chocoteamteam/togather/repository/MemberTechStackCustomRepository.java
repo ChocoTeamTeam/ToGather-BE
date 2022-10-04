@@ -1,10 +1,9 @@
 package chocoteamteam.togather.repository;
 
-import chocoteamteam.togather.dto.queryDslSimpleDto.MemberTechStackInfoDto;
-import java.util.List;
+import chocoteamteam.togather.dto.MemberDetailResponse;
 
 public interface MemberTechStackCustomRepository {
 
-    List<MemberTechStackInfoDto> findAllByMemberId(Long id);
+    MemberDetailResponse findMemberWithTechStackDetailByMemberId(Long memberId);
 
 }

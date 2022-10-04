@@ -2,7 +2,6 @@ package chocoteamteam.togather.service;
 
 import chocoteamteam.togather.dto.MemberDetailResponse;
 import chocoteamteam.togather.dto.SignUpControllerDto.Request;
-import chocoteamteam.togather.dto.queryDslSimpleDto.MemberTechStackInfoDto;
 import chocoteamteam.togather.entity.Member;
 import chocoteamteam.togather.entity.MemberTechStack;
 import chocoteamteam.togather.entity.TechStack;
@@ -37,10 +36,10 @@ public class MemberService {
     @Transactional(readOnly = true)
     public MemberDetailResponse getDetail(Long memberId) {
 
-        List<MemberTechStackInfoDto> memberTechStackInfoDtos =
-            memberTechStackRepository.findAllByMemberId(memberId);
+        MemberDetailResponse memberDetailResponse =
+            memberTechStackRepository.findMemberWithTechStackDetailByMemberId(memberId);
 
-        if (memberTechStackInfoDtos.isEmpty()) {
+        if (memberDetailResponse == null) {
             Member member = getMember(memberId);
             return MemberDetailResponse.builder()
                 .id(member.getId())
@@ -49,8 +48,7 @@ public class MemberService {
                 .build();
         }
 
-        return MemberDetailResponse.fromMemberTechStackInfoDtos(memberTechStackInfoDtos);
-
+        return memberDetailResponse;
     }
 
     private Member getMember(Long memberId) {
@@ -97,10 +95,10 @@ public class MemberService {
             deleteMemberTechStackIds
         );
 
-        // 삭제할 MemberTechStackId List가 비어있지 않다면 삭제
+        // 삭제할 MemberTechStackId List 비어있지 않다면 삭제
         deleteByMemberTechStackIds(deleteMemberTechStackIds);
 
-        // 저장할 TechStackId List가 비어있지 않다면 저장
+        // 저장할 TechStackId List 비어있지 않다면 저장
         saveByMemberTechStack(member, requestTechStackIds);
     }
 

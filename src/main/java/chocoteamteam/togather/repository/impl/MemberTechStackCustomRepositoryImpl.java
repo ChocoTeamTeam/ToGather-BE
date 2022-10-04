@@ -1,11 +1,16 @@
 package chocoteamteam.togather.repository.impl;
 
-import chocoteamteam.togather.dto.queryDslSimpleDto.MemberTechStackInfoDto;
-import chocoteamteam.togather.entity.QMemberTechStack;
+import static chocoteamteam.togather.entity.QMember.member;
+import static chocoteamteam.togather.entity.QMemberTechStack.memberTechStack;
+import static chocoteamteam.togather.entity.QTechStack.techStack;
+import static com.querydsl.core.group.GroupBy.groupBy;
+import static com.querydsl.core.group.GroupBy.list;
+
+import chocoteamteam.togather.dto.MemberDetailResponse;
+import chocoteamteam.togather.dto.TechStackDto;
 import chocoteamteam.togather.repository.MemberTechStackCustomRepository;
 import com.querydsl.core.types.Projections;
 import com.querydsl.jpa.impl.JPAQueryFactory;
-import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Repository;
 
@@ -16,21 +21,27 @@ public class MemberTechStackCustomRepositoryImpl implements MemberTechStackCusto
     private final JPAQueryFactory queryFactory;
 
     @Override
-    public List<MemberTechStackInfoDto> findAllByMemberId(Long id) {
-        QMemberTechStack memberTechStack = QMemberTechStack.memberTechStack;
+    public MemberDetailResponse findMemberWithTechStackDetailByMemberId(Long memberId) {
         return queryFactory
-            .select(Projections.constructor(MemberTechStackInfoDto.class,
-                memberTechStack.member.id,
-                memberTechStack.member.nickname,
-                memberTechStack.member.profileImage,
-                memberTechStack.techStack.id,
-                memberTechStack.techStack.name,
-                memberTechStack.techStack.image
-            ))
             .from(memberTechStack)
-            .join(memberTechStack.member)
-            .join(memberTechStack.techStack)
-            .where(memberTechStack.member.id.eq(id))
-            .fetch();
+            .where(memberTechStack.member.id.in(memberId))
+            .join(memberTechStack.member, member)
+            .join(memberTechStack.techStack, techStack)
+            .transform(groupBy(memberTechStack.member.id)
+                .as(Projections.constructor(
+                    MemberDetailResponse.class,
+                    memberTechStack.member.id,
+                    memberTechStack.member.nickname,
+                    memberTechStack.member.profileImage,
+                    list(Projections.constructor(
+                            TechStackDto.class,
+                            memberTechStack.techStack.id,
+                            memberTechStack.techStack.name,
+                            memberTechStack.techStack.category,
+                            memberTechStack.techStack.image
+                        )
+                    )
+                ))).get(memberId);
     }
+
 }

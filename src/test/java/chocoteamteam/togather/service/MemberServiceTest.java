@@ -100,8 +100,19 @@ class MemberServiceTest {
     @Test
     void getDetail_success_memberTechStack_exist_true() {
         // given
-        given(memberTechStackRepository.findAllByMemberId(any()))
-            .willReturn(List.of(memberTechStackInfoDto));
+        given(memberTechStackRepository.findMemberWithTechStackDetailByMemberId(any()))
+            .willReturn(MemberDetailResponse.builder()
+                .id(member.getId())
+                .nickname(member.getNickname())
+                .profileImage(member.getProfileImage())
+                .techStackDtos(List.of(TechStackDto.builder()
+                        .id(techStack.getId())
+                        .name(techStack.getName())
+                        .category(techStack.getCategory())
+                        .image(techStack.getImage())
+                    .build()))
+                .build()
+            );
 
 
         // when
