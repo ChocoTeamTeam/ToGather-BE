@@ -28,11 +28,12 @@ public class ChatService {
         Member member = memberRepository.getReferenceById(memberId);
         ChatRoom chatRoom = chatRoomRepository.getReferenceById(chatRoomId);
 
-        chatMessageRepository.save(ChatMessage.builder()
+        ChatMessage saveChatMessage = chatMessageRepository.save(ChatMessage.builder()
             .chatRoom(chatRoom)
             .sender(member)
             .message(chatMessageDto.getMessage())
             .build());
+        chatMessageDto.setSendTime(saveChatMessage.getCreatedAt());
 
         rabbitTemplate.convertAndSend(EXCHANGE.getName(), "room." + chatRoomId, chatMessageDto);
     }
