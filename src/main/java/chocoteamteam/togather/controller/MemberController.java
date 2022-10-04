@@ -59,10 +59,9 @@ public class MemberController {
 		security = {@SecurityRequirement(name = "Authorization")}, tags = {"Member"}
 	)
 	@PutMapping("/{memberId}")
-	public ResponseEntity<?> modify(@PathVariable @Positive Long memberId, @RequestBody @Valid
+	public ResponseEntity<MemberDetailResponse> modify(@PathVariable @Positive Long memberId, @RequestBody @Valid
 	SignUpControllerDto.Request request, @AuthenticationPrincipal LoginMember loginMember) {
-		memberService.modify(memberId, request, loginMember.getId());
-		return ResponseEntity.ok().body("");
+		return ResponseEntity.ok(memberService.modify(memberId, request, loginMember.getId()));
 	}
 
     @Operation(

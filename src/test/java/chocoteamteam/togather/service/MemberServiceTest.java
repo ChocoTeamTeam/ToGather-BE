@@ -92,7 +92,9 @@ class MemberServiceTest {
         modifyRequest = Request.builder()
             .nickname("수정")
             .profileImage("이미지수정")
-            .techStackDtos(List.of(2L))
+            .techStackDtos(List.of(TechStackDto.builder()
+                .id(2L)
+                .build()))
             .build();
     }
 
@@ -100,9 +102,19 @@ class MemberServiceTest {
     @Test
     void getDetail_success_memberTechStack_exist_true() {
         // given
-        given(memberTechStackRepository.findAllByMemberId(any()))
-            .willReturn(List.of(memberTechStackInfoDto));
-
+        given(memberTechStackRepository.findMemberWithTechStackDetailByMemberId(any()))
+            .willReturn(MemberDetailResponse.builder()
+                .id(member.getId())
+                .nickname(member.getNickname())
+                .profileImage(member.getProfileImage())
+                .techStackDtos(List.of(TechStackDto.builder()
+                        .id(techStack.getId())
+                        .name(techStack.getName())
+                        .category(techStack.getCategory())
+                        .image(techStack.getImage())
+                    .build()))
+                .build()
+            );
 
         // when
         MemberDetailResponse response = memberService.getDetail(1L);
@@ -260,7 +272,7 @@ class MemberServiceTest {
 
     @DisplayName("닉네임 중복 검사 - 성공")
     @Test
-    void existNickname_success(){
+    void existNickname_success() {
         // given
         given(memberRepository.existsByNickname(any())).willReturn(true);
 
