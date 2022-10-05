@@ -1,9 +1,7 @@
 package chocoteamteam.togather.dto;
 
-import chocoteamteam.togather.batch.application.job.model.TechStatisticsDto;
+import chocoteamteam.togather.batch.application.model.TechStatisticsDto;
 import chocoteamteam.togather.batch.domain.entity.WeeklyTechStatistics;
-import chocoteamteam.togather.type.TechCategory;
-import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;

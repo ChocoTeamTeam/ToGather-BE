@@ -1,7 +1,7 @@
 package chocoteamteam.togather.batch.application.job;
 
 
-import chocoteamteam.togather.batch.application.job.model.TechStatisticsDto;
+import chocoteamteam.togather.batch.application.model.TechStatisticsDto;
 import chocoteamteam.togather.batch.application.job.param.TechStatisticsJobParam;
 import chocoteamteam.togather.batch.domain.entity.WeeklyTechStatistics;
 import com.querydsl.core.types.Projections;

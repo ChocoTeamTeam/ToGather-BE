@@ -1,4 +1,4 @@
-package chocoteamteam.togather.batch.application.job.model;
+package chocoteamteam.togather.batch.application.model;
 
 import chocoteamteam.togather.type.TechCategory;
 import lombok.AllArgsConstructor;

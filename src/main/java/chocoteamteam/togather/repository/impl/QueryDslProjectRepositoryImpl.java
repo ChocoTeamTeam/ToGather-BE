@@ -1,6 +1,7 @@
 package chocoteamteam.togather.repository.impl;
 
 
+import chocoteamteam.togather.batch.application.model.MemberRecommendationProjectDto;
 import chocoteamteam.togather.dto.InterestDetail;
 import chocoteamteam.togather.dto.ProjectCondition;
 import chocoteamteam.togather.dto.queryDslSimpleDto.QSimpleMemberDto;
@@ -10,6 +11,7 @@ import chocoteamteam.togather.dto.queryDslSimpleDto.SimpleProjectDto;
 import chocoteamteam.togather.entity.Project;
 import chocoteamteam.togather.entity.ProjectMember;
 import chocoteamteam.togather.repository.QueryDslProjectRepository;
+import chocoteamteam.togather.type.ProjectStatus;
 import com.querydsl.core.group.GroupBy;
 import com.querydsl.core.types.Projections;
 import com.querydsl.core.types.dsl.BooleanExpression;
@@ -17,6 +19,9 @@ import com.querydsl.jpa.impl.JPAQueryFactory;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Repository;
 
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.LocalTime;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -27,6 +32,7 @@ import static chocoteamteam.togather.entity.QProject.project;
 import static chocoteamteam.togather.entity.QProjectMember.projectMember;
 import static chocoteamteam.togather.entity.QProjectTechStack.projectTechStack;
 import static chocoteamteam.togather.entity.QTechStack.techStack;
+import static com.querydsl.core.group.GroupBy.groupBy;
 import static com.querydsl.core.group.GroupBy.list;
 
 @RequiredArgsConstructor
@@ -37,19 +43,43 @@ public class QueryDslProjectRepositoryImpl implements QueryDslProjectRepository 
 
     @Override
     public List<InterestDetail> findAllInterestProjectByIds(List<Long> projectIds) {
-        return new ArrayList<>(jpaQueryFactory
-            .select(Projections.fields(InterestDetail.class,
-                project.id.as("projectId"),
-                project.title.as("title"),
-                project.status.as("status"),
-                project.deadline.as("deadline"),
-                project.member.nickname.as("writer")
-            ))
-            .from(project)
-            .join(project.member)
-            .where(project.id.in(projectIds))
-            .fetch());
+        return jpaQueryFactory
+                .select(Projections.fields(InterestDetail.class,
+                        project.id.as("projectId"),
+                        project.title.as("title"),
+                        project.status.as("status"),
+                        project.deadline.as("deadline"),
+                        project.member.nickname.as("writer")
+                ))
+                .from(project)
+                .join(project.member)
+                .where(project.id.in(projectIds))
+                .fetch();
 
+    }
+
+    @Override
+    public List<MemberRecommendationProjectDto> findAllByTechStackIdsAndDeadline(
+            List<Long> techStackIds,
+            LocalDate startDate,
+            LocalDate endDate) {
+
+        return jpaQueryFactory
+                .from(projectTechStack)
+                .innerJoin(projectTechStack.project, project)
+                .innerJoin(projectTechStack.techStack, techStack)
+                .where(project.status.eq(ProjectStatus.RECRUITING),
+                        (project.deadline.between(startDate, endDate)),
+                        (techStack.id.in(techStackIds)),
+                        (project.createdAt.before(LocalDateTime.of(startDate, LocalTime.MIN))))
+                .limit(10)
+                .transform(groupBy(project.id).list(
+                        Projections.fields(MemberRecommendationProjectDto.class,
+                                project.id.as("id"),
+                                project.title.as("subject"),
+                                project.deadline.as("deadline"),
+                                list(techStack.name).as("techStackNames"))
+                ));
     }
 
     @Override
@@ -57,11 +87,11 @@ public class QueryDslProjectRepositoryImpl implements QueryDslProjectRepository 
         return Optional.ofNullable(jpaQueryFactory
                 .selectFrom(project)
                 .where(project.id.eq(projectId))
-                .leftJoin(project.member,member).fetchJoin()
+                .leftJoin(project.member, member).fetchJoin()
                 .leftJoin(project.projectTechStacks, projectTechStack).fetchJoin()
                 .leftJoin(projectTechStack.techStack, techStack).fetchJoin()
                 .fetchOne());
-}
+    }
 
     @Override
     public List<SimpleProjectDto> findAllByMemberId(Long memberId) {
