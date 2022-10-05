@@ -4,10 +4,7 @@ import chocoteamteam.togather.batch.BatchTestConfig;
 import chocoteamteam.togather.batch.application.job.listener.JobExecutionLogger;
 import chocoteamteam.togather.batch.application.job.param.WeeklyDeadlineParam;
 import chocoteamteam.togather.batch.domain.repository.WeeklyDeadlineProjectRepository;
-import chocoteamteam.togather.entity.Member;
-import chocoteamteam.togather.entity.Project;
-import chocoteamteam.togather.entity.ProjectTechStack;
-import chocoteamteam.togather.entity.TechStack;
+import chocoteamteam.togather.entity.*;
 import chocoteamteam.togather.repository.MemberRepository;
 import chocoteamteam.togather.repository.ProjectRepository;
 import chocoteamteam.togather.repository.ProjectTechStackRepository;
@@ -66,7 +63,11 @@ class CreateWeeklyDeadlineProjectJobConfigTest {
                 .personnel(5)
                 .status(ProjectStatus.RECRUITING)
                 .offline(false)
-                .location("서울")
+                .location(Location.builder()
+                        .address("서울특별시 강남구 센터 테헤란로 231 필드 웨스트 6층 7층")
+                        .latitude(37.503050)
+                        .longitude(127.041583)
+                        .build())
                 .deadline(LocalDate.now().plusDays(5))
                 .build();
 

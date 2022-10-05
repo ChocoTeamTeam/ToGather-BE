@@ -2,6 +2,7 @@ package chocoteamteam.togather.controller;
 
 import chocoteamteam.togather.config.SecurityConfig;
 import chocoteamteam.togather.dto.*;
+import chocoteamteam.togather.entity.Location;
 import chocoteamteam.togather.service.JwtService;
 import chocoteamteam.togather.service.ProjectApplicantService;
 import chocoteamteam.togather.service.ProjectService;
@@ -96,7 +97,11 @@ class ProjectControllerTest {
                 .personnel(5)
                 .status(ProjectStatus.RECRUITING)
                 .offline(true)
-                .location("서울")
+                .location(Location.builder()
+                        .address("서울특별시 강남구 센터 테헤란로 231 필드 웨스트 6층 7층")
+                        .latitude(37.503050)
+                        .longitude(127.041583)
+                        .build())
                 .deadline(LocalDate.of(2022, 10, 5))
                 .techStacks(techStackDtos)
                 .build();
@@ -126,7 +131,11 @@ class ProjectControllerTest {
                 .personnel(5)
                 .status(ProjectStatus.RECRUITING)
                 .offline(true)
-                .location("서울")
+                .location(Location.builder()
+                        .address("서울특별시 강남구 센터 테헤란로 231 필드 웨스트 6층 7층")
+                        .latitude(37.503050)
+                        .longitude(127.041583)
+                        .build())
                 .deadline(LocalDate.of(2022, 10, 5))
                 .techStacks(techStackDtos)
                 .comments(commentDtos)
@@ -150,7 +159,9 @@ class ProjectControllerTest {
                                 .personnel(100)
                                 .status(ProjectStatus.RECRUITING)
                                 .offline(true)
-                                .location("아무 장소")
+                                .address("서울특별시 강남구 센터 테헤란로 231 필드 웨스트 6층 7층")
+                                .latitude(37.503050)
+                                .longitude(127.041583)
                                 .deadline(LocalDate.of(2050, 1, 1))
                                 .techStackIds(List.of(1L, 2L))
                                 .build())))
@@ -196,7 +207,9 @@ class ProjectControllerTest {
                                 .personnel(100)
                                 .status(ProjectStatus.RECRUITING)
                                 .offline(true)
-                                .location("아무 장소")
+                                .address("서울특별시 강남구 센터 테헤란로 231 필드 웨스트 6층 7층")
+                                .latitude(37.503050)
+                                .longitude(127.041583)
                                 .deadline(LocalDate.of(2050, 1, 1))
                                 .techStackIds(List.of(1L, 2L))
                                 .build())))
@@ -241,7 +254,9 @@ class ProjectControllerTest {
                                 .personnel(100)
                                 .status(ProjectStatus.RECRUITING)
                                 .offline(true)
-                                .location("아무 장소")
+                                .address("서울특별시 강남구 센터 테헤란로 231 필드 웨스트 6층 7층")
+                                .latitude(37.503050)
+                                .longitude(127.041583)
                                 .deadline(LocalDate.of(2050, 1, 1))
                                 .techStackIds(List.of(1L, 2L))
                                 .build())))
@@ -296,7 +311,9 @@ class ProjectControllerTest {
                                 .personnel(100)
                                 .status(ProjectStatus.RECRUITING)
                                 .offline(true)
-                                .location("아무 장소")
+                                .address("서울특별시 강남구 센터 테헤란로 231 필드 웨스트 6층 7층")
+                                .latitude(37.503050)
+                                .longitude(127.041583)
                                 .deadline(LocalDate.of(2050, 1, 1))
                                 .techStackIds(List.of(1L, 2L))
                                 .build())))
