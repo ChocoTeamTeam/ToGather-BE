@@ -17,7 +17,6 @@ import chocoteamteam.togather.entity.TechStack;
 import chocoteamteam.togather.exception.ErrorCode;
 import chocoteamteam.togather.exception.MemberException;
 import chocoteamteam.togather.repository.MemberRepository;
-import chocoteamteam.togather.repository.MemberTechStackCustomRepository;
 import chocoteamteam.togather.repository.MemberTechStackRepository;
 import chocoteamteam.togather.repository.RefreshTokenRepository;
 import chocoteamteam.togather.repository.TechStackRepository;
@@ -44,8 +43,6 @@ class MemberServiceTest {
     MemberTechStackRepository memberTechStackRepository;
     @Mock
     TechStackRepository techStackRepository;
-    @Mock
-    MemberTechStackCustomRepository memberTechStackCustomRepository;
     @Mock
     RefreshTokenRepository refreshTokenRepository;
     @InjectMocks
@@ -80,9 +77,9 @@ class MemberServiceTest {
             .status(MemberStatus.PERMITTED)
             .role(Role.ROLE_USER)
             .providerType(ProviderType.GOOGLE)
-            .memberTechStacks(
-                List.of(MemberTechStack.builder().id(1L).techStack(techStack).build()))
             .build();
+        member.getMemberTechStacks()
+            .add(MemberTechStack.builder().id(1L).techStack(techStack).build());
         memberTechStack = new MemberTechStack(1L, member, techStack);
         memberTechStackInfoDto = MemberTechStackInfoDto.builder()
             .id(1L)
@@ -95,7 +92,9 @@ class MemberServiceTest {
         modifyRequest = Request.builder()
             .nickname("수정")
             .profileImage("이미지수정")
-            .techStackDtos(List.of(2L))
+            .techStackDtos(List.of(TechStackDto.builder()
+                .id(2L)
+                .build()))
             .build();
     }
 
@@ -103,9 +102,19 @@ class MemberServiceTest {
     @Test
     void getDetail_success_memberTechStack_exist_true() {
         // given
-        given(memberTechStackCustomRepository.findAllByMemberId(any()))
-            .willReturn(List.of(memberTechStackInfoDto));
-
+        given(memberTechStackRepository.findMemberWithTechStackDetailByMemberId(any()))
+            .willReturn(MemberDetailResponse.builder()
+                .id(member.getId())
+                .nickname(member.getNickname())
+                .profileImage(member.getProfileImage())
+                .techStackDtos(List.of(TechStackDto.builder()
+                        .id(techStack.getId())
+                        .name(techStack.getName())
+                        .category(techStack.getCategory())
+                        .image(techStack.getImage())
+                    .build()))
+                .build()
+            );
 
         // when
         MemberDetailResponse response = memberService.getDetail(1L);
@@ -259,6 +268,19 @@ class MemberServiceTest {
         assertThatThrownBy(() -> memberService.modify(1L, modifyRequest, 1L))
             .isInstanceOf(MemberException.class)
             .hasMessage(ErrorCode.NOT_FOUND_MEMBER.getErrorMessage());
+    }
+
+    @DisplayName("닉네임 중복 검사 - 성공")
+    @Test
+    void existNickname_success() {
+        // given
+        given(memberRepository.existsByNickname(any())).willReturn(true);
+
+        // when
+        boolean response = memberService.existNickname("test");
+
+        // then
+        assertThat(response).isTrue();
     }
 
 }

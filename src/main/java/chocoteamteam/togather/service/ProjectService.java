@@ -12,6 +12,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.*;
+import java.util.stream.Collectors;
 
 import static chocoteamteam.togather.exception.ErrorCode.*;
 
@@ -156,5 +157,18 @@ public class ProjectService {
         projectTechStackRepository.deleteByProjectId(project.getId());
         projectRepository.deleteById(project.getId());
         return ProjectDto.from(project);
+    }
+
+    @Transactional(readOnly = true)
+    public List<SimpleProjectDto> getMyProjects(Long memberId) {
+        return projectRepository.findAllByMemberId(memberId);
+    }
+
+    @Transactional(readOnly = true)
+    public List<ParticipatingProjectDto> getMyParticipatingProjects(Long memberId) {
+        return projectRepository.findAllByProjectMemberId(memberId).stream()
+                .map(projectMember ->
+                        new ParticipatingProjectDto(projectMember.getProject().getId(), projectMember.getProject().getTitle()))
+                .collect(Collectors.toList());
     }
 }

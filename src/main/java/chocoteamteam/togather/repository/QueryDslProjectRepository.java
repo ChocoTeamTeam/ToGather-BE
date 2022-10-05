@@ -5,6 +5,7 @@ import chocoteamteam.togather.dto.InterestDetail;
 import chocoteamteam.togather.dto.ProjectCondition;
 import chocoteamteam.togather.dto.queryDslSimpleDto.SimpleProjectDto;
 import chocoteamteam.togather.entity.Project;
+import chocoteamteam.togather.entity.ProjectMember;
 
 import java.time.LocalDate;
 import java.util.List;
@@ -21,4 +22,9 @@ public interface QueryDslProjectRepository {
             List<Long> techStackIds,
             LocalDate startDate,
             LocalDate endDate);
+
+    List<SimpleProjectDto> findAllByMemberId(Long memberId);
+
+    List<ProjectMember> findAllByProjectMemberId(Long memberId);
+
 }
