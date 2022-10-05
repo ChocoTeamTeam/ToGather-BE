@@ -32,7 +32,8 @@ public enum ErrorCode {
     CHATROOM_NOT_MATCHED_PROJECT(HttpStatus.BAD_REQUEST,"프로젝트에 없는 채팅방입니다."),
     ALREADY_APPLY_PROJECT(HttpStatus.BAD_REQUEST,"이미 지원한 프로젝트입니다."),
     NOT_FOUND_APPLICANT(HttpStatus.BAD_REQUEST,"찾을 수 없는 신청자 입니다."),
-    ALREADY_CHECKED_APPLICANT(HttpStatus.BAD_REQUEST,"이미 처리된 신청자입니다.");
+    ALREADY_CHECKED_APPLICANT(HttpStatus.BAD_REQUEST,"이미 처리된 신청자입니다."),
+    EMAIL_SEND_FAIL(HttpStatus.INTERNAL_SERVER_ERROR, "메일 전송이 실패했습니다");
 
     private final HttpStatus httpStatus;
     private final String errorMessage;

@@ -2,7 +2,6 @@ package chocoteamteam.togather.exception;
 
 import chocoteamteam.togather.dto.ErrorResponse;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.security.core.token.Token;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 
@@ -28,7 +27,7 @@ public class GlobalExceptionHandler {
         return new ErrorResponse(e.getStatus(), e.getErrorCode(), e.getErrorMessage());
     }
 
-	  @ExceptionHandler(TokenException.class)
+    @ExceptionHandler(TokenException.class)
     public ErrorResponse tokenExceptionHandler(TokenException e) {
         log.error("{} is occured", e.getErrorCode());
         return new ErrorResponse(e.getStatus(), e.getErrorCode(), e.getErrorMessage());
@@ -45,7 +44,7 @@ public class GlobalExceptionHandler {
         log.error("{} is occured", e.getErrorCode());
         return new ErrorResponse(e.getStatus(), e.getErrorCode(), e.getErrorMessage());
     }
-    
+
     @ExceptionHandler(TechStackException.class)
     public ErrorResponse techStackExceptionHandler(TechStackException e) {
 
@@ -60,6 +59,9 @@ public class GlobalExceptionHandler {
         return new ErrorResponse(e.getStatus(), e.getErrorCode(), e.getErrorMessage());
     }
 
-
-
+    @ExceptionHandler(MailException.class)
+    public ErrorResponse mailExceptionHandler(MailException e) {
+        log.error("{} is occured", e.getErrorCode());
+        return new ErrorResponse(e.getStatus(), e.getErrorCode(), e.getErrorMessage());
+    }
 }
