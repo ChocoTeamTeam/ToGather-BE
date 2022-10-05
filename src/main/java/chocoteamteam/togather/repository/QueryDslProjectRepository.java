@@ -20,9 +20,9 @@ public interface QueryDslProjectRepository {
     Optional<Project> findByIdWithMemberAndTechStack(Long projectId);
 
     List<MemberRecommendationProjectDto> findAllByTechStackIdsAndDeadline(
-            @Param("techStackIds") List<Long> techStackIds,
-            @Param("startDate") LocalDate startDate,
-            @Param("endDate") LocalDate endDate);
+            List<Long> techStackIds,
+            LocalDate startDate,
+            LocalDate endDate);
 
     List<SimpleProjectDto> findAllByMemberId(Long memberId);
 
