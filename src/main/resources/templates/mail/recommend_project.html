@@ -3,23 +3,42 @@
 <head>
     <meta charset="UTF-8">
     <title>ToGather Weekly Report</title>
+    <style>
+        .pj_box {
+            padding: 10px;
+            width: 200%;
+            background: mintcream;
+            margin-bottom: 15px;
+            border-radius: 10px;
+        }
+    </style>
 </head>
 <body>
 <h3>ToGather Weekly Report</h3>
-<p>이번 주에 마감되는 공고예요! 회원님의 기술 스택 맞춤 공고니, 서둘러 확인해 보아요</p>
 
-<table class="project_list_table">
-    <tr th:each="project : ${projects}">
-        <td>
-            <a th:href="@{https://dokuny.blog/studyDetail/{projectId}(projectId=${project.id})}">
-                <div th:text="${project.subject}">프로젝트 공고글 제목</div>
-            </a>
-            <div>모집 마감 : <span th:text="${project.deadline}">모집 마감일</span></div>
-            <span th:each="techStackName : ${project.techStackNames}">
+<div th:unless="${#lists.isEmpty(projects)}">
+    <p>이번 주에 마감되는 공고예요! 회원님의 기술 스택 맞춤 공고니, 서둘러 확인해 보아요</p>
+    <table class="project_list_table">
+        <tr th:each="project : ${projects}">
+            <td>
+                <div class="pj_box">
+                    <a th:href="@{https://dokuny.blog/studyDetail/{projectId}(projectId=${project.id})}">
+                        <div th:text="${project.subject}">프로젝트 공고글 제목</div>
+                    </a>
+                    <div>모집 마감 : <span
+                            th:text="${project.deadline}">모집 마감일</span>
+                    </div>
+                    <span th:each="techStackName : ${project.techStackNames}">
                 #<span th:text="${techStackName}">기술 스택 이름</span>
-            </span>
-        </td>
-    </tr>
-</table>
+                    </span>
+                </div>
+            </td>
+        </tr>
+    </table>
+</div>
+<div th:if="${#lists.isEmpty(projects)}">
+    회원님의 기술 스택과 맞는 이번 주 모집 마감 공고 글이 없어요<br>
+    <a th:href="@{https://dokuny.blog/projects}">직접 등록하러 가기</a>
+</div>
 </body>
 </html>
