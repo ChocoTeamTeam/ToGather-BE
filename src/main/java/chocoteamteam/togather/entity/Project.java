@@ -35,7 +35,9 @@ public class Project extends BaseTimeEntity {
     private ProjectStatus status;
 
     private Boolean offline;
-    private String location;
+
+    @Embedded
+    private Location location;
 
     private LocalDate deadline;
 
