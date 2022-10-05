@@ -118,7 +118,7 @@ public class ProjectController {
             security = {@SecurityRequirement(name = "Authorization")}, tags = {"Project"}
     )
     @GetMapping("/search/distance")
-    public ResponseEntity<?> getProjectByDistance(@Valid @RequestBody ProjectDistance projectDistance) {
+    public ResponseEntity<?> getProjectByDistance(@Valid ProjectDistance projectDistance) {
         return ResponseEntity.ok(projectService.getProjectByDistance(projectDistance));
     }
 }
