@@ -1,5 +1,6 @@
 package chocoteamteam.togather.dto;
 
+import chocoteamteam.togather.entity.Location;
 import chocoteamteam.togather.entity.Project;
 import chocoteamteam.togather.type.ProjectStatus;
 import lombok.AllArgsConstructor;
@@ -22,7 +23,7 @@ public class ProjectDetails {
     private String content;
     private Integer personnel;
     private ProjectStatus status;
-    private String location;
+    private Location location;
     private LocalDate deadline;
     private boolean offline;
     private List<TechStackDto> techStacks;
