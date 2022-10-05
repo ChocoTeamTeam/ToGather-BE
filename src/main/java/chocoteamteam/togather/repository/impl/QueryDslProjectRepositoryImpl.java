@@ -41,7 +41,7 @@ public class QueryDslProjectRepositoryImpl implements QueryDslProjectRepository 
 
     @Override
     public List<InterestDetail> findAllInterestProjectByIds(List<Long> projectIds) {
-        return new ArrayList<>(jpaQueryFactory
+        return jpaQueryFactory
                 .select(Projections.fields(InterestDetail.class,
                         project.id.as("projectId"),
                         project.title.as("title"),
@@ -52,7 +52,7 @@ public class QueryDslProjectRepositoryImpl implements QueryDslProjectRepository 
                 .from(project)
                 .join(project.member)
                 .where(project.id.in(projectIds))
-                .fetch());
+                .fetch();
 
     }
 
@@ -62,7 +62,7 @@ public class QueryDslProjectRepositoryImpl implements QueryDslProjectRepository 
             LocalDate startDate,
             LocalDate endDate) {
 
-        return new ArrayList<>(jpaQueryFactory
+        return jpaQueryFactory
                 .from(projectTechStack)
                 .innerJoin(projectTechStack.project, project)
                 .innerJoin(projectTechStack.techStack, techStack)
@@ -77,8 +77,7 @@ public class QueryDslProjectRepositoryImpl implements QueryDslProjectRepository 
                                 project.title.as("subject"),
                                 project.deadline.as("deadline"),
                                 list(techStack.name).as("techStackNames"))
-                ))
-        );
+                ));
     }
 
     @Override
