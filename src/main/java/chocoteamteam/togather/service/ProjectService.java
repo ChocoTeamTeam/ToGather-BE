@@ -171,4 +171,13 @@ public class ProjectService {
                         new ParticipatingProjectDto(projectMember.getProject().getId(), projectMember.getProject().getTitle()))
                 .collect(Collectors.toList());
     }
+
+    @Transactional(readOnly = true)
+    public List<ProjectMapResponse> getProjectByDistance(ProjectDistance projectDistance) {
+        return projectRepository.findAllByDistance(projectDistance.getDistance(),
+                        projectDistance.getLatitude(), projectDistance.getLongitude())
+                .stream()
+                .map(ProjectMapResponse::fromEntity)
+                .collect(Collectors.toList());
+    }
 }

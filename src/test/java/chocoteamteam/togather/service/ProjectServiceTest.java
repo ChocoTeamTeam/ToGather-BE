@@ -72,7 +72,11 @@ class ProjectServiceTest {
                 .personnel(10)
                 .status(ProjectStatus.RECRUITING)
                 .offline(false)
-                .location("서울")
+                .location(Location.builder()
+                        .address("서울특별시 강남구 센터 테헤란로 231 필드 웨스트 6층 7층")
+                        .latitude(37.503050)
+                        .longitude(127.041583)
+                        .build())
                 .deadline(LocalDate.of(2022, 9, 12))
                 .build();
 
@@ -115,7 +119,9 @@ class ProjectServiceTest {
                 1000,
                 ProjectStatus.RECRUITING,
                 false,
-                "의미 없는 위치",
+                "서울특별시 강남구 센터 테헤란로 231 필드 웨스트 6층 7층",
+                37.503050,
+                127.041583,
                 LocalDate.of(2050, 9, 13),
                 List.of(1000L, 1001L)
         );
@@ -167,7 +173,9 @@ class ProjectServiceTest {
                         20,
                         ProjectStatus.RECRUITING,
                         false,
-                        "부산",
+                        "서울특별시 강남구 센터 테헤란로 231 필드 웨스트 6층 7층",
+                        37.503050,
+                        127.041583,
                         LocalDate.of(2022, 9, 13),
                         List.of(5L, 6L)
                 )));
@@ -287,7 +295,9 @@ class ProjectServiceTest {
                         1,
                         ProjectStatus.RECRUITING,
                         false,
-                        "위치 수정",
+                        "서울특별시 강남구 센터 테헤란로 231 필드 웨스트 6층 7층",
+                        37.503050,
+                        127.041583,
                         LocalDate.of(2022, 9, 15),
                         List.of(1L, 2L)
                 )));

@@ -112,4 +112,13 @@ public class ProjectController {
         return ResponseEntity.ok(projectService.getMyParticipatingProjects(member.getId()));
     }
 
+    @Operation(
+            summary = "거리에 따른 프로젝트 목록 조회",
+            description = "특정 거리 안에 있는 프로젝트 모집글 목록을 조회합니다",
+            security = {@SecurityRequirement(name = "Authorization")}, tags = {"Project"}
+    )
+    @GetMapping("/search/distance")
+    public ResponseEntity<?> getProjectByDistance(@Valid @RequestBody ProjectDistance projectDistance) {
+        return ResponseEntity.ok(projectService.getProjectByDistance(projectDistance));
+    }
 }
