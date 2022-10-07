@@ -1,4 +1,4 @@
-# ToGather
+# [ToGather](https://www.notion.so/dokuny/TOGATHER-1fd2033dda614e3489961aa3e84748cd)
 ![image](https://user-images.githubusercontent.com/49369306/194480597-c8ec81fd-6340-450d-9317-2ce7efd6a112.png)
 
 >팀프로젝트를 구하거나 인원을 모집할 수 있는 플랫폼입니다.
