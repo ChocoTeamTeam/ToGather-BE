@@ -32,6 +32,9 @@
 
 ### Infrastructure
 <img src="https://img.shields.io/badge/Amazon EC2-FF9900?style=for-the-badge&logo=Amazon EC2&logoColor=white">
+<img src="https://img.shields.io/badge/Docker-2496ED?style=for-the-badge&logo=Docker&logoColor=white">
+<img src="https://img.shields.io/badge/Cloudflare-F38020?style=for-the-badge&logo=Cloudflare&logoColor=white">
+<img src="https://img.shields.io/badge/Git-#F05032?style=for-the-badge&logo=Git&logoColor=white">
 
 # Architecture
 
