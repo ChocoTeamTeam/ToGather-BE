@@ -99,8 +99,8 @@ class ProjectChatRoomControllerTest {
 		mockMvc.perform(get("/projects/1/chats"))
 			.andDo(print())
 			.andExpect(status().isOk())
-			.andExpect(jsonPath("$[0].roomId").value(dto.getRoomId()))
-			.andExpect(jsonPath("$[0].roomName").value(dto.getRoomName()));
+			.andExpect(jsonPath("$.chatRoomDtos[0].roomId").value(dto.getRoomId()))
+			.andExpect(jsonPath("$.chatRoomDtos[0].roomName").value(dto.getRoomName()));
 
 		verify(projectChatRoomService)
 			.getChatRooms(projectIdCaptor.capture(), memberIdCaptor.capture());
