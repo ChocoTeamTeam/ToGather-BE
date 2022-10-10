@@ -1,5 +1,6 @@
 package chocoteamteam.togather.repository.impl;
 
+import chocoteamteam.togather.DataCleanUp;
 import chocoteamteam.togather.dto.ProjectCondition;
 import chocoteamteam.togather.dto.queryDslSimpleDto.SimpleProjectDto;
 import chocoteamteam.togather.entity.*;
@@ -18,7 +19,7 @@ import static org.junit.jupiter.api.Assertions.*;
 
 @TestMethodOrder(MethodOrderer.OrderAnnotation.class)
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
-@Import(QueryDslTestConfig.class)
+@Import({QueryDslTestConfig.class, DataCleanUp.class})
 @DataJpaTest
 @ExtendWith(SpringExtension.class)
 class QueryDslProjectRepositoryImplTest {
@@ -40,8 +41,13 @@ class QueryDslProjectRepositoryImplTest {
     @Autowired
     private ProjectMemberRepository projectMemberRepository;
 
+    @Autowired
+    private DataCleanUp dataCleanUp;
+
     @BeforeAll
     public void dataSetup() {
+        dataCleanUp.execute();
+
         Member aMember = memberRepository.save(Member.builder().email("www.a.com").nickname("aaaa name").profileImage("image").build());
         Member bMember = memberRepository.save(Member.builder().email("www.b.com").nickname("bbbb name").profileImage("image").build());
         Member cMember = memberRepository.save(Member.builder().email("www.c.com").nickname("cccc name").profileImage("image").build());
@@ -102,7 +108,8 @@ class QueryDslProjectRepositoryImplTest {
         queryDslProjectRepository.findAllOptionAndSearch(ProjectCondition.builder()
                 .limit(1L)
                 .build());
-        System.out.println("insert Data loading");
+
+        System.out.println("insert Data loading------------");
     }
 
     @Test
@@ -183,8 +190,8 @@ class QueryDslProjectRepositoryImplTest {
         assertEquals(2, result.size());
 
         // 0 page = [1L, 2L] , 1 page = [3L, 4L]
-        assertEquals(3L, result.get(0).getId());
-        assertEquals(4L, result.get(1).getId());
+        assertEquals(4L, result.get(0).getId());
+        assertEquals(3L, result.get(1).getId());
     }
 
     @Test

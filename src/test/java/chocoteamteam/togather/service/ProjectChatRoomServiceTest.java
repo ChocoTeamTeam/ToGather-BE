@@ -31,7 +31,7 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
-@ExtendWith(MockitoExtension.class)
+@ExtendWith({MockitoExtension.class})
 class ProjectChatRoomServiceTest {
 
 	@Mock
@@ -95,7 +95,7 @@ class ProjectChatRoomServiceTest {
 		//then
 		assertThatThrownBy(() -> projectChatRoomService.createChatRoom(form))
 			.isInstanceOf(ProjectMemberException.class)
-			.hasMessage(ErrorCode.NOT_PROJECT_MEMBER.getErrorMessage());
+			.hasMessage(ErrorCode.NO_PERMISSION.getErrorMessage());
 	}
 
 	@DisplayName("프로젝트 채팅방 생성 실패 - 이미 채팅방을 최대치만큼 생성한 경우")
@@ -145,7 +145,7 @@ class ProjectChatRoomServiceTest {
 		//then
 		assertThatThrownBy(() -> projectChatRoomService.getChatRooms(1L, 1L))
 			.isInstanceOf(ProjectMemberException.class)
-			.hasMessage(ErrorCode.NOT_PROJECT_MEMBER.getErrorMessage());
+			.hasMessage(ErrorCode.NO_PERMISSION.getErrorMessage());
 	}
 
 	@DisplayName("프로젝트 채팅방 상세 조회 성공")
@@ -189,7 +189,7 @@ class ProjectChatRoomServiceTest {
 		//then
 		assertThatThrownBy(() -> projectChatRoomService.getChatRoom(1L, 1L,1L))
 			.isInstanceOf(ProjectMemberException.class)
-			.hasMessage(ErrorCode.NOT_PROJECT_MEMBER.getErrorMessage());
+			.hasMessage(ErrorCode.NO_PERMISSION.getErrorMessage());
 	}
 
 	@DisplayName("프로젝트 채팅방 상세 조회 실패 - 채팅방이 존재하지 않는 경우")
