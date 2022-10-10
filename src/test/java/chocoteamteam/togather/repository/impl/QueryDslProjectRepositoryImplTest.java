@@ -109,12 +109,7 @@ class QueryDslProjectRepositoryImplTest {
                 .limit(1L)
                 .build());
 
-        List<Project> projects = projectRepository.findAll();
-        for (Project project : projects) {
-            System.out.println(project.getId());
-        }
-        System.out.println("------------------------------");
-        System.out.println("insert Data loading");
+        System.out.println("insert Data loading------------");
     }
 
     @Test
