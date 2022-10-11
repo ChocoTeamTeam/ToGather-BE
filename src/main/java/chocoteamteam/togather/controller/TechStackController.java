@@ -14,7 +14,6 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
 import java.util.List;
-import org.springframework.web.multipart.MultipartFile;
 
 @Tag(name = "TechStack", description = "기술스택 관련 API")
 @RestController
@@ -70,17 +69,6 @@ public class TechStackController {
     @DeleteMapping("/{techStackId}")
     public ResponseEntity<TechStackDto> deleteTechStack(@PathVariable Long techStackId) {
         return ResponseEntity.ok(techStackService.deleteTechStack(techStackId));
-    }
-
-    @Operation(
-        summary = "기술스택 이미지 저장",
-        description = "기술스택 이미지를 저장합니다. ADMIN만 가능",
-        security = {@SecurityRequirement(name = "Authorization")}, tags = {"TechStack"}
-    )
-    @PreAuthorize("hasRole('ADMIN')")
-    @PostMapping("/image")
-    public String imageUpload(@RequestBody MultipartFile file) {
-        return techStackService.imageUpload(file);
     }
 
 }
