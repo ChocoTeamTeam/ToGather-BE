@@ -1,5 +1,6 @@
 package chocoteamteam.togather.service;
 
+import chocoteamteam.togather.DataCleanUp;
 import chocoteamteam.togather.dto.CreateTechStackForm;
 import chocoteamteam.togather.dto.TechStackDto;
 import chocoteamteam.togather.dto.UpdateTechStackForm;
@@ -15,6 +16,7 @@ import org.mockito.ArgumentCaptor;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
+import org.springframework.context.annotation.Import;
 
 import java.util.Optional;
 
@@ -26,6 +28,7 @@ import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 
 @ExtendWith(MockitoExtension.class)
+@Import(DataCleanUp.class)
 class TechStackServiceTest {
 
     @Mock

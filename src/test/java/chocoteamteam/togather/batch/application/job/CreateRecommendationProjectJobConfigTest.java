@@ -95,7 +95,11 @@ class CreateRecommendationProjectJobConfigTest {
                 .personnel(5)
                 .status(ProjectStatus.RECRUITING)
                 .offline(false)
-                .location("")
+                .location(Location.builder()
+                        .address("서울특별시 강남구 센터 테헤란로 231 필드 웨스트 6층 7층")
+                        .latitude(37.503050)
+                        .longitude(127.041583)
+                        .build())
                 .deadline(now.plusDays(5))
                 .build();
 
@@ -107,7 +111,11 @@ class CreateRecommendationProjectJobConfigTest {
                 .personnel(3)
                 .status(ProjectStatus.COMPLETED)
                 .offline(false)
-                .location("")
+                .location(Location.builder()
+                        .address("서울특별시 강남구 센터 테헤란로 231 필드 웨스트 6층 7층")
+                        .latitude(37.503050)
+                        .longitude(127.041583)
+                        .build())
                 .deadline(now.plusDays(5))
                 .build();
 
@@ -119,7 +127,11 @@ class CreateRecommendationProjectJobConfigTest {
                 .personnel(3)
                 .status(ProjectStatus.RECRUITING)
                 .offline(false)
-                .location("")
+                .location(Location.builder()
+                        .address("서울특별시 강남구 센터 테헤란로 231 필드 웨스트 6층 7층")
+                        .latitude(37.503050)
+                        .longitude(127.041583)
+                        .build())
                 .deadline(now.plusDays(7))
                 .build();
 
@@ -131,7 +143,11 @@ class CreateRecommendationProjectJobConfigTest {
                 .personnel(3)
                 .status(ProjectStatus.RECRUITING)
                 .offline(false)
-                .location("")
+                .location(Location.builder()
+                        .address("서울특별시 강남구 센터 테헤란로 231 필드 웨스트 6층 7층")
+                        .latitude(37.503050)
+                        .longitude(127.041583)
+                        .build())
                 .deadline(now.plusDays(4))
                 .build();
 

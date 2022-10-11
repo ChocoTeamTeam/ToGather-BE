@@ -57,6 +57,7 @@ dependencies {
     implementation "com.querydsl:querydsl-apt:${queryDslVersion}"
 
     implementation 'com.github.jojoldu.spring-batch-querydsl:spring-batch-querydsl-reader:2.4.8'
+    implementation 'com.google.firebase:firebase-admin:9.0.0'
 
     compile 'com.github.jojoldu.spring-batch-querydsl:spring-batch-querydsl-reader:2.4.8'
     compileOnly 'com.github.jojoldu.spring-batch-querydsl:spring-batch-querydsl-reader:2.4.8'

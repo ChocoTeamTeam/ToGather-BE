@@ -3,6 +3,7 @@ package chocoteamteam.togather.repository.impl;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.*;
 
+import chocoteamteam.togather.DataCleanUp;
 import chocoteamteam.togather.dto.ApplicantDto;
 import chocoteamteam.togather.dto.TechStackDto;
 import chocoteamteam.togather.entity.Applicant;
@@ -38,7 +39,7 @@ import org.springframework.util.StopWatch;
 
 
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
-@Import({QueryDslTestConfig.class})
+@Import({QueryDslTestConfig.class,DataCleanUp.class})
 @DataJpaTest
 class QuerydslApplicantRepositoryImplTest {
 
@@ -69,10 +70,14 @@ class QuerydslApplicantRepositoryImplTest {
 
 	Applicant applicant;
 
+	@Autowired
+	private DataCleanUp dataCleanUp;
 
 	@BeforeAll
 	@Transactional
 	public void beforeAll() {
+		dataCleanUp.execute();
+
 		member = memberRepository.save(
 			Member.builder()
 				.nickname("닉네임")
@@ -100,7 +105,7 @@ class QuerydslApplicantRepositoryImplTest {
 				.build()
 		);
 
-		for (int i = 0; i < 10000; i++) {
+		for (int i = 0; i < 10; i++) {
 			// 회원 저장
 			Member tempMember = memberRepository.save(
 				Member.builder()
@@ -134,7 +139,7 @@ class QuerydslApplicantRepositoryImplTest {
 		}
 	}
 
-	@DisplayName("ApplicantDto , 10000건 조회 ")
+	@DisplayName("ApplicantDto , 10건 조회 ")
 	@Test
 	void findAllByProjectId() {
 		StopWatch stopWatch = new StopWatch();
@@ -145,6 +150,6 @@ class QuerydslApplicantRepositoryImplTest {
 		stopWatch.stop();
 		System.out.println("시간 = "+ stopWatch.getTotalTimeMillis());
 
-		assertThat(result.size()).isEqualTo(10000);
+		assertThat(result.size()).isEqualTo(10);
 	}
 }

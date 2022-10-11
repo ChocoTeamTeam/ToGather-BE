@@ -35,7 +35,8 @@ public enum ErrorCode {
     ALREADY_CHECKED_APPLICANT(HttpStatus.BAD_REQUEST,"이미 처리된 신청자입니다."),
     IMAGE_UPLOAD_FAIL(HttpStatus.BAD_REQUEST, "이미지 업로드에 실패했습니다."),
     NOT_FOUND_IMAGE(HttpStatus.BAD_REQUEST, "이미지를 찾을 수 없습니다."),
-    EMAIL_SEND_FAIL(HttpStatus.INTERNAL_SERVER_ERROR, "메일 전송이 실패했습니다");
+    EMAIL_SEND_FAIL(HttpStatus.INTERNAL_SERVER_ERROR, "메일 전송이 실패했습니다"),
+    FCM_INITIALIZATION_FAILED(HttpStatus.INTERNAL_SERVER_ERROR, "FCM 초기화에 실패했습니다.");
 
     private final HttpStatus httpStatus;
     private final String errorMessage;
