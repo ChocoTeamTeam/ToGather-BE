@@ -40,7 +40,7 @@ public class ProjectApplicantController {
 		@ApiIgnore @AuthenticationPrincipal LoginMember member,
 		@PathVariable Long projectId
 	) {
-		projectApplicantService.applyForProject(projectId, member.getId());
+		projectApplicantService.applyForProject(member.getId(), projectId);
 
 		return ResponseEntity.ok().body("");
 	}

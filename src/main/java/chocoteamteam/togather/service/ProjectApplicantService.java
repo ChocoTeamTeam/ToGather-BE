@@ -3,10 +3,12 @@ package chocoteamteam.togather.service;
 import chocoteamteam.togather.dto.ApplicantDto;
 import chocoteamteam.togather.dto.ManageApplicantForm;
 import chocoteamteam.togather.entity.Applicant;
+import chocoteamteam.togather.entity.Member;
 import chocoteamteam.togather.entity.Project;
 import chocoteamteam.togather.entity.ProjectMember;
 import chocoteamteam.togather.exception.ApplicantException;
 import chocoteamteam.togather.exception.ErrorCode;
+import chocoteamteam.togather.exception.MemberException;
 import chocoteamteam.togather.exception.ProjectException;
 import chocoteamteam.togather.repository.ApplicantRepository;
 import chocoteamteam.togather.repository.MemberRepository;
@@ -25,13 +27,24 @@ public class ProjectApplicantService {
 	private final ProjectRepository projectRepository;
 	private final ApplicantRepository applicantRepository;
 	private final MemberRepository memberRepository;
-
 	private final ProjectMemberRepository projectMemberRepository;
+	private final FCMService fcmService;
 
 	@Transactional
 	public void applyForProject(Long memberId, Long projectId) {
-		validateApplicant(projectId, memberId);
-		saveApplicant(projectId, memberId);
+
+		Project project = projectRepository.findById(projectId)
+			.orElseThrow(() -> new ProjectException(ErrorCode.NOT_FOUND_PROJECT));
+
+		Member member = memberRepository.findById(memberId)
+			.orElseThrow(() -> new MemberException(ErrorCode.NOT_FOUND_MEMBER));
+
+		validateApplicant(memberId, projectId);
+		saveApplicant(memberId, projectId);
+
+		fcmService.sendToMember(project.getMember().getId(), project.getTitle(),
+			member.getNickname() + "님이 신청했습니다.");
+
 	}
 
 	private void validateApplicant(Long memberId, Long projectId) {
@@ -69,7 +82,7 @@ public class ProjectApplicantService {
 	public void manageApplicant(ManageApplicantForm form) {
 		validateProjectOwnerByProjectId(form.getProjectOwnerMemberId(), form.getProjectId());
 
-		Applicant applicant = findApplicant(form.getProjectId(),form.getApplicantMemberId());
+		Applicant applicant = findApplicant(form.getProjectId(), form.getApplicantMemberId());
 
 		if (!ApplicantStatus.WAIT.equals(applicant.getStatus())) {
 			throw new ApplicantException(ErrorCode.ALREADY_CHECKED_APPLICANT);
