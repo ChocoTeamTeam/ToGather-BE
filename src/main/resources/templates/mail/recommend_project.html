@@ -22,7 +22,7 @@
         <tr th:each="project : ${projects}">
             <td>
                 <div class="pj_box">
-                    <a th:href="@{https://dokuny.blog/studyDetail/{projectId}(projectId=${project.id})}">
+                    <a th:href="@{https://togather-chocoteamteam.netlify.app/studyDetail/{projectId}(projectId=${project.id})}">
                         <div th:text="${project.subject}">프로젝트 공고글 제목</div>
                     </a>
                     <div>모집 마감 : <span
@@ -38,7 +38,7 @@
 </div>
 <div th:if="${#lists.isEmpty(projects)}">
     회원님의 기술 스택과 맞는 이번 주 모집 마감 공고 글이 없어요<br>
-    <a th:href="@{https://dokuny.blog/projects}">직접 등록하러 가기</a>
+    <a th:href="@{https://togather-chocoteamteam.netlify.app/}">직접 등록하러 가기</a>
 </div>
 </body>
 </html>

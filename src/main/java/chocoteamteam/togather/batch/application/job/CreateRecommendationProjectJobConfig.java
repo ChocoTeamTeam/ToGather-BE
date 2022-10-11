@@ -5,6 +5,7 @@ import chocoteamteam.togather.batch.application.model.SimpleMemberTechStackInfoD
 import chocoteamteam.togather.batch.application.service.CreateRecommendationProjectService;
 import chocoteamteam.togather.batch.domain.entity.Mail;
 import chocoteamteam.togather.batch.domain.repository.MailRepository;
+import chocoteamteam.togather.type.MemberStatus;
 import com.querydsl.core.types.Projections;
 import lombok.RequiredArgsConstructor;
 import org.springframework.batch.core.Job;
@@ -79,6 +80,7 @@ public class CreateRecommendationProjectJobConfig {
                         member
                 ))
                 .from(member)
+                .where(member.status.eq(MemberStatus.PERMITTED))
                 .innerJoin(member.memberTechStacks, memberTechStack)
                 .distinct()
         );

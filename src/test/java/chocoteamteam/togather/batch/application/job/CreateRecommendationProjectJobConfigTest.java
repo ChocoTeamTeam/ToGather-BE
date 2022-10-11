@@ -10,6 +10,7 @@ import chocoteamteam.togather.batch.domain.repository.MailRepository;
 import chocoteamteam.togather.entity.*;
 import chocoteamteam.togather.repository.*;
 import chocoteamteam.togather.repository.impl.QueryDslTestConfig;
+import chocoteamteam.togather.type.MemberStatus;
 import chocoteamteam.togather.type.ProjectStatus;
 import chocoteamteam.togather.type.TechCategory;
 import org.junit.jupiter.api.BeforeEach;
@@ -75,12 +76,14 @@ class CreateRecommendationProjectJobConfigTest {
                 .email("togather@to.com")
                 .nickname("작성자")
                 .profileImage("img_url")
+                .status(MemberStatus.PERMITTED)
                 .build();
 
         Member member = Member.builder()
                 .email("to@gather.com")
                 .nickname("대상")
                 .profileImage("img_url")
+                .status(MemberStatus.PERMITTED)
                 .build();
 
         List<Member> members = new ArrayList<>();
