@@ -64,4 +64,11 @@ public class GlobalExceptionHandler {
         log.error("{} is occured", e.getErrorCode());
         return new ErrorResponse(e.getStatus(), e.getErrorCode(), e.getErrorMessage());
     }
+
+    @ExceptionHandler(S3FileUtilException.class)
+    public ErrorResponse s3FileUtilExceptionHandler(S3FileUtilException e) {
+        log.error("{} is occured", e.getErrorCode());
+        return new ErrorResponse(e.getStatus(), e.getErrorCode(), e.getErrorMessage());
+    }
+
 }
