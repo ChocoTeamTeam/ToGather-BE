@@ -14,6 +14,7 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
 import java.util.List;
+import org.springframework.web.multipart.MultipartFile;
 
 @Tag(name = "TechStack", description = "기술스택 관련 API")
 @RestController
@@ -24,22 +25,22 @@ public class TechStackController {
     private final TechStackService techStackService;
 
     @Operation(
-            summary = "기술스택 추가",
-            description = "기술스택을 추가합니다. ADMIN만 추가할 수 있습니다",
-            security = {@SecurityRequirement(name = "Authorization")}, tags = {"TechStack"}
+        summary = "기술스택 추가",
+        description = "기술스택을 추가합니다. ADMIN만 추가할 수 있습니다",
+        security = {@SecurityRequirement(name = "Authorization")}, tags = {"TechStack"}
     )
     @PreAuthorize("hasRole('ADMIN')")
     @PostMapping
     public ResponseEntity<TechStackDto> createTechStack(
-            @Valid @RequestBody CreateTechStackForm form
+        @Valid @RequestBody CreateTechStackForm form
     ) {
         return ResponseEntity.ok(techStackService.createTechStack(form));
     }
 
     @Operation(
-            summary = "기술스택 목록 조회",
-            description = "기술스택 목록을 조회합니다",
-            tags = {"TechStack"}
+        summary = "기술스택 목록 조회",
+        description = "기술스택 목록을 조회합니다",
+        tags = {"TechStack"}
     )
     @GetMapping
     public ResponseEntity<List<TechStackDto>> getTechStacks() {
@@ -47,27 +48,39 @@ public class TechStackController {
     }
 
     @Operation(
-            summary = "기술스택 수정",
-            description = "기술스택을 수정합니다. ADMIN만 수정할 수 있습니다",
-            security = {@SecurityRequirement(name = "Authorization")}, tags = {"TechStack"}
+        summary = "기술스택 수정",
+        description = "기술스택을 수정합니다. ADMIN만 수정할 수 있습니다",
+        security = {@SecurityRequirement(name = "Authorization")}, tags = {"TechStack"}
     )
     @PreAuthorize("hasRole('ADMIN')")
     @PutMapping("/{techStackId}")
     public ResponseEntity<TechStackDto> updateTechStack(
-            @PathVariable Long techStackId,
-            @Valid @RequestBody UpdateTechStackForm form
+        @PathVariable Long techStackId,
+        @Valid @RequestBody UpdateTechStackForm form
     ) {
         return ResponseEntity.ok(techStackService.updateTechStack(techStackId, form));
     }
 
     @Operation(
-            summary = "기술스택 삭제",
-            description = "기술스택을 삭제합니다. ADMIN만 수정할 수 있습니다",
-            security = {@SecurityRequirement(name = "Authorization")}, tags = {"TechStack"}
+        summary = "기술스택 삭제",
+        description = "기술스택을 삭제합니다. ADMIN만 수정할 수 있습니다",
+        security = {@SecurityRequirement(name = "Authorization")}, tags = {"TechStack"}
     )
     @PreAuthorize("hasRole('ADMIN')")
     @DeleteMapping("/{techStackId}")
     public ResponseEntity<TechStackDto> deleteTechStack(@PathVariable Long techStackId) {
         return ResponseEntity.ok(techStackService.deleteTechStack(techStackId));
     }
+
+    @Operation(
+        summary = "기술스택 이미지 저장",
+        description = "기술스택 이미지를 저장합니다. ADMIN만 가능",
+        security = {@SecurityRequirement(name = "Authorization")}, tags = {"TechStack"}
+    )
+    @PreAuthorize("hasRole('ADMIN')")
+    @PostMapping("/image")
+    public String imageUpload(@RequestBody MultipartFile file) {
+        return techStackService.imageUpload(file);
+    }
+
 }
