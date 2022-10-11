@@ -40,7 +40,7 @@ public class ProjectApplicantService {
 			.orElseThrow(() -> new MemberException(ErrorCode.NOT_FOUND_MEMBER));
 
 		validateApplicant(memberId, projectId);
-		saveApplicant(memberId, projectId);
+		saveApplicant(member,project);
 
 		fcmService.sendToMember(project.getMember().getId(), project.getTitle(),
 			member.getNickname() + "님이 신청했습니다.");
@@ -53,10 +53,10 @@ public class ProjectApplicantService {
 		}
 	}
 
-	private void saveApplicant(Long memberId, Long projectId) {
+	private void saveApplicant(Member member, Project project) {
 		applicantRepository.save(Applicant.builder()
-			.project(projectRepository.getReferenceById(projectId))
-			.member(memberRepository.getReferenceById(memberId))
+			.project(project)
+			.member(member)
 			.status(ApplicantStatus.WAIT)
 			.build());
 	}
