@@ -49,6 +49,9 @@ class ProjectApplicantServiceTest {
 	@Mock
 	ProjectMemberRepository projectMemberRepository;
 
+	@Mock
+	FCMService fcmService;
+
 	@InjectMocks
 	ProjectApplicantService projectApplicantService;
 
@@ -76,14 +79,13 @@ class ProjectApplicantServiceTest {
 	@Test
 	void applyForProject_success() {
 		//given
+		given(projectRepository.findById(anyLong()))
+			.willReturn(Optional.of(project));
+		given(memberRepository.findById(anyLong()))
+			.willReturn(Optional.of(member));
+
 		given(applicantRepository.existsByProjectIdAndMemberId(anyLong(), anyLong()))
 			.willReturn(false);
-
-		given(projectRepository.getReferenceById(any()))
-			.willReturn(project);
-
-		given(memberRepository.getReferenceById(any()))
-			.willReturn(member);
 
 		ArgumentCaptor<Applicant> captor = ArgumentCaptor.forClass(Applicant.class);
 
@@ -102,6 +104,11 @@ class ProjectApplicantServiceTest {
 	@Test
 	void applyForProject_fail() {
 		//given
+		given(projectRepository.findById(anyLong()))
+			.willReturn(Optional.of(project));
+		given(memberRepository.findById(anyLong()))
+			.willReturn(Optional.of(member));
+
 		given(applicantRepository.existsByProjectIdAndMemberId(anyLong(), anyLong()))
 			.willReturn(true);
 
