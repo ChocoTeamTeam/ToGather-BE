@@ -5,6 +5,7 @@ import chocoteamteam.togather.exception.S3FileUtilException;
 import com.amazonaws.services.s3.AmazonS3;
 import com.amazonaws.services.s3.model.ObjectMetadata;
 import java.io.IOException;
+import java.util.Objects;
 import java.util.UUID;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
@@ -26,11 +27,12 @@ public class ImageService {
             throw new S3FileUtilException(ErrorCode.NOT_FOUND_IMAGE);
         }
 
-        String type = file.getName().substring(file.getName().lastIndexOf(".") + 1);
+        String originName = file.getOriginalFilename();
+        String type = Objects.requireNonNull(originName).substring(originName.lastIndexOf(".") + 1);
 
         validationFileType(type);
 
-        String fileName = UUID.randomUUID() + file.getOriginalFilename();
+        String fileName = UUID.randomUUID() + originName;
         ObjectMetadata objectMetadata = new ObjectMetadata();
 
         try {
