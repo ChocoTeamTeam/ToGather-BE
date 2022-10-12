@@ -30,7 +30,7 @@ public class ImageService {
         String originName = file.getOriginalFilename();
         String type = Objects.requireNonNull(originName).substring(originName.lastIndexOf(".") + 1);
 
-        validationFileType(type);
+        validationFileType(type.toUpperCase());
 
         String fileName = UUID.randomUUID() + originName;
         ObjectMetadata objectMetadata = new ObjectMetadata();
@@ -48,10 +48,10 @@ public class ImageService {
 
     private void validationFileType(String type) {
         switch (type){
-            case "png":
-            case "jpg":
-            case "jpeg":
-            case "gif":
+            case "PNG":
+            case "JPG":
+            case "JPEG":
+            case "GIF":
                 return;
             default:
                 throw new S3FileUtilException(ErrorCode.MISS_MATCH_IMAGE_TYPE);
