@@ -176,10 +176,10 @@
 
 <br><br>
 
-## 📄ERD
+## ERD
 ![image](https://user-images.githubusercontent.com/49369306/194484414-6f465dcc-efe8-4042-99bc-3a501a7c94d3.png)
 
-## 팀 협업 문화
+## 🤼팀 협업 문화
 
 <details>
 <summary>스프린트 칸반보드 사용</summary>
