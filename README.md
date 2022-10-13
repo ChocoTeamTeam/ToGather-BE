@@ -37,11 +37,8 @@
 | <img src="https://user-images.githubusercontent.com/49369306/195584647-2f17ae6b-1a41-47ec-964a-d67cba0a247a.gif"> | <img src="https://user-images.githubusercontent.com/49369306/195590532-b5569b8c-26e0-4520-91b0-11639688ec01.png"> |
 
 
-
-
 ## 🧑‍🤝‍🧑 팀원 소개
 - [팀 프로젝트 문서 (노션)](https://www.notion.so/dokuny/TOGATHER-1fd2033dda614e3489961aa3e84748cd)
-
 
 
 | ![image](https://user-images.githubusercontent.com/49369306/194483762-7212f0c5-a76e-4258-ab7a-24a03f2903e7.png)     | ![image](https://user-images.githubusercontent.com/49369306/194483762-7212f0c5-a76e-4258-ab7a-24a03f2903e7.png)     |   ![194528630-1c4c1697-b463-4e30-b372-db609655d716](https://user-images.githubusercontent.com/49369306/194532101-beb7a539-2dc5-41a9-beb5-2cae516fe0ae.jpg)   |  ![hsh](https://user-images.githubusercontent.com/49369306/194506216-ee652477-527c-495b-9c00-5c7759524560.png)    | ![jjm](https://user-images.githubusercontent.com/90626691/194509019-075c0978-68cc-43e8-8490-9d9f5b2eb019.PNG)     | ![ar](https://user-images.githubusercontent.com/49369306/194508170-38f3fd68-c03e-40c5-8f66-993fbb98be8d.png) |
@@ -61,6 +58,11 @@
 <img src="https://img.shields.io/badge/Amazon EC2-FF9900?style=for-the-badge&logo=Amazon EC2&logoColor=white"> <img src="https://img.shields.io/badge/Docker-2496ED?style=for-the-badge&logo=Docker&logoColor=white"> <img src="https://img.shields.io/badge/Cloudflare-F38020?style=for-the-badge&logo=Cloudflare&logoColor=white"> <img src="https://img.shields.io/badge/Git-F05032?style=for-the-badge&logo=Git&logoColor=white"> <img src="https://img.shields.io/badge/Amazon RDS-527FFF?style=for-the-badge&logo=Amazon RDS&logoColor=white"> <img src="https://img.shields.io/badge/GitHub Actions-2088FF?style=for-the-badge&logo=GitHub Actions&logoColor=white"> <img src="https://img.shields.io/badge/Netlify-00C7B7?style=for-the-badge&logo=Netlify&logoColor=white">
 
 ## 🏢Architecture
+![시스템아키텍처](https://user-images.githubusercontent.com/49369306/195604545-52ae569d-2d59-4fd0-aff6-dc677c1d33e8.png)
+
+
+
+
 
 ## 📄ERD
 ![image](https://user-images.githubusercontent.com/49369306/194484414-6f465dcc-efe8-4042-99bc-3a501a7c94d3.png)
