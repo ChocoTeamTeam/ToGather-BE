@@ -64,7 +64,7 @@ jobs:
         aws-region: ap-northeast-2
       
     - name: Upload to S3
-      run: aws s3 cp --region ap-northeast-2 ./test-cd-jar.zip s3://$S3_BUCKET_NAME/togather-jar.zip
+      run: aws s3 cp --region ap-northeast-2 ./togather-jar.zip s3://$S3_BUCKET_NAME/togather-jar.zip
       
     - name: Code Deploy
       run: >
