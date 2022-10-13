@@ -54,7 +54,7 @@
   <th scope="col">팀원과 의사소통하는 팀 채팅</th>
 </tr>
 <tr>
-  <td><img src="https://user-images.githubusercontent.com/49369306/195658135-52696018-8437-4e23-9c1c-fd7893e04c81.gif"></td>
+  <td scope="col"><img width="500px" src="https://user-images.githubusercontent.com/49369306/195658135-52696018-8437-4e23-9c1c-fd7893e04c81.gif"></td>
   <td><img src="https://user-images.githubusercontent.com/49369306/195594127-c82f606f-8326-471e-8213-0a780722a422.gif"></td>
 </tr>
 <tr>
