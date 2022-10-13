@@ -20,7 +20,52 @@
 <br><br>
 
 
-
+<table width="100%">
+<colgroup>
+  <col width="50%">
+  <col width="50%">
+</colgroup>
+<tr>
+  <th scope="col">손쉬운 간편 로그인 (naver, google, github, kakao)</th>
+  <th scope="col">프로필 수정</th>
+</tr>
+<tr>
+  <td><img src="https://user-images.githubusercontent.com/49369306/195571145-08304ede-6e58-4e18-8655-a788ef34eb63.gif" ></td>
+  <td><img src="https://user-images.githubusercontent.com/49369306/195573656-1e4f25b1-7568-428b-a08e-e761738786ea.gif"></td>
+</tr>
+<tr>
+  <th scope="col">다양한 카테고리로 프로젝트 조회</th>
+  <th scope="col">지도 위치 기반 프로젝트 조회</th>
+</tr>
+<tr>
+  <td><img src="https://user-images.githubusercontent.com/49369306/195580514-85235af5-291f-4cd5-96d9-539da48a97be.gif"></td>
+  <td><img src="https://user-images.githubusercontent.com/49369306/195631496-7ab59e27-07a6-4372-81f9-bed6abb46376.gif"></td>
+</tr>
+<tr>
+  <th scope="col">프로젝트 팀원 모집</th>
+  <th scope="col">프로젝트 댓글 기능</th>
+</tr>
+<tr>
+  <td><img src="https://user-images.githubusercontent.com/49369306/195571145-08304ede-6e58-4e18-8655-a788ef34eb63.gif"></td>
+  <td><img src="https://user-images.githubusercontent.com/49369306/195573656-1e4f25b1-7568-428b-a08e-e761738786ea.gif"></td>
+</tr>
+<tr>
+  <th scope="col">참여 신청 알림</th>
+  <th scope="col">팀원과 의사소통하는 팀 채팅</th>
+</tr>
+<tr>
+  <td><img src="https://user-images.githubusercontent.com/49369306/195658135-52696018-8437-4e23-9c1c-fd7893e04c81.gif"></td>
+  <td><img src="https://user-images.githubusercontent.com/49369306/195594127-c82f606f-8326-471e-8213-0a780722a422.gif"></td>
+</tr>
+<tr>
+  <th scope="col">이번 주 인기 기술 스택 통계</th>
+  <th scope="col">기술스택 맞춤 임박 공고 이메일 추천 기능</th>
+</tr>
+<tr>
+  <td><img src="https://user-images.githubusercontent.com/49369306/195584647-2f17ae6b-1a41-47ec-964a-d67cba0a247a.gif"></td>
+  <td><img src="https://user-images.githubusercontent.com/49369306/195590532-b5569b8c-26e0-4520-91b0-11639688ec01.png"></td>
+</tr>
+</table>
 
 ## 🚀 Demo
 
