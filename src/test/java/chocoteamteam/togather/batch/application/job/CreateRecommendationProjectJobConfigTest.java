@@ -216,7 +216,12 @@ class CreateRecommendationProjectJobConfigTest {
         List<Mail> mails = mailRepository.findAll();
         assertThat(mails).hasSize(1);
         List<MemberRecommendationProjectDto> targetProjects =
-                projectRepository.findAllByTechStackIdsAndDeadline(List.of(techStack.getId()), startDate, endDate);
+                projectRepository.findAllByTechStackIdsAndDeadline(
+                        List.of(techStack.getId()),
+                        startDate,
+                        endDate,
+                        member.getId()
+                );
         assertThat(targetProjects).hasSize(1);
         assertThat(targetProjects.get(0).getSubject()).isEqualTo(targetProject.getTitle());
     }

@@ -21,7 +21,9 @@ public interface QueryDslProjectRepository {
     List<MemberRecommendationProjectDto> findAllByTechStackIdsAndDeadline(
             List<Long> techStackIds,
             LocalDate startDate,
-            LocalDate endDate);
+            LocalDate endDate,
+            Long memberId
+    );
 
     List<SimpleProjectDto> findAllByMemberId(Long memberId);
 

@@ -34,7 +34,8 @@ public class CreateRecommendationProjectService {
                 projectRepository.findAllByTechStackIdsAndDeadline(
                         member.getTechStackIds(),
                         startDate,
-                        endDate);
+                        endDate,
+                        member.getId());
 
         return convertMail(member, projects);
     }

@@ -62,7 +62,8 @@ public class QueryDslProjectRepositoryImpl implements QueryDslProjectRepository 
     public List<MemberRecommendationProjectDto> findAllByTechStackIdsAndDeadline(
             List<Long> techStackIds,
             LocalDate startDate,
-            LocalDate endDate) {
+            LocalDate endDate,
+            Long memberId) {
 
         return jpaQueryFactory
                 .from(projectTechStack)
@@ -71,6 +72,7 @@ public class QueryDslProjectRepositoryImpl implements QueryDslProjectRepository 
                 .where(project.status.eq(ProjectStatus.RECRUITING),
                         (project.deadline.between(startDate, endDate)),
                         (techStack.id.in(techStackIds)),
+                        (project.member.id.ne(memberId)),
                         (project.createdAt.before(LocalDateTime.of(startDate, LocalTime.MIN))))
                 .limit(10)
                 .transform(groupBy(project.id).list(

@@ -12,10 +12,12 @@ import java.util.stream.Collectors;
 @NoArgsConstructor
 @AllArgsConstructor
 public class SimpleMemberTechStackInfoDto {
+    private Long id;
     private String email;
     private List<Long> techStackIds;
 
     public SimpleMemberTechStackInfoDto(Member member) {
+        this.id = member.getId();
         this.email = member.getEmail();
         this.techStackIds = member.getMemberTechStacks().stream()
                 .map(x -> x.getTechStack().getId())
