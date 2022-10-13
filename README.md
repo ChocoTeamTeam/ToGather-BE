@@ -42,7 +42,7 @@
 
 |                 이번 주 인기 기술 스택 통계     |                   기술스택 맞춤 임박 공고 이메일 추천 기능                    |
 | :----------------------------------------------------------: | :----------------------------------------------------------: |
-| <img src="https://user-images.githubusercontent.com/49369306/195584647-2f17ae6b-1a41-47ec-964a-d67cba0a247a.gif" width="600"> | <img src="https://user-images.githubusercontent.com/49369306/195590532-b5569b8c-26e0-4520-91b0-11639688ec01.png"> |
+| <img src="https://user-images.githubusercontent.com/49369306/195584647-2f17ae6b-1a41-47ec-964a-d67cba0a247a.gif" width="500"> | <img src="https://user-images.githubusercontent.com/49369306/195590532-b5569b8c-26e0-4520-91b0-11639688ec01.png"> |
 
 <br><br>
 
