@@ -35,18 +35,25 @@ jobs:
       
       ## create application-test.yml
     - name: make application.yml
-      if: contains(github.ref, 'ci-cd-test') # branch가 ci-cd일 때
+      if: contains(github.ref, 'ci-cd-test') # branch가 ci-cd-test일 때
       run:
         echo "${{ secrets.PROPERTIES_TEST }}" > ./src/main/resources/application.yml
       shell: bash
-      
+
+      ## create application-prod.yml
+    - name: make application-prod.yml
+      if: contains(github.ref, 'ci-cd-test') # branch가 ci-cd-test일 때
+      run:
+        echo "${{ secrets.PROPERTIES_PROD }}" > ./src/main/resources/application-prod.yml
+      shell: bash
+
     - name: Build with Gradle
       uses: gradle/gradle-build-action@67421db6bd0bf253fb4bd25b31ebb98943c375e1
       with:
         arguments: build
         
     - name: Make zip file
-      run: zip -r ./test-cd-jar.zip .
+      run: zip -r ./togather-jar.zip .
       shell: bash
       
     - name: Configure AWS credentials
@@ -57,12 +64,12 @@ jobs:
         aws-region: ap-northeast-2
       
     - name: Upload to S3
-      run: aws s3 cp --region ap-northeast-2 ./test-cd-jar.zip s3://$S3_BUCKET_NAME/test-cd-jar.zip
+      run: aws s3 cp --region ap-northeast-2 ./test-cd-jar.zip s3://$S3_BUCKET_NAME/togather-jar.zip
       
     - name: Code Deploy
       run: >
         aws deploy create-deployment --application-name jys-aws-code-deploy
         --deployment-config-name CodeDeployDefault.AllAtOnce
         --deployment-group-name jys-aws-code-deploy-group
-        --s3-location bucket=$S3_BUCKET_NAME,bundleType=zip,key=test-cd-jar.zip
+        --s3-location bucket=$S3_BUCKET_NAME,bundleType=zip,key=togather-jar.zip
         
