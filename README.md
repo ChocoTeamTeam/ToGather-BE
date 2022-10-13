@@ -14,6 +14,12 @@
 
 - 팀 프로젝트 신청이 승인됐다면 프로젝트 별 다양한 채팅방에서 실시간 채팅으로 소통할 수 있습니다.
 
+## 🚀 Demo
+
+|                   손쉬운 간편 로그인 (naver, google, github, kakao)     |                   프로필 수정                    |
+| :----------------------------------------------------------: | :----------------------------------------------------------: |
+| <img src="https://user-images.githubusercontent.com/49369306/195571145-08304ede-6e58-4e18-8655-a788ef34eb63.gif" width="470" height="300"> | <img src="https://user-images.githubusercontent.com/49369306/195573656-1e4f25b1-7568-428b-a08e-e761738786ea.gif" width="470" height="300"> |
+
 ## 🧑‍🤝‍🧑 팀원 소개
 - [팀 프로젝트 문서 (노션)](https://www.notion.so/dokuny/TOGATHER-1fd2033dda614e3489961aa3e84748cd)
 
@@ -40,7 +46,3 @@
 ## 📄ERD
 ![image](https://user-images.githubusercontent.com/49369306/194484414-6f465dcc-efe8-4042-99bc-3a501a7c94d3.png)
 
-
-![손쉬운간편로그인](https://user-images.githubusercontent.com/49369306/195571145-08304ede-6e58-4e18-8655-a788ef34eb63.gif)
-
-<img src="https://user-images.githubusercontent.com/49369306/195571145-08304ede-6e58-4e18-8655-a788ef34eb63.gif" width="500" height="300">
