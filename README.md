@@ -112,7 +112,7 @@
 <img src="https://user-images.githubusercontent.com/49369306/195658135-52696018-8437-4e23-9c1c-fd7893e04c81.gif" width="350">
 </td>
 <td width="300" align="center">
-<img src="https://user-images.githubusercontent.com/49369306/195631496-7ab59e27-07a6-4372-81f9-bed6abb46376.gif" width="350">
+<img src="https://user-images.githubusercontent.com/49369306/195594127-c82f606f-8326-471e-8213-0a780722a422.gif" width="350">
 </td>
 </tr>
 <tr>
