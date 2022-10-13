@@ -178,3 +178,39 @@
 
 ## 📄ERD
 ![image](https://user-images.githubusercontent.com/49369306/194484414-6f465dcc-efe8-4042-99bc-3a501a7c94d3.png)
+
+## 팀 협업 문화
+
+<details>
+<summary>스프린트 칸반보드 사용</summary>
+<div markdown="1">
+
+![Untitled](https://user-images.githubusercontent.com/49369306/195683241-dbd71619-5178-4141-a6bf-6bdb2a23b1da.png)
+
+</div>
+</details>
+
+<details>
+<summary>스크럼 및 각종 회의</summary>
+<div markdown="1">
+<h2> 스프린트, 스프린트 회고, 데일리 스크럼, 셋업 회의, 인스턴스 미팅 등 각종 회의 </h2>
+
+![scrum](https://user-images.githubusercontent.com/49369306/195684933-b0cafd73-650c-4ced-a258-60e1f01b413e.png)
+
+<h2> 데일리 스크럼 현장 </h2>
+
+![데일리 스크럼](https://user-images.githubusercontent.com/49369306/195684953-99e41a76-941e-409a-916f-48a2df57fc9b.png)
+
+</div>
+</details>
+
+<details>
+<summary>코드리뷰 문화</summary>
+<div markdown="1">
+<h3> 제일 활발했던 코드리뷰 현장 사진! <br> 스스럼없이 코드에 대해 다양한 의견을 나누었습니다. </h3>
+
+![screencapture-github-ChocoTeamTeam-ToGather-BE-pull-9-2022-10-05-04_59_03](https://user-images.githubusercontent.com/49369306/195689012-ff792f36-802d-41f1-b6b5-237985ef5e3f.png)
+
+</div>
+</details>
+
