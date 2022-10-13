@@ -16,10 +16,9 @@
 
 - 팀 프로젝트 신청이 승인됐다면 프로젝트 별 다양한 채팅방에서 실시간 채팅으로 소통할 수 있습니다.
 
+- [프로젝트  API 명세서 보러가기](https://www.notion.so/dokuny/API-e42ab049b1334fd0b8b478a5cc2c768c)
 <br><br>
 
-## API 명세서 보러가기
-[프로젝트 문서 API 명세](https://www.notion.so/dokuny/API-e42ab049b1334fd0b8b478a5cc2c768c)
 
 
 
