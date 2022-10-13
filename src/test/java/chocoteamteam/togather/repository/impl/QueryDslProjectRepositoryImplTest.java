@@ -189,9 +189,9 @@ class QueryDslProjectRepositoryImplTest {
 
         assertEquals(2, result.size());
 
-        // 0 page = [1L, 2L] , 1 page = [3L, 4L]
-        assertEquals(4L, result.get(0).getId());
-        assertEquals(3L, result.get(1).getId());
+        // 0 page = [4L, 3L] , 1 page = [2L, 1L]
+        assertEquals(2L, result.get(0).getId());
+        assertEquals(1L, result.get(1).getId());
     }
 
     @Test
