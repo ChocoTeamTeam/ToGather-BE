@@ -26,7 +26,7 @@
 ## 🚀 Demo
 
 
-<table>
+<table align="center">
 <thead>
 <tr margin-bottom=3px>
 <td width="300" align="center">
