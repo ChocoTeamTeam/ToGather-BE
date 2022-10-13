@@ -14,6 +14,9 @@
 
 - 팀 프로젝트 신청이 승인됐다면 프로젝트 별 다양한 채팅방에서 실시간 채팅으로 소통할 수 있습니다.
 
+## API 명세서 보러가기
+[프로젝트 문서 API 명세](https://www.notion.so/dokuny/API-e42ab049b1334fd0b8b478a5cc2c768c)
+
 ## 🚀 Demo
 
 |                   손쉬운 간편 로그인 (naver, google, github, kakao)     |                   프로필 수정                    |
@@ -58,12 +61,9 @@
 <img src="https://img.shields.io/badge/Amazon EC2-FF9900?style=for-the-badge&logo=Amazon EC2&logoColor=white"> <img src="https://img.shields.io/badge/Docker-2496ED?style=for-the-badge&logo=Docker&logoColor=white"> <img src="https://img.shields.io/badge/Cloudflare-F38020?style=for-the-badge&logo=Cloudflare&logoColor=white"> <img src="https://img.shields.io/badge/Git-F05032?style=for-the-badge&logo=Git&logoColor=white"> <img src="https://img.shields.io/badge/Amazon RDS-527FFF?style=for-the-badge&logo=Amazon RDS&logoColor=white"> <img src="https://img.shields.io/badge/GitHub Actions-2088FF?style=for-the-badge&logo=GitHub Actions&logoColor=white"> <img src="https://img.shields.io/badge/Netlify-00C7B7?style=for-the-badge&logo=Netlify&logoColor=white">
 
 ## 🏢Architecture
-![시스템아키텍처](https://user-images.githubusercontent.com/49369306/195604545-52ae569d-2d59-4fd0-aff6-dc677c1d33e8.png)
-
-
-
-
+![시스템아키텍처](https://user-images.githubusercontent.com/49369306/195606058-dcd1be28-21bc-45b0-afe3-376f555cd84d.png)
+![채팅 구조](https://user-images.githubusercontent.com/49369306/195606211-b720ece4-9a26-47a8-9558-8293cf2445ea.png)
+![배치 구조](https://user-images.githubusercontent.com/49369306/195606230-8579a8fb-3e77-439a-9774-d1fb7e926012.png)
 
 ## 📄ERD
 ![image](https://user-images.githubusercontent.com/49369306/194484414-6f465dcc-efe8-4042-99bc-3a501a7c94d3.png)
-
