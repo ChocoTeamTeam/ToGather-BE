@@ -170,6 +170,7 @@ public class QueryDslProjectRepositoryImpl implements QueryDslProjectRepository 
                         searchProjectContent(projectCondition),
                         searchProjectTitle(projectCondition),
                         searchUserName(projectCondition))
+                .orderBy(project.id.desc())
                 .distinct()
                 .limit(projectCondition.getLimit())
                 .offset(projectCondition.getPageNumber() * projectCondition.getLimit())
