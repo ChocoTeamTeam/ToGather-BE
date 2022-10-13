@@ -18,7 +18,7 @@
 
 |                   손쉬운 간편 로그인 (naver, google, github, kakao)     |                   프로필 수정                    |
 | :----------------------------------------------------------: | :----------------------------------------------------------: |
-| <img src="https://user-images.githubusercontent.com/49369306/195571145-08304ede-6e58-4e18-8655-a788ef34eb63.gif" width="470" height="300"> | <img src="https://user-images.githubusercontent.com/49369306/195573656-1e4f25b1-7568-428b-a08e-e761738786ea.gif" width="470" height="300"> |
+| <img src="https://user-images.githubusercontent.com/49369306/195571145-08304ede-6e58-4e18-8655-a788ef34eb63.gif"> | <img src="https://user-images.githubusercontent.com/49369306/195573656-1e4f25b1-7568-428b-a08e-e761738786ea.gif"> |
 
 ## 🧑‍🤝‍🧑 팀원 소개
 - [팀 프로젝트 문서 (노션)](https://www.notion.so/dokuny/TOGATHER-1fd2033dda614e3489961aa3e84748cd)
