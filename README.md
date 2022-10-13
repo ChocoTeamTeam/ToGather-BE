@@ -18,11 +18,11 @@
 
 |                   손쉬운 간편 로그인 (naver, google, github, kakao)     |                   프로필 수정                    |
 | :----------------------------------------------------------: | :----------------------------------------------------------: |
-| <img src="https://user-images.githubusercontent.com/49369306/195571145-08304ede-6e58-4e18-8655-a788ef34eb63.gif"> | <img src="https://user-images.githubusercontent.com/49369306/195573656-1e4f25b1-7568-428b-a08e-e761738786ea.gif"> |
+| <img src="https://user-images.githubusercontent.com/49369306/195571145-08304ede-6e58-4e18-8655-a788ef34eb63.gif" > | <img src="https://user-images.githubusercontent.com/49369306/195573656-1e4f25b1-7568-428b-a08e-e761738786ea.gif"> |
 
-|                   다양한 카테고리로 프로젝트 조회     |                   프로필 수정                    |
+|                   다양한 카테고리로 프로젝트 조회     |               지도 위치 기반 프로젝트 조회                 |
 | :----------------------------------------------------------: | :----------------------------------------------------------: |
-| <img src= "https://user-images.githubusercontent.com/49369306/195576016-491856cc-8965-45f5-94b9-17aa3d081778.gif"> | <img src=""> |
+| <img src= "https://user-images.githubusercontent.com/49369306/195576016-491856cc-8965-45f5-94b9-17aa3d081778.gif" width="70%" > | <img src="https://user-images.githubusercontent.com/49369306/195578810-b3e08583-41f0-4602-9734-71fecdfd631e.gif"> |
 
 |                   손쉬운 간편 로그인 (naver, google, github, kakao)     |                   프로필 수정                    |
 | :----------------------------------------------------------: | :----------------------------------------------------------: |
@@ -30,8 +30,7 @@
 
 |                   손쉬운 간편 로그인 (naver, google, github, kakao)     |                   프로필 수정                    |
 | :----------------------------------------------------------: | :----------------------------------------------------------: |
-| <img src="https://user-images.githubusercontent.com/49369306/195571145-08304ede-6e58-4e18-8655-a788ef34eb63.gif"> | <img src="https://user-images.githubusercontent.com/49369306/195573656-1e4f25b1-7568-428b-a08e-e761738786ea.gif"> |
-
+| <img src="https://user-images.githubusercontent.com/49369306/195571145-08304ede-6e58-4e18-8655-a788ef34eb63.gif"> | <img src="https://user-images.githubusercontent.com/49369306/195578810-b3e08583-41f0-4602-9734-71fecdfd631e.gif"> |
 
 
 
