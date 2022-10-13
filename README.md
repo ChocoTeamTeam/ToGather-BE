@@ -41,5 +41,5 @@
 ![image](https://user-images.githubusercontent.com/49369306/194484414-6f465dcc-efe8-4042-99bc-3a501a7c94d3.png)
 
 
-![손쉬운간편로그인](https://user-images.githubusercontent.com/49369306/195571145-08304ede-6e58-4e18-8655-a788ef34eb63.gif)
+![손쉬운간편로그인](https://user-images.githubusercontent.com/49369306/195571145-08304ede-6e58-4e18-8655-a788ef34eb63.gif){: width="100" height="100"}
 
