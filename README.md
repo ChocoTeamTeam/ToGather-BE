@@ -26,11 +26,11 @@
 
 |                   프로젝트 팀원 모집     |                   프로젝트 참여 신청                    |
 | :----------------------------------------------------------: | :----------------------------------------------------------: |
-| <img src="https://user-images.githubusercontent.com/49369306/195580514-85235af5-291f-4cd5-96d9-539da48a97be.gif"> | <img src="https://user-images.githubusercontent.com/49369306/195573656-1e4f25b1-7568-428b-a08e-e761738786ea.gif"> |
+| <img src="https://user-images.githubusercontent.com/49369306/195580514-85235af5-291f-4cd5-96d9-539da48a97be.gif"> | <img src=""> |
 
 |                 참여 신청 알림     |                   팀원과 의사소통하는 팀 채팅                    |
 | :----------------------------------------------------------: | :----------------------------------------------------------: |
-| <img src="https://user-images.githubusercontent.com/49369306/195571145-08304ede-6e58-4e18-8655-a788ef34eb63.gif"> | <img src="https://user-images.githubusercontent.com/49369306/195578810-b3e08583-41f0-4602-9734-71fecdfd631e.gif"> |
+| <img src=""> | <img src=""> |
 
 
 ## 🧑‍🤝‍🧑 팀원 소개
