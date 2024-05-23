@@ -4,6 +4,7 @@
 
 >팀프로젝트를 구하거나 인원을 모집할 수 있는 플랫폼입니다.
 - [팀 프로젝트 문서 (노션)](https://www.notion.so/dokuny/TOGATHER-1fd2033dda614e3489961aa3e84748cd)
+- [제로베이스 백엔드 스쿨 1th - 우수 프로젝트 선정](https://zero-base.oopy.io/be-project)
 <br><br>
 
 ## 📜주요 기능 소개
